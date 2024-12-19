@@ -1,0 +1,27 @@
+<h2>Node Reader</h2>
+<div id="nodeData"></div>
+<button id="find">Find</button>
+<script>
+onmessage = (event) => {
+  message = event.data.pluginMessage;
+  if (message.type !== 'readed-node') return;
+    
+
+  const nodeData = document.getElementById('nodeData');
+
+  const isArray = Array.isArray(message.data);
+  if (isArray) {
+    for (let i = 0; i < message.data.length; i++) {
+      console.log(message.data[i])
+    nodeData.append("i");
+    }
+  } else throw new Error ("This should be an array!!")
+    
+}
+</script>
+<script>
+
+document.getElementById('find').onclick = () => {
+  parent.postMessage({ pluginMessage: { type: 'read-node'} }, '*')
+}
+</script>
