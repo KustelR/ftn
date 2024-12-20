@@ -4,19 +4,21 @@
 <script>
 onmessage = (event) => {
   message = event.data.pluginMessage;
+  console.log(message)
+  /*
   if (message.type !== 'readed-node') return;
     
 
   const nodeData = document.getElementById('nodeData');
-
+  console.log(message)
   const isArray = Array.isArray(message.data);
   if (isArray) {
     for (let i = 0; i < message.data.length; i++) {
-      console.log(message.data[i])
-    nodeData.append("i");
+      console.log(message)
+    nodeData.append(message.data[i].id);
     }
   } else throw new Error ("This should be an array!!")
-    
+    */
 }
 </script>
 <script>
