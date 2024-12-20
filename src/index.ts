@@ -1,4 +1,4 @@
-import { ParsedNode, parseNode } from "./parse";
+import {parseNode } from "./parse";
 
 if (figma.editorType === "figma") {
   figma.showUI(__html__);
@@ -8,12 +8,12 @@ if (figma.editorType === "figma") {
 
       selection.forEach(async (node) => {
         const scNode = await figma.getNodeByIdAsync(node.id);
-        console.log(figma.currentPage.selection[0]);
+        //console.log(figma.currentPage.selection[0]);
 
         //figma.ui.postMessage({type: "readed-node", data: scNode?.toString()});
 
         if (scNode) {
-          console.log(parseNode(selection[0]).toJSX());
+          figma.ui.postMessage(parseNode(node).toJSX());
         }
       });
     }

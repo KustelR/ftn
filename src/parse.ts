@@ -38,7 +38,7 @@ class ParsedNode {
             const fill = this.background.fills[0];
             if (fill.type === "SOLID") {
 
-                output += `bg-${rgbToHex(fill.color)}`;
+                output += `bg-${rgbToHex(fill.color)} `;
             }
         }
       return output;
@@ -57,7 +57,7 @@ class ParsedNode {
 
 function parseNode(node: BaseNode) {
   const serializedNode = new ParsedNode(node);
-    console.log(serializedNode);
+    //console.log(serializedNode);
   return serializedNode;
 }
 
