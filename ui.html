@@ -2,10 +2,10 @@
 <div id="nodeData"></div>
 <button id="find">Find</button>
 <script>
-onmessage = (event) => {
-  message = event.data.pluginMessage;
-  console.log(message)
-  /*
+  onmessage = (event) => {
+    message = event.data.pluginMessage;
+    console.log(message);
+    /*
   if (message.type !== 'readed-node') return;
     
 
@@ -19,11 +19,10 @@ onmessage = (event) => {
     }
   } else throw new Error ("This should be an array!!")
     */
-}
+  };
 </script>
 <script>
-
-document.getElementById('find').onclick = () => {
-  parent.postMessage({ pluginMessage: { type: 'read-node'} }, '*')
-}
+  document.getElementById("find").onclick = () => {
+    parent.postMessage({ pluginMessage: { type: "read-node" } }, "*");
+  };
 </script>
