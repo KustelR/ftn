@@ -13,15 +13,41 @@ function generateTextColor(paint: Paint): string {
   } else return "";
 }
 
-function generateSizes(
-  sizes: { width?: number; height?: number },
-  autolayout?: Layout,
-): string {
-  if (sizes.width && sizes.height) {
-    return ` w-[${sizes.width}] h-[${sizes.height}]`;
-  } else {
-    return "";
+function generateSizes(sizes: {
+  width?: number;
+  height?: number;
+  autolayout?: Layout;
+}): string {
+  let result: string = "";
+  if (sizes.autolayout === undefined) {
+    return `w-[${sizes.width}] h-[${sizes.height}]`;
   }
+  let autoWidth: "fit" | "full" | null;
+  let autoHeight: "fit" | "full" | null;
+  switch (sizes.autolayout.sizingHorizontal) {
+    case "FIXED":
+      autoWidth = null;
+      break;
+    case "HUG":
+      autoWidth = "fit";
+      break;
+    case "FILL":
+      autoWidth = "full";
+      break;
+  }
+  switch (sizes.autolayout.sizingVertical) {
+    case "FIXED":
+      autoHeight = null;
+      break;
+    case "HUG":
+      autoHeight = "fit";
+      break;
+    case "FILL":
+      autoHeight = "full";
+      break;
+  }
+  result += `${autoWidth ? `w-${autoWidth}` : `w-[${sizes.width}]`} ${autoHeight ? `h-${autoHeight}` : `h-[${sizes.height}]`} `;
+  return result;
 }
 
 function generateRounded(round?: number, full?: boolean): string {

@@ -94,6 +94,7 @@ class ParsedNode {
 
 function parseNode(node: BaseNode) {
   const serializedNode = new ParsedNode(node);
+  console.log(serializedNode);
   return serializedNode;
 }
 
