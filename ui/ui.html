@@ -1,0 +1,27 @@
+<h2>Node Reader</h2>
+<div style="
+  background: #333333;
+  color: #aaaaaa;
+  min-height: 300px; ">
+  <code id="nodeData"></code>
+
+</div>
+<button id="find">Find</button>
+<script>
+  onmessage = (event) => {
+    message = event.data.pluginMessage;
+    console.log(message);
+    const nodeData = document.getElementById("nodeData");
+    const isArray = Array.isArray(message.data);
+    if (isArray) {
+      for (let i = 0; i < message.data.length; i++) {
+        nodeData.append(message, "<br/>");
+      }
+    } else nodeData.append(message);
+  };
+</script>
+<script>
+  document.getElementById("find").onclick = () => {
+    parent.postMessage({ pluginMessage: { type: "read-node" } }, "*");
+  };
+</script>
