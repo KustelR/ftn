@@ -102,9 +102,9 @@ function toJSX(node: JSXConvertable): string {
   if (typeof node === "string") return node;
   return (
     `<${node.getTag()} ` +
-    `className="${node.getClassNames(classNameGenMods.Tailwind)}">` +
+    `className="${node.getClassNames(classNameGenMods.Tailwind)}"> ` +
     `${node.children.map((child) => toJSX(child)).join("")}` +
-    `</${node.getTag()}>\n`
+    `</${node.getTag()}>`
   );
 }
 
