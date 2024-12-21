@@ -1,19 +1,20 @@
-import {parseNode } from "./parse";
+import { parseNode, toJSX } from "./parse";
 
 if (figma.editorType === "figma") {
   figma.showUI(__html__);
+  figma.ui.resize(600, 500);
   figma.ui.onmessage = async (msg: { type: string; count: number }) => {
     if (msg.type === "read-node") {
       const selection = figma.currentPage.selection;
 
       selection.forEach(async (node) => {
         const scNode = await figma.getNodeByIdAsync(node.id);
-        //console.log(figma.currentPage.selection[0]);
+        console.log(figma.currentPage.selection);
 
         //figma.ui.postMessage({type: "readed-node", data: scNode?.toString()});
 
         if (scNode) {
-          figma.ui.postMessage(parseNode(node).toJSX());
+          figma.ui.postMessage(toJSX(parseNode(node)));
         }
       });
     }
