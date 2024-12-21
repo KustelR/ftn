@@ -1,4 +1,5 @@
 import rgbToHex from "./utils/rgbToHex";
+import { Layout } from "./types";
 
 function generateBgColor(paint: Paint): string {
   if (paint.type === "SOLID") {
@@ -12,7 +13,10 @@ function generateTextColor(paint: Paint): string {
   } else return "";
 }
 
-function generateSizes(sizes: { width?: number; height?: number }): string {
+function generateSizes(
+  sizes: { width?: number; height?: number },
+  autolayout?: Layout,
+): string {
   if (sizes.width && sizes.height) {
     return ` w-[${sizes.width}] h-[${sizes.height}]`;
   } else {

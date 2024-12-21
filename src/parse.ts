@@ -1,4 +1,4 @@
-import { ColoredNode, SizedNode } from "./node_types";
+import { ColoredNode, SizedNode, Layout, bgData } from "./types";
 import {
   generateBgColor,
   generateRounded,
@@ -12,12 +12,6 @@ enum classNameGenMods {
   Tailwind = 1,
 }
 
-
-type Padding = {top: number, bootom: number, left: number, right: number}
-type bgData = {
-  fills: Array<Paint>;
-};
-
 class ParsedNode {
   constructor(node: BaseNode) {
     this.type = node.type;
@@ -26,6 +20,10 @@ class ParsedNode {
     let sizedNode = node as SizedNode;
     this.width = sizedNode.width;
     this.height = sizedNode.height;
+    this.autolayout = {
+      sizingHorizontal: sizedNode.layoutSizingHorizontal,
+      sizingVertical: sizedNode.layoutSizingVertical,
+    };
 
     let textNode = node as TextNode;
     this.text = textNode.characters;
@@ -89,6 +87,7 @@ class ParsedNode {
   width?: number;
   height?: number;
   text?: string;
+  autolayout?: Layout;
   paints?: bgData | null;
   children: Array<JSXConvertable>;
 }
