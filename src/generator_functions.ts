@@ -1,15 +1,20 @@
 import rgbToHex from "./utils/rgbToHex";
-import { Layout } from "./types";
+import { Layout, VectorData } from "./types";
 
+function generateHexColor(paint: Paint): string {
+  if (paint.type === "SOLID") {
+    return rgbToHex(paint.color);
+  } else return "";
+}
 function generateBgColor(paint: Paint): string {
   if (paint.type === "SOLID") {
-    return `bg-[${rgbToHex(paint.color)}] `;
+    return `bg-[${generateHexColor(paint)}] `;
   } else return "";
 }
 
 function generateTextColor(paint: Paint): string {
   if (paint.type === "SOLID") {
-    return `text-[${rgbToHex(paint.color)}] `;
+    return `text-[${generateHexColor(paint)}] `;
   } else return "";
 }
 
@@ -57,4 +62,34 @@ function generateRounded(round?: number, full?: boolean): string {
   return `rounded-[${round}] `;
 }
 
-export { generateBgColor, generateRounded, generateTextColor, generateSizes };
+function generateFlex(node: { autolayout?: Layout }) {
+  if (!node.autolayout) {
+    return "";
+  }
+  switch (node.autolayout.layoutMode) {
+    case "NONE":
+      return "";
+    case "HORIZONTAL":
+      return "flex flex-row ";
+    case "VERTICAL":
+      return "flex flex-col ";
+    default:
+      return "";
+  }
+}
+
+function generateVectorPath(vectorData?: VectorData): string {
+  if (!vectorData) return "";
+
+  return vectorData.paths[0].data;
+}
+
+export {
+  generateHexColor,
+  generateBgColor,
+  generateRounded,
+  generateTextColor,
+  generateSizes,
+  generateFlex,
+  generateVectorPath,
+};
