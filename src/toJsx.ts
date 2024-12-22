@@ -92,13 +92,13 @@ function generateLayout(node: Layouted): Array<string> {
         result.push(`max-h-${node.maxHeight}`);
     }
     if (node.minHeight) {
-        result.push(`max-h-${node.minHeight}`);
+        result.push(`min-h-${node.minHeight}`);
     }
     if (node.maxWidth) {
-        result.push(`max-h-${node.maxWidth}`);
+        result.push(`max-w-${node.maxWidth}`);
     }
     if (node.minWidth) {
-        result.push(`max-h-${node.minWidth}`);
+        result.push(`min-w-${node.minWidth}`);
     }
     switch (node.layoutSizingHorizontal) {
         case "FIXED":
@@ -147,6 +147,78 @@ function generateSpacings(node: SpacedNode): Array<string> {
     return result;
 }
 
+type BorderedNode = {
+    cornerRadius: number | symbol,
+    topLeftRadius: number,
+    topRightRadius: number,
+    bottomLeftRadius: number,
+    bottomRightRadius: number,
+    strokeWeight: number | symbol
+    strokeRightWeight: number,
+    strokeLeftWeight: number,
+    strokeTopWeight: number,
+    strokeBottomWeight: number,
+}
+function generateBorders(strokes: Array<Paint>, node: BorderedNode): Array<string> {
+
+    let result: Array<string> = [];
+
+    if (typeof node.strokeWeight !== 'symbol') {
+        result.push(`border-[${node.strokeWeight}px]`);
+    } else {
+        if (node.strokeRightWeight !== 0) {
+            result.push(`border-r-[${node.strokeRightWeight}]`);
+        }
+        if (node.strokeLeftWeight !== 0) {
+            result.push(`border-l-[${node.strokeLeftWeight}]`);
+        }
+        if (node.strokeTopWeight !== 0) {
+            result.push(`border-t-[${node.strokeTopWeight}]`);
+        }
+        if (node.strokeBottomWeight !== 0) {
+            result.push(`border-b-[${node.strokeBottomWeight}]`);
+        }
+    }
+    if (typeof node.cornerRadius !== 'symbol') {
+        result.push(`rounded-[${node.cornerRadius}px]`);
+    } else {
+    if (node.topLeftRadius && node.topLeftRadius !== 0) {
+        result.push(`rounded-tl-[${node.topLeftRadius}]`);
+    }
+    if (node.topRightRadius !== 0) {
+        result.push(`rounded-tr-[${node.topRightRadius}]`);
+    }
+    if (node.bottomLeftRadius !== 0) {
+        result.push(`rounded-bl-[${node.bottomLeftRadius}]`);
+    }
+    if (node.topRightRadius !== 0) {
+        result.push(`rounded-br-[${node.bottomRightRadius}]`);
+    }
+}
+    strokes.map((fill) => {
+        switch (fill.type) {
+            case "SOLID":
+                result.push(`border-[${rgbToHex(fill.color)}]/[${fill.opacity ? fill.opacity : 1}] `);
+                break;
+            case "GRADIENT_ANGULAR":
+                break;
+            case "GRADIENT_LINEAR":
+                break;
+            case "GRADIENT_DIAMOND":
+                break;
+            case "GRADIENT_RADIAL":
+                break;
+            case "IMAGE":
+                break;
+            case "VIDEO":
+                break;
+            default:
+        }
+    });
+
+    return result;
+}
+
 export default function toJSXWIP(node: BaseNode): string | null {
 
     if (node.type === "DOCUMENT") {
@@ -174,13 +246,15 @@ function toJSX_FrameNode(node: FrameNode): string {
     let tagName = "div";
     let classNames: Array<string> = [];
     const children: Array <string | null> = [];
-    node.children.map(child => {children.push(toJSXWIP(child))})
 
     if (typeof node.fills !== "symbol") {
         classNames.push(generateBgFromFills({fills: [...node.fills]}).join(" "));
     }
     classNames.push(generateLayout(node).join(" "));
     classNames.push(generateSpacings(node).join(" "));
+    classNames.push(generateBorders([...node.strokes], node).join(" "));
+
+    node.children.map(child => {children.push(toJSXWIP(child))})
 
     return `<${tagName} className="${classNames.join(" ")}">${children.join('')}<\/${tagName}>`;
 }
