@@ -1,4 +1,5 @@
 import { parseNode, toJSX } from "./parse";
+import toJSXWIP from "./toJsx";
 
 if (figma.editorType === "figma") {
   figma.showUI(__html__);
@@ -14,7 +15,8 @@ if (figma.editorType === "figma") {
         //figma.ui.postMessage({type: "readed-node", data: scNode?.toString()});
 
         if (scNode) {
-          figma.ui.postMessage(toJSX(parseNode(node)));
+          //figma.ui.postMessage(toJSX(parseNode(node)));
+          figma.ui.postMessage(toJSXWIP(node));
         }
       });
     }
