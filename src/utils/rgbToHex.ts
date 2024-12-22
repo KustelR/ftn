@@ -1,4 +1,8 @@
-export default function rgbToHex(color: { r: number; g: number; b: number }): string{
+export default function rgbToHex(color: {
+  r: number;
+  g: number;
+  b: number;
+}): string {
   return `#${colorToHex(color.r)}${colorToHex(color.g)}${colorToHex(color.b)}`;
 }
 

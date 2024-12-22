@@ -6,12 +6,12 @@ type Layouted = {
   width: number;
   maxWidth?: number | null | undefined;
   minWidth?: number | null | undefined;
-  layoutMode: LayoutMode;
-  itemSpacing: number;
-  layoutSizingVertical: "FIXED" | "HUG" | "FILL";
-  layoutSizingHorizontal: "FIXED" | "HUG" | "FILL";
-  primaryAxisAlignItems: "MIN" | "MAX" | "SPACE_BETWEEN" | "CENTER";
-  counterAxisAlignItems: "MIN" | "MAX" | "BASELINE" | "CENTER";
+  layoutMode?: LayoutMode;
+  itemSpacing?: number;
+  layoutSizingVertical?: "FIXED" | "HUG" | "FILL";
+  layoutSizingHorizontal?: "FIXED" | "HUG" | "FILL";
+  primaryAxisAlignItems?: "MIN" | "MAX" | "SPACE_BETWEEN" | "CENTER";
+  counterAxisAlignItems?: "MIN" | "MAX" | "BASELINE" | "CENTER";
 };
 export default function generateLayout(node: Layouted): Array<string> {
   let result: Array<string> = [];
