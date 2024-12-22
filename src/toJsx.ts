@@ -6,6 +6,8 @@ type IntermediateNodeData = {
 function generateBgFromFills(node: {fills: Array<Paint>}): Array<String> {
     const result: Array<string> = [];
     node.fills.map((fill) => {
+        if (!fill.visible) return;
+
         switch (fill.type) {
             case "SOLID":
                 result.push(`bg-[${rgbToHex(fill.color)}]/[${fill.opacity ? fill.opacity : 1}] `);
@@ -52,7 +54,8 @@ type Layouted = {
     width: number, 
     maxWidth?: number | null | undefined, 
     minWidth?: number | null | undefined,
-    layoutMode: LayoutMode
+    layoutMode: LayoutMode,
+    itemSpacing: number,
     layoutSizingVertical: "FIXED" | "HUG" | "FILL"
     layoutSizingHorizontal: "FIXED" | "HUG" | "FILL"
     primaryAxisAlignItems: "MIN" | "MAX" | "SPACE_BETWEEN" | "CENTER"
@@ -64,10 +67,11 @@ function generateLayout(node: Layouted): Array<string> {
         case "NONE":
             break;
         case "HORIZONTAL":
-            result.push(`flex flex-row`);
+            result.push(`flex flex-row ${`space-x-[${node.itemSpacing}px]`}`);
             break;
         case "VERTICAL":
-            result.push(`flex flex-col`);
+            result.push(`flex flex-col ${`space-y-[${node.itemSpacing}px]`}`);
+            
             break;
         case "FIXED":
             result.push();
@@ -75,7 +79,7 @@ function generateLayout(node: Layouted): Array<string> {
     }
     switch (node.primaryAxisAlignItems) {
         case "MIN":
-            result.push(`justify-items-start`);
+            result.push(`justify-start`);
             break;
         case "MAX":
             result.push(`justify-end`);
@@ -85,6 +89,21 @@ function generateLayout(node: Layouted): Array<string> {
             break;
         case "CENTER":
             result.push(`justify-center`);
+            break;
+    }
+
+    switch (node.counterAxisAlignItems) {
+        case "MIN":
+            result.push(`items-start`);
+            break;
+        case "MAX":
+            result.push(`items-end`);
+            break;
+        case "BASELINE":
+            result.push(`items-stretch`);
+            break;
+        case "CENTER":
+            result.push(`items-center`);
             break;
     }
 
@@ -180,7 +199,10 @@ function generateBorders(strokes: Array<Paint>, node: BorderedNode): Array<strin
         }
     }
     if (typeof node.cornerRadius !== 'symbol') {
-        result.push(`rounded-[${node.cornerRadius}px]`);
+        if (node.cornerRadius == 0 )
+            result.push(`rounded-[${node.cornerRadius}px]`);
+        else
+            result.push(``);
     } else {
     if (node.topLeftRadius && node.topLeftRadius !== 0) {
         result.push(`rounded-tl-[${node.topLeftRadius}]`);
@@ -237,14 +259,17 @@ function toJSX_SceneNode(node: SceneNode): string {
     switch (node.type) {
         case "FRAME":
             return toJSX_FrameNode(node);
+        case "VECTOR":
+            return toJSX_VectorNode(node);
+            case "TEXT":
         default:
             throw new Error(`Unsupported node type: ${node.type}`);
     }
 }
 
 function toJSX_FrameNode(node: FrameNode): string {
-    let tagName = "div";
     let classNames: Array<string> = [];
+    let tagName: string = "div";
     const children: Array <string | null> = [];
 
     if (typeof node.fills !== "symbol") {
@@ -252,9 +277,23 @@ function toJSX_FrameNode(node: FrameNode): string {
     }
     classNames.push(generateLayout(node).join(" "));
     classNames.push(generateSpacings(node).join(" "));
+
+    if (node.strokes.length > 0) {
     classNames.push(generateBorders([...node.strokes], node).join(" "));
+    }
 
     node.children.map(child => {children.push(toJSXWIP(child))})
+    
+    if (node.children[0] && node.children[0].type === "VECTOR") {
+        tagName = "svg";
+    }
 
     return `<${tagName} className="${classNames.join(" ")}">${children.join('')}<\/${tagName}>`;
+}
+
+function toJSX_VectorNode(node: VectorNode): string {
+    const result: Array<string> = [];
+    node.vectorPaths.map(path => result.push(`<path x="${node.x}" y="${node.y}" d="${path.data}" />`));
+
+    return result.join("");
 }
