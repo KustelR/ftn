@@ -1,5 +1,6 @@
 type LayoutMode = "NONE" | "HORIZONTAL" | "VERTICAL" | "FIXED";
 type Layouted = {
+  parent: BaseNode | null;
   height: number;
   maxHeight?: number | null | undefined;
   minHeight?: number | null | undefined;
@@ -8,6 +9,9 @@ type Layouted = {
   minWidth?: number | null | undefined;
   layoutMode?: LayoutMode;
   itemSpacing?: number;
+  x: number;
+  y: number;
+  relativeTransform: Transform;
   layoutSizingVertical?: "FIXED" | "HUG" | "FILL";
   layoutSizingHorizontal?: "FIXED" | "HUG" | "FILL";
   primaryAxisAlignItems?: "MIN" | "MAX" | "SPACE_BETWEEN" | "CENTER";
@@ -15,8 +19,10 @@ type Layouted = {
 };
 export default function generateLayout(node: Layouted): Array<string> {
   let result: Array<string> = [];
+  result.push(`overflow-hidden`);
   switch (node.layoutMode) {
     case "NONE":
+      result.push(`relative`);
       break;
     case "HORIZONTAL":
       result.push(`flex flex-row ${`space-x-[${node.itemSpacing}px]`}`);
@@ -26,7 +32,7 @@ export default function generateLayout(node: Layouted): Array<string> {
 
       break;
     case "FIXED":
-      result.push();
+      result.push(`relative`);
       break;
   }
   switch (node.primaryAxisAlignItems) {
@@ -94,5 +100,18 @@ export default function generateLayout(node: Layouted): Array<string> {
       break;
   }
 
+  if (
+    node.parent &&
+    node.parent.type !== "DOCUMENT" &&
+    node.parent.type !== "PAGE"
+  ) {
+    if (
+      (node.parent as Layouted).layoutMode === "FIXED" ||
+      (node.parent as Layouted).layoutMode === "NONE" ||
+      !(node.parent as Layouted).layoutMode
+    ) {
+      result.push(`absolute left-[${node.x}] top-[${node.y}]`);
+    }
+  }
   return result;
 }
