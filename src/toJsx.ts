@@ -126,6 +126,10 @@ function toJSX_ShapeNode(node: ShapeNode): string {
   if (typeof node.fills !== "symbol") {
     classNames.push(generateBgColor({ fills: [...node.fills] }).join(" "));
   }
+
+  if (node.type === "ELLIPSE") {
+    classNames.push(`rounded-full`);
+  }
   classNames.push(generateLayout(node).join(" "));
 
   return `<${tagName} className="${classNames.join(" ")}"></${tagName}>`;
