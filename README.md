@@ -13,19 +13,34 @@ Next here is the list of supported figma node types and progress status
 
 ## Supported properties
 
-- Autolayout - WIP
-- Background - WIP
-- Gradients - WIP
-- Borders - WIP
-- Border Radius - WIP
-- Typography - WIP
-- SVG from figma paths - WIP
-- Fonts - WIP
-- Transformations - Planned
-- Shadows - Planned
+### Freezer:
+
+- Transformations
+- Shadows
+
+### WIP:
+
+- Fonts
+- Typography
+- Background
+- Gradients
+
+### Raw:
+
+- Images
+- Relative/Absolute positioning
+- Autolayout
+- Borders
+- Border Radius
+- SVG from figma paths
+
+### Tested:
 
 ## Features
 
+- Conversion to Tailwind Colors/Units - Planned
+- Configurable conversion (NextJS, Plain CSS etc) - Planned
+- Fonts sources (Next/CDN) support - Planned
 - Hierarachy detection (Based on depth of frame maybe suggest types of headers etc) - Planned
 - Semantic suggestions (Alt text based on node name, p/span based on text length etc) - Planned
 - Automatic suggestions for font imports
