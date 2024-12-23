@@ -1,6 +1,7 @@
 import rgbToHex from "../utils/rgbToHex";
 
 export default function generateBgFromFills(node: {
+  name: string;
   fills: Array<Paint>;
 }): Array<String> {
   const result: Array<string> = [];
@@ -12,8 +13,6 @@ export default function generateBgFromFills(node: {
         result.push(
           `bg-[${rgbToHex(fill.color)}]/[${fill.opacity ? fill.opacity : 1}] `,
         );
-        break;
-      case "GRADIENT_ANGULAR":
         break;
       case "GRADIENT_LINEAR":
         let gradientStrings: Array<string> = [`bg-gradient-to-l`];
@@ -41,15 +40,12 @@ export default function generateBgFromFills(node: {
         }
         result.push(gradientStrings.join(" "));
         break;
-      case "GRADIENT_DIAMOND":
-        break;
-      case "GRADIENT_RADIAL":
-        break;
       case "IMAGE":
         break;
-      case "VIDEO":
-        break;
       default:
+        console.warn(
+          `Unsupported fill type (${fill.type}) for text node: ${node.name}`,
+        );
     }
   });
   return result;

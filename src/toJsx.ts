@@ -49,7 +49,9 @@ function toJSX_FrameNode(node: FrameNode): string {
   const children: Array<string | null> = [];
 
   if (typeof node.fills !== "symbol") {
-    classNames.push(generateBgColor({ fills: [...node.fills] }).join(" "));
+    classNames.push(
+      generateBgColor({ name: node.name, fills: [...node.fills] }).join(" "),
+    );
   }
   classNames.push(generateLayout(node).join(" "));
   classNames.push(generateSpacing(node).join(" "));
@@ -126,7 +128,9 @@ function toJSX_ShapeNode(node: ShapeNode): string {
   const classNames: Array<string> = [];
 
   if (typeof node.fills !== "symbol") {
-    classNames.push(generateBgColor({ fills: [...node.fills] }).join(" "));
+    classNames.push(
+      generateBgColor({ name: node.name, fills: [...node.fills] }).join(" "),
+    );
   }
 
   if (node.type === "ELLIPSE") {
