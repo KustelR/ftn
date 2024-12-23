@@ -39,7 +39,7 @@ function toJSX_SceneNode(node: SceneNode): string {
       return toJSX_ShapeNode(node);
     default:
       console.warn(`[WARNING!] Unsupported node type: ${node.type}`);
-      return `<div></div>`;
+      return `<div className="${`w-[${node.width}] h-[${node.height}]`}">${`Unsupported node type: ${node.type}`}</div>`;
   }
 }
 
@@ -124,8 +124,20 @@ function toJSXWIP_TextNode(node: TextNode): string {
   return `<${tagName} className="${classNames.join(" ")}">${node.characters}</${tagName}>`;
 }
 function toJSX_ShapeNode(node: ShapeNode): string {
-  const tagName = "div";
+  if (typeof node.fills !== "symbol") {
+    if (node.fills[0].type === "IMAGE") {
+      return toJSX_ShapeImageNode(node);
+    }
+  }
+
+  let tagName = "div";
   const classNames: Array<string> = [];
+  const otherTags: Array<string> = [];
+
+  if (node.type === "ELLIPSE") {
+    classNames.push(`rounded-full`);
+  }
+  classNames.push(generateLayout(node).join(" "));
 
   if (typeof node.fills !== "symbol") {
     classNames.push(
@@ -133,10 +145,32 @@ function toJSX_ShapeNode(node: ShapeNode): string {
     );
   }
 
+  return `<${tagName} className="${classNames.join(" ")}" ${otherTags.join(" ")}></${tagName}>`;
+}
+
+function toJSX_ShapeImageNode(node: ShapeNode): string {
+  const classNames: Array<string> = [];
+  const otherTags: Array<string> = [];
+
+  const tagName = "Image";
+
   if (node.type === "ELLIPSE") {
     classNames.push(`rounded-full`);
   }
-  classNames.push(generateLayout(node).join(" "));
 
-  return `<${tagName} className="${classNames.join(" ")}"></${tagName}>`;
+  otherTags.push(
+    `width="${node.absoluteRenderBounds?.width}"`,
+    `height="${node.absoluteRenderBounds?.height}"`,
+    `src="SRC HERE"`,
+    `alt="${node.name}"`,
+  );
+  classNames.push(
+    `object-center`,
+    // @ts-expect-error This is literally reason why it is an Image Node...
+    `opacity-[${node.fills[0].opacity}]`,
+    // @ts-expect-error This is literally reason why it is an Image Node...
+    generateBgColor({ name: node.name, fills: [...node.fills] }).join(" "),
+  );
+
+  return `<${tagName} className="${classNames.join(" ")}" ${otherTags.join(" ")}></${tagName}>`;
 }
