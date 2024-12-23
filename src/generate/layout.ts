@@ -11,6 +11,7 @@ type Layouted = {
   itemSpacing?: number;
   x: number;
   y: number;
+  absoluteRenderBounds: Rect | null;
   relativeTransform: Transform;
   layoutSizingVertical?: "FIXED" | "HUG" | "FILL";
   layoutSizingHorizontal?: "FIXED" | "HUG" | "FILL";
