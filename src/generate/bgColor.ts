@@ -40,8 +40,6 @@ export default function generateBgFromFills(node: {
         }
         result.push(gradientStrings.join(" "));
         break;
-      case "IMAGE":
-        break;
       default:
         console.warn(
           `Unsupported fill type (${fill.type}) for text node: ${node.name}`,
