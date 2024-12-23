@@ -9,7 +9,8 @@ Next here is the list of supported figma node types and progress status
 1. FrameNode - WIP
 2. VectorNode - WIP
 3. TextNode - WIP
-4. RectangleNode - Queued
+4. RectangleNode - Supported
+5. EllipseNode - Supported
 
 ## Supported properties
 
