@@ -113,7 +113,9 @@ function toJSXWIP_TextNode(node: TextNode): string {
   let classNames: Array<string> = [];
 
   if (typeof node.fills !== "symbol") {
-    classNames.push(generateTextColor({ fills: [...node.fills] }).join(" "));
+    classNames.push(
+      generateTextColor({ name: node.name, fills: [...node.fills] }).join(" "),
+    );
   }
   classNames.push(generateFont(node).join(" "));
   classNames.push(generateLayout(node).join(" "));
