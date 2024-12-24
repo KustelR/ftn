@@ -15,7 +15,9 @@
   onmessage = (event) => {
     message = event.data.pluginMessage;
     const nodeData = document.getElementById("nodeData");
-    splittedMessage = message.match(new RegExp("(<[^<>]+>)|([^<>]+)", "g"));
+    splittedMessage = message.match(
+      new RegExp("<((?:[^<>]|>)+>)|([^<>]+)", "g"),
+    );
     const elements = [];
     let step = 0;
     splittedMessage.map((msgElement) => {
