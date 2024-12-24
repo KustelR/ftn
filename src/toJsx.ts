@@ -7,6 +7,8 @@ import {
   generateBorders,
   generateTextColor,
   generateFont,
+  generateSvgColor,
+  generateSvgStroke,
 } from "./generate";
 
 type ShapeNode = RectangleNode | EllipseNode;
@@ -67,13 +69,6 @@ function toJSX_FrameNode(node: FrameNode): string {
   });
 
   const otherTags: Array<{ tagName: string; data: string }> = [];
-  if (node.children[0] && node.children[0].type === "VECTOR") {
-    tagName = "svg";
-    otherTags.push({
-      tagName: "viewBox",
-      data: `0 0 ${node.width} ${node.height}`,
-    });
-  }
 
   return `<${tagName} className="${classNames.join(" ")}"  ${otherTags.map(
     (tag) => {
@@ -85,27 +80,56 @@ function toJSX_FrameNode(node: FrameNode): string {
 function toJSX_VectorNode(node: VectorNode): string {
   const result: Array<string> = [];
 
-  let colors: Array<string | undefined>;
+  const otherSvgTags: Array<string> = [
+    `viewBox="0 0 ${node.absoluteRenderBounds?.width} ${node.absoluteRenderBounds?.height}"`,
+    ``,
+  ];
+
+  const defsData: Array<string> = [];
   const fills: Array<Paint> =
     typeof node.fills !== "symbol" ? [...node.fills] : [];
-  if (typeof node.fills != "symbol") {
-    colors = [...node.fills].map((fill) => {
-      if (fill.type === "SOLID") {
-        return rgbToHex((fills[0] as SolidPaint).color);
-      } else {
-        console.warn(
-          `[WARNING] Unsupported fill type in vector node ${node.name}`,
+  const otherPathTags: Array<string> = [];
+  if (typeof fills != "symbol") {
+    generateSvgColor({ name: node.name, fills: fills }).map((pFill) => {
+      if (typeof pFill === "string") {
+        otherPathTags.push(pFill);
+      } else if (pFill.type === "GRADIENT_LINEAR") {
+        defsData.push(
+          `<linearGradient id="${pFill.id}" ${pFill.stops
+            .map((stop) => {
+              return `${stop.id}="${stop.color.a}"`;
+            })
+            .join(" ")}>` +
+            `${pFill.stops
+              .map((stop) => {
+                return `<stop offset="${stop.position}" stopColor="${rgbToHex(stop.color as RGB)}" />`;
+              })
+              .join("")}` +
+            `</linearGradient>`,
         );
-        return;
       }
     });
   }
+
   const classNames: Array<string> = [
-    `translate-x-[${node.x}px] translate-y-[${node.y}px]`,
+    `top-[${node.y}] left-[${node.x}]`,
+    `h-[${node.height}] w-[${node.width}]`,
   ];
+
+  const strokes: Array<Paint> =
+    typeof node.strokes !== "symbol" ? [...node.strokes] : [];
+  if (node.height == 0 || node.width == 0) {
+    classNames.push(...generateBorders(strokes, node));
+  } else {
+    classNames.push(...generateSvgStroke(strokes, node));
+  }
+
   node.vectorPaths.map((path) =>
     result.push(
-      `<path className="${classNames.join(" ")}" x="${node.x}" y="${node.y}" d="${path.data}" fill="${colors[0]}" />`,
+      `<svg className="${classNames.join(" ")}" ${otherSvgTags.join(" ")}>` +
+        `<path d="${path.data}" ${otherPathTags.join(" ")} />` +
+        `<defs>${defsData.join()}</defs>` +
+        `</svg>`,
     ),
   );
 
@@ -178,5 +202,6 @@ function toJSX_ShapeImageNode(node: ShapeNode): string {
 }
 
 function toJSX_GroupNode(node: GroupNode): string {
-  return node.children.map((child) => toJSXWIP(child)).join("");
+  const children = node.children.map((child) => toJSXWIP(child));
+  return `<div className="w-[${node.width}] h-[${node.height}] relative [&>*]:absolute">${children.join("")}</div>`;
 }
