@@ -1,16 +1,27 @@
 import rgbToHex from "../utils/rgbToHex";
 
 type BorderedNode = {
-  cornerRadius: number | symbol;
-  topLeftRadius: number;
-  topRightRadius: number;
-  bottomLeftRadius: number;
-  bottomRightRadius: number;
+  name: string;
+  width: number;
+  height: number;
+  cornerRadius?: number | symbol;
+  topLeftRadius?: number;
+  topRightRadius?: number;
+  bottomLeftRadius?: number;
+  bottomRightRadius?: number;
   strokeWeight: number | symbol;
-  strokeRightWeight: number;
-  strokeLeftWeight: number;
-  strokeTopWeight: number;
-  strokeBottomWeight: number;
+  strokeRightWeight?: number;
+  strokeLeftWeight?: number;
+  strokeTopWeight?: number;
+  strokeBottomWeight?: number;
+  strokeALign?: "CENTER" | "INSIDE" | "OUTSIDE";
+  strokeCap:
+    | "NONE"
+    | "ROUND"
+    | "SQUARE"
+    | "ARROW_LINES"
+    | "ARROW_EQUILATERAL"
+    | symbol;
 };
 export default function generateBorders(
   strokes: Array<Paint>,
@@ -18,7 +29,7 @@ export default function generateBorders(
 ): Array<string> {
   let result: Array<string> = [];
 
-  if (typeof node.strokeWeight !== "symbol") {
+  if (typeof node.strokeWeight !== "symbol" && node.strokeWeight !== 0) {
     result.push(`border-[${node.strokeWeight}px]`);
   } else {
     if (node.strokeRightWeight !== 0) {
@@ -73,6 +84,35 @@ export default function generateBorders(
       default:
     }
   });
+
+  switch (node.strokeALign) {
+    case "INSIDE":
+      result.push("box-border");
+      break;
+    case "OUTSIDE":
+      break;
+    default:
+      console.warn(
+        `Unsupported stroke alignment: ${node.strokeALign} in node ${node.name}`,
+      );
+  }
+
+  switch (node.strokeCap) {
+    case "NONE":
+      break;
+    case "ROUND":
+      result.push(
+        `rounded-[${node.width !== 0 ? node.width / 2 : node.height / 2}px]`,
+      );
+      break;
+    case "SQUARE":
+      break;
+    default:
+      if (typeof node.strokeCap === "symbol") break;
+      console.warn(
+        `Unsupported stroke cap: ${node.strokeCap} in node ${node.name}`,
+      );
+  }
 
   return result;
 }
