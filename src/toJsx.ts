@@ -37,6 +37,8 @@ function toJSX_SceneNode(node: SceneNode): string {
       return toJSX_ShapeNode(node);
     case "ELLIPSE":
       return toJSX_ShapeNode(node);
+    case "GROUP":
+      return toJSX_GroupNode(node);
     default:
       console.warn(`[WARNING!] Unsupported node type: ${node.type}`);
       return `<div className="${`w-[${node.width}] h-[${node.height}]`}">${`Unsupported node type: ${node.type}`}</div>`;
@@ -173,4 +175,8 @@ function toJSX_ShapeImageNode(node: ShapeNode): string {
   );
 
   return `<${tagName} className="${classNames.join(" ")}" ${otherTags.join(" ")}></${tagName}>`;
+}
+
+function toJSX_GroupNode(node: GroupNode): string {
+  return node.children.map((child) => toJSXWIP(child)).join("");
 }
