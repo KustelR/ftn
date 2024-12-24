@@ -60,9 +60,7 @@ class ParsedNode {
     if (typeof coloredNode.fills === "symbol") this.paints = null;
     if (this.paints !== null) {
       this.paints = {
-        /* TS expects that here can be passed symbol, but it checked above
-         */ //@ts-expect-error
-        fills: [...coloredNode.fills],
+        fills: [...(coloredNode.fills as Array<Paint>)],
       };
     }
   }

@@ -1,4 +1,4 @@
-import rgbToHex from "../utils/rgbToHex";
+import rgbToHex from "@/utils/rgbToHex";
 
 export default function generateSVGFill(
   strokes: Array<Paint>,

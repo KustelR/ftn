@@ -80,7 +80,7 @@ export default function generateLayout(node: Layouted): Array<string> {
   }
   switch (node.layoutSizingHorizontal) {
     case "FIXED":
-      result.push(`w-[${node.width}]`);
+      result.push(`w-[${node.width}px]`);
       break;
     case "HUG":
       result.push(`w-fit`);
@@ -91,7 +91,7 @@ export default function generateLayout(node: Layouted): Array<string> {
   }
   switch (node.layoutSizingVertical) {
     case "FIXED":
-      result.push(`h-[${node.height}]`);
+      result.push(`h-[${node.height}px]`);
       break;
     case "HUG":
       result.push(`h-fit`);
