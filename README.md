@@ -46,3 +46,4 @@ Next here is the list of supported figma node types and progress status
 - Semantic suggestions (Alt text based on node name, p/span based on text length etc) - Planned
 - Automatic suggestions for font imports
 - Nice UI - Planned
+- create auto deploy via filesystem (maybe websocket for remote?)
