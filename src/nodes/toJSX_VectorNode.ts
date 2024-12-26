@@ -4,6 +4,7 @@ import {
   generateSvgColor,
   generateSvgStroke,
 } from "@/properties";
+import generateTailwind from "@/utils/generateTailwind";
 
 export default function toJSX_VectorNode(node: VectorNode): string {
   const result: Array<string> = [];
@@ -47,7 +48,7 @@ export default function toJSX_VectorNode(node: VectorNode): string {
   const strokes: Array<Paint> =
     typeof node.strokes !== "symbol" ? [...node.strokes] : [];
   if (node.height == 0 || node.width == 0) {
-    classNames.push(...generateBorders(strokes, node));
+    classNames.push(generateTailwind(generateBorders(strokes, node)));
   } else {
     classNames.push(...generateSvgStroke(strokes, node));
   }
