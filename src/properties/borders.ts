@@ -22,10 +22,9 @@ export default function generateBorders(
       result.set(`border-b`, `[${node.strokeBottomWeight}]`);
     }
   }
-  if (node.cornerRadius !== 0) console.log("corner radius detect here");
   if (node.cornerRadius && typeof node.cornerRadius !== "symbol") {
-    if (node.cornerRadius !== 0) console.log("corner radius detected");
-    result.set(`rounded`, `[${node.cornerRadius}]`);
+    if (node.cornerRadius !== 0)
+      result.set(`rounded`, `[${node.cornerRadius}]`);
   } else {
     if (node.topLeftRadius && node.topLeftRadius !== 0) {
       result.set(`rounded-tl`, `[${node.topLeftRadius}]`);

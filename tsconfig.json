@@ -1,5 +1,5 @@
 {
-  "type": "module",
+  "esModuleInterop": true,
   "compilerOptions": {
     "target": "es6",
     "lib": ["es2022"],
