@@ -7,6 +7,6 @@ export default function rgbToHex(color: {
 }
 
 function colorToHex(c: number) {
-  const cHex = Math.ceil(c * 255).toString(16);
-  return cHex.length !== 1 ? cHex : "0" + cHex;
+  const cHex = Math.ceil(Math.min(c, 1) * 255).toString(16);
+  return cHex.length >= 2 ? cHex : "0" + cHex;
 }
