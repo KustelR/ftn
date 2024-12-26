@@ -3,13 +3,18 @@
     "target": "es6",
     "lib": ["es2022"],
     "strict": true,
-    "typeRoots": ["./node_modules/@types", "./node_modules/@figma"],
+    "typeRoots": [
+      "./node_modules/@types",
+      "./node_modules/@figma",
+      "./src/types/*"
+    ],
     "outDir": "./dist",
     "jsx": "react",
     "allowJs": true,
     "moduleResolution": "node",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "*": ["./types/*.d.ts"]
     }
   },
   "include": ["src/**/*.ts"]

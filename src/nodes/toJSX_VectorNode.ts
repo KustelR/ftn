@@ -54,7 +54,7 @@ export default function toJSX_VectorNode(node: VectorNode): string {
 
   node.vectorPaths.map((path) =>
     result.push(
-      `<svg className="${classNames.join(" ")}" ${otherSvgTags.join(" ")}>` +
+      `<svg className="absolute ${classNames.join(" ")}" ${otherSvgTags.join(" ")}>` +
         `<path d="${path.data}" ${otherPathTags.join(" ")} />` +
         `<defs>${defsData.join()}</defs>` +
         `</svg>`,

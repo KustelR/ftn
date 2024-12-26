@@ -12,6 +12,8 @@ import {
   toJSX_GroupNode,
 } from "@/nodes";
 
+import generateTailwind from "@/utils/generateTailwind";
+
 export default function toJSX_SceneNode(node: SceneNode): string {
   switch (node.type) {
     case "FRAME":
@@ -34,15 +36,28 @@ export default function toJSX_SceneNode(node: SceneNode): string {
   }
 }
 
+type NodeData = {
+  htmlTag: string;
+  props: { [key: string]: string };
+  children: Array<NodeData | null>;
+};
+
 function toJSX_FrameNode(node: FrameNode): string {
   let classNames: Array<string> = [];
   let tagName: string = "div";
   const children: Array<string | null> = [];
+  let nodeData = {
+    htmlTag: "div",
+    props: {},
+    children: [],
+  };
 
   if (typeof node.fills !== "symbol") {
-    classNames.push(
-      generateBgColor({ name: node.name, fills: [...node.fills] }).join(" "),
-    );
+    const bgColorClasses = generateBgColor({
+      name: node.name,
+      fills: [...node.fills],
+    });
+    classNames.push(generateTailwind(bgColorClasses));
   }
   classNames.push(generateLayout(node).join(" "));
   classNames.push(generateSpacing(node).join(" "));

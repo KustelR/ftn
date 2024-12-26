@@ -1,5 +1,6 @@
 import { generateBgColor, generateLayout } from "@/properties";
 import { toJSX_ShapeImageNode } from "@/nodes";
+import generateTailwind from "@/utils/generateTailwind";
 
 export type ShapeNode = RectangleNode | EllipseNode;
 export default function toJSX_ShapeNode(node: ShapeNode): string {
@@ -19,7 +20,9 @@ export default function toJSX_ShapeNode(node: ShapeNode): string {
 
   if (typeof node.fills !== "symbol") {
     classNames.push(
-      generateBgColor({ name: node.name, fills: [...node.fills] }).join(" "),
+      generateTailwind(
+        generateBgColor({ name: node.name, fills: [...node.fills] }),
+      ),
     );
   }
 
