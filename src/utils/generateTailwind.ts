@@ -4,8 +4,12 @@ export default function generateTailwindString(
   let result: Array<string> = [];
 
   properties.forEach((value, key) => {
-    console.log(key, value);
-    result.push(`${key.match("[a-zA-Z\-]+")}-${value}`);
+    let item: string;
+    if (typeof value === "boolean" && value) {
+      result.push(`${key.match("[a-zA-Z\-]+")}`);
+    } else {
+      result.push(`${key.match("[a-zA-Z\-]+")}-${value}`);
+    }
   });
 
   return result.join(" ");
