@@ -1,94 +1,62 @@
-import rgbToHex from "@/utils/rgbToHex";
+import generateTailwindColor from "@/utils/generateTailwindColor";
 
-type BorderedNode = {
-  name: string;
-  width: number;
-  height: number;
-  cornerRadius?: number | symbol;
-  topLeftRadius?: number;
-  topRightRadius?: number;
-  bottomLeftRadius?: number;
-  bottomRightRadius?: number;
-  strokeWeight: number | symbol;
-  strokeRightWeight?: number;
-  strokeLeftWeight?: number;
-  strokeTopWeight?: number;
-  strokeBottomWeight?: number;
-  strokeALign?: "CENTER" | "INSIDE" | "OUTSIDE";
-  strokeCap:
-    | "NONE"
-    | "ROUND"
-    | "SQUARE"
-    | "ARROW_LINES"
-    | "ARROW_EQUILATERAL"
-    | symbol;
-};
 export default function generateBorders(
   strokes: Array<Paint>,
   node: BorderedNode,
-): Array<string> {
-  let result: Array<string> = [];
+): TailwindProperties {
+  let result: TailwindProperties = new Map();
 
   if (typeof node.strokeWeight !== "symbol" && node.strokeWeight !== 0) {
-    result.push(`border-[${node.strokeWeight}px]`);
+    result.set(`border`, `[${node.strokeWeight}]`);
   } else {
     if (node.strokeRightWeight !== 0) {
-      result.push(`border-r-[${node.strokeRightWeight}]`);
+      result.set(`border-r`, `[${node.strokeRightWeight}]`);
     }
     if (node.strokeLeftWeight !== 0) {
-      result.push(`border-l-[${node.strokeLeftWeight}]`);
+      result.set(`border-l`, `[${node.strokeLeftWeight}]`);
     }
     if (node.strokeTopWeight !== 0) {
-      result.push(`border-t-[${node.strokeTopWeight}]`);
+      result.set(`border-t`, `[${node.strokeTopWeight}]`);
     }
     if (node.strokeBottomWeight !== 0) {
-      result.push(`border-b-[${node.strokeBottomWeight}]`);
+      result.set(`border-b`, `[${node.strokeBottomWeight}]`);
     }
   }
-  if (typeof node.cornerRadius !== "symbol") {
-    if (node.cornerRadius == 0) result.push(`rounded-[${node.cornerRadius}px]`);
-    else result.push(``);
+  if (node.cornerRadius !== 0) console.log("corner radius detect here");
+  if (node.cornerRadius && typeof node.cornerRadius !== "symbol") {
+    if (node.cornerRadius !== 0) console.log("corner radius detected");
+    result.set(`rounded`, `[${node.cornerRadius}]`);
   } else {
     if (node.topLeftRadius && node.topLeftRadius !== 0) {
-      result.push(`rounded-tl-[${node.topLeftRadius}]`);
+      result.set(`rounded-tl`, `[${node.topLeftRadius}]`);
     }
     if (node.topRightRadius !== 0) {
-      result.push(`rounded-tr-[${node.topRightRadius}]`);
+      result.set(`rounded-tr`, `[${node.topRightRadius}]`);
     }
     if (node.bottomLeftRadius !== 0) {
-      result.push(`rounded-bl-[${node.bottomLeftRadius}]`);
+      result.set(`rounded-bl`, `[${node.bottomLeftRadius}]`);
     }
     if (node.topRightRadius !== 0) {
-      result.push(`rounded-br-[${node.bottomRightRadius}]`);
+      result.set(`rounded-br`, `[${node.bottomRightRadius}]`);
     }
   }
   strokes.map((fill) => {
     switch (fill.type) {
       case "SOLID":
-        result.push(
-          `border-[${rgbToHex(fill.color)}]/[${fill.opacity ? fill.opacity : 1}] `,
-        );
-        break;
-      case "GRADIENT_ANGULAR":
-        break;
-      case "GRADIENT_LINEAR":
-        break;
-      case "GRADIENT_DIAMOND":
-        break;
-      case "GRADIENT_RADIAL":
-        break;
-      case "IMAGE":
-        break;
-      case "VIDEO":
+        result.set(`border1`, generateTailwindColor(fill.color, fill.opacity));
         break;
       default:
+        console.warn(
+          `[WARNING] Unsupported stroke fill ${fill.type} in ${node.name}`,
+        );
     }
   });
 
   switch (node.strokeALign) {
     case "INSIDE":
-      result.push("box-border");
+      result.set("box", "border");
       break;
+    case undefined:
     case "OUTSIDE":
       break;
     default:
@@ -98,14 +66,15 @@ export default function generateBorders(
   }
 
   switch (node.strokeCap) {
+    case undefined:
     case "NONE":
+    case "SQUARE":
       break;
     case "ROUND":
-      result.push(
-        `rounded-[${node.width !== 0 ? node.width / 2 : node.height / 2}px]`,
-      );
-      break;
-    case "SQUARE":
+      let radius = 0;
+      if (node.width && node.width > 0) radius = Math.ceil(node.width / 2);
+      if (node.height && node.height > 0) radius = Math.ceil(node.height / 2);
+      result.set(`rounded`, `[${radius}]`);
       break;
     default:
       if (typeof node.strokeCap === "symbol") break;
