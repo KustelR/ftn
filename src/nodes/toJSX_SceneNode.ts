@@ -61,10 +61,8 @@ function toJSX_FrameNode(node: FrameNode): string {
   }
   classNames.push(generateLayout(node).join(" "));
   classNames.push(generateSpacing(node).join(" "));
-
-  if (node.strokes.length > 0) {
-    classNames.push(generateBorders([...node.strokes], node).join(" "));
-  }
+  const borders = generateBorders([...node.strokes], node);
+  classNames.push(generateTailwind(borders));
 
   node.children.map((child) => {
     children.push(toJSX(child));
