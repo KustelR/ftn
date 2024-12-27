@@ -21,7 +21,15 @@ const borderedMockFull: BorderedNode = {
   width: 10,
   height: 10,
   cornerRadius: 5,
+  topLeftRadius: 5,
+  topRightRadius: 5,
+  bottomLeftRadius: 5,
+  bottomRightRadius: 5,
   strokeWeight: 5,
+  strokeLeftWeight: 5,
+  strokeRightWeight: 5,
+  strokeTopWeight: 5,
+  strokeBottomWeight: 5,
   strokeALign: "OUTSIDE",
 };
 const borderedMockSeparate: BorderedNode = {
@@ -49,10 +57,13 @@ const strokeCappedMock: BorderedNode = {
   strokeCap: undefined,
 };
 describe("generateBorders", () => {
+  test("should not generate border with empty strokes", () => {
+    expect(generateBorders([], borderedMockFull).get("border")).toBeUndefined();
+  });
   test("should generate correct borders and rounded", () => {
     expect(
       generateBorders(mockStrokes, borderedMockFull).get("border"),
-    ).toEqual("[5]");
+    ).toEqual("[5px]");
     expect(
       generateBorders(mockStrokes, borderedMockFull).get("rounded"),
     ).toEqual("[5]");
@@ -73,16 +84,16 @@ describe("generateBorders", () => {
     ).toEqual("[4]");
     expect(
       generateBorders(mockStrokes, borderedMockSeparate).get("border-r"),
-    ).toEqual("[5]");
+    ).toEqual("[5px]");
     expect(
       generateBorders(mockStrokes, borderedMockSeparate).get("border-l"),
-    ).toEqual("[6]");
+    ).toEqual("[6px]");
     expect(
       generateBorders(mockStrokes, borderedMockSeparate).get("border-t"),
-    ).toEqual("[7]");
+    ).toEqual("[7px]");
     expect(
       generateBorders(mockStrokes, borderedMockSeparate).get("border-b"),
-    ).toEqual("[8]");
+    ).toEqual("[8px]");
     expect(
       generateBorders(mockStrokes, borderedMockSeparate).get("border"),
     ).toBeUndefined();
@@ -90,6 +101,34 @@ describe("generateBorders", () => {
       generateBorders(mockStrokes, borderedMockSeparate).get("rounded"),
     ).toBeUndefined();
   });
+  test("should not generate corner-specific borders", () => {
+    expect(
+      generateBorders(mockStrokes, borderedMockFull).get("border-r"),
+    ).toBeUndefined();
+    expect(
+      generateBorders(mockStrokes, borderedMockFull).get("border-l"),
+    ).toBeUndefined();
+    expect(
+      generateBorders(mockStrokes, borderedMockFull).get("border-t"),
+    ).toBeUndefined();
+    expect(
+      generateBorders(mockStrokes, borderedMockFull).get("border-b"),
+    ).toBeUndefined();
+  });
+  test("should not generate corner-specific rounding", () => {
+    expect(
+      generateBorders(mockStrokes, borderedMockFull).get("rounded-tr"),
+    ).toBeUndefined();
+  });
+  expect(
+    generateBorders(mockStrokes, borderedMockFull).get("rounded-tl"),
+  ).toBeUndefined();
+  expect(
+    generateBorders(mockStrokes, borderedMockFull).get("rounded-bl"),
+  ).toBeUndefined();
+  expect(
+    generateBorders(mockStrokes, borderedMockFull).get("rounded-br"),
+  ).toBeUndefined();
   test("should generate correct coloring", () => {
     expect(
       generateBorders(mockStrokes, borderedMockFull).get("border1"),
@@ -120,5 +159,34 @@ describe("generateBorders", () => {
     expect(
       generateBorders(mockStrokes, strokeCappedMock).get("rounded"),
     ).toEqual("[3]");
+  });
+  test("should not generate corner-specific borders on strokeCapped", () => {
+    expect(
+      generateBorders(mockStrokes, strokeCappedMock).get("border-r"),
+    ).toBeUndefined();
+    expect(
+      generateBorders(mockStrokes, strokeCappedMock).get("border-l"),
+    ).toBeUndefined();
+    expect(
+      generateBorders(mockStrokes, strokeCappedMock).get("border-t"),
+    ).toBeUndefined();
+    expect(
+      generateBorders(mockStrokes, strokeCappedMock).get("border-b"),
+    ).toBeUndefined();
+  });
+  strokeCappedMock.topLeftRadius = 5;
+  test("should not generate corner-specific rounded on strokeCapped", () => {
+    expect(
+      generateBorders(mockStrokes, strokeCappedMock).get("rounded-tl"),
+    ).toBeUndefined();
+    expect(
+      generateBorders(mockStrokes, strokeCappedMock).get("rounded-tr"),
+    ).toBeUndefined();
+    expect(
+      generateBorders(mockStrokes, strokeCappedMock).get("rounded-bl"),
+    ).toBeUndefined();
+    expect(
+      generateBorders(mockStrokes, strokeCappedMock).get("rounded-br"),
+    ).toBeUndefined();
   });
 });
