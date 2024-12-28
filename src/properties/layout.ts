@@ -54,6 +54,14 @@ export default function generateLayout(node: Layouted): TailwindProperties {
 
   switch (node.layoutSizingHorizontal) {
     case "FIXED":
+      if (
+        node.parent &&
+        node.parent.type != "DOCUMENT" &&
+        node.parent.type != "PAGE" &&
+        node.width === node.parent.width
+      ) {
+        res.set("w", "full");
+      }
       res.set("w", `[${node.width}px]`);
       break;
     case "HUG":
@@ -81,19 +89,23 @@ export default function generateLayout(node: Layouted): TailwindProperties {
 
 function fixedLayout(node: Layouted): TailwindProperties {
   const result: TailwindProperties = new Map();
-  if (!node.parent) {
+  if (
+    !node.parent ||
+    node.parent.type == "DOCUMENT" ||
+    node.parent.type == "PAGE"
+  ) {
+    result.set("w", "full");
+    result.set("min-h", "screen");
     return result;
   }
-  if (node.parent.type !== "DOCUMENT" && node.parent.type !== "PAGE") {
-    if (
-      (node.parent as Layouted).layoutMode === "FIXED" ||
-      (node.parent as Layouted).layoutMode === "NONE" ||
-      !(node.parent as Layouted).layoutMode
-    ) {
-      result.set("absolute", true);
-      result.set("left", `[${node.x}]`);
-      result.set("top", `[${node.y}]`);
-    }
+  if (
+    (node.parent as Layouted).layoutMode === "FIXED" ||
+    (node.parent as Layouted).layoutMode === "NONE" ||
+    !(node.parent as Layouted).layoutMode
+  ) {
+    result.set("absolute", true);
+    result.set("left", `[${node.x}]`);
+    result.set("top", `[${node.y}]`);
   }
   return result;
 }
