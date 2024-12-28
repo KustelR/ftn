@@ -1,3 +1,4 @@
+import generateTailwind from "@/utils/generateTailwind";
 import { generateFont, generateLayout, generateTextColor } from "../properties";
 
 export default function toJSXWIP_TextNode(node: TextNode): string {
@@ -10,6 +11,6 @@ export default function toJSXWIP_TextNode(node: TextNode): string {
     );
   }
   classNames.push(generateFont(node).join(" "));
-  classNames.push(generateLayout(node).join(" "));
+  classNames.push(generateTailwind(generateLayout(node)));
   return `<${tagName} className="${classNames.join(" ")}">${node.characters}</${tagName}>`;
 }

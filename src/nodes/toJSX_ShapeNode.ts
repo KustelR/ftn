@@ -16,7 +16,7 @@ export default function toJSX_ShapeNode(node: ShapeNode): string {
   if (node.type === "ELLIPSE") {
     classNames.push(`rounded-full`);
   }
-  classNames.push(generateLayout(node).join(" "));
+  classNames.push(generateTailwind(generateLayout(node)));
 
   if (typeof node.fills !== "symbol") {
     classNames.push(
