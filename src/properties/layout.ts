@@ -1,117 +1,98 @@
-type LayoutMode = "NONE" | "HORIZONTAL" | "VERTICAL" | "FIXED";
-type Layouted = {
-  parent: BaseNode | null;
-  height: number;
-  maxHeight?: number | null | undefined;
-  minHeight?: number | null | undefined;
-  width: number;
-  maxWidth?: number | null | undefined;
-  minWidth?: number | null | undefined;
-  layoutMode?: LayoutMode;
-  itemSpacing?: number;
-  x: number;
-  y: number;
-  absoluteRenderBounds: Rect | null;
-  relativeTransform: Transform;
-  layoutSizingVertical?: "FIXED" | "HUG" | "FILL";
-  layoutSizingHorizontal?: "FIXED" | "HUG" | "FILL";
-  primaryAxisAlignItems?: "MIN" | "MAX" | "SPACE_BETWEEN" | "CENTER";
-  counterAxisAlignItems?: "MIN" | "MAX" | "BASELINE" | "CENTER";
-};
-export default function generateLayout(node: Layouted): Array<string> {
-  let result: Array<string> = [];
-  result.push(`overflow-hidden`);
+export default function generateLayout(node: Layouted): TailwindProperties {
+  let res: TailwindProperties = new Map();
   switch (node.layoutMode) {
     case "NONE":
-      result.push(`relative`);
+    case "FIXED":
+      res.set("relative", true);
       break;
     case "HORIZONTAL":
-      result.push(`flex flex-row ${`space-x-[${node.itemSpacing}px]`}`);
+      res.set("flex", true);
+      res.set("flex-row", true);
+      res.set("space-x", `[${node.itemSpacing}px]`);
       break;
     case "VERTICAL":
-      result.push(`flex flex-col ${`space-y-[${node.itemSpacing}px]`}`);
-
+      res.set("flex", true);
+      res.set("flex-col", true);
+      res.set("space-y", `[${node.itemSpacing}px]`);
       break;
     case "FIXED":
-      result.push(`relative`);
-      break;
   }
   switch (node.primaryAxisAlignItems) {
     case "MIN":
-      result.push(`justify-start`);
+      res.set("justify", "start");
       break;
     case "MAX":
-      result.push(`justify-end`);
+      res.set("justify", "end");
       break;
     case "SPACE_BETWEEN":
-      result.push(`justify-stretch`);
+      res.set("justify", "stretch");
       break;
     case "CENTER":
-      result.push(`justify-center`);
+      res.set("justify", "center");
       break;
   }
 
   switch (node.counterAxisAlignItems) {
     case "MIN":
-      result.push(`items-start`);
+      res.set("items", "start");
       break;
     case "MAX":
-      result.push(`items-end`);
+      res.set("items", "end");
       break;
     case "BASELINE":
-      result.push(`items-stretch`);
+      res.set("items", "stretch");
       break;
     case "CENTER":
-      result.push(`items-center`);
+      res.set("items", "center");
       break;
   }
 
-  if (node.maxHeight) {
-    result.push(`max-h-${node.maxHeight}`);
-  }
-  if (node.minHeight) {
-    result.push(`min-h-${node.minHeight}`);
-  }
-  if (node.maxWidth) {
-    result.push(`max-w-${node.maxWidth}`);
-  }
-  if (node.minWidth) {
-    result.push(`min-w-${node.minWidth}`);
-  }
+  if (node.maxHeight) res.set("max-h", node.maxHeight);
+  if (node.minHeight) res.set("min-h", node.minHeight);
+  if (node.maxWidth) res.set("max-w", node.maxWidth);
+  if (node.minWidth) res.set("min-w", node.minWidth);
+
   switch (node.layoutSizingHorizontal) {
     case "FIXED":
-      result.push(`w-[${node.width}px]`);
+      res.set("w", `[${node.width}px]`);
       break;
     case "HUG":
-      result.push(`w-fit`);
+      res.set("w", "fit");
       break;
     case "FILL":
-      result.push(`w-full`);
+      res.set("w", "full");
       break;
   }
   switch (node.layoutSizingVertical) {
     case "FIXED":
-      result.push(`h-[${node.height}px]`);
+      res.set("h", `[${node.height}px]`);
       break;
     case "HUG":
-      result.push(`h-fit`);
+      res.set("h", "fit");
       break;
     case "FILL":
-      result.push(`h-full`);
+      res.set("h", "full");
       break;
   }
 
-  if (
-    node.parent &&
-    node.parent.type !== "DOCUMENT" &&
-    node.parent.type !== "PAGE"
-  ) {
+  res = new Map([...res.entries(), ...fixedLayout(node)]);
+  return res;
+}
+
+function fixedLayout(node: Layouted): TailwindProperties {
+  const result: TailwindProperties = new Map();
+  if (!node.parent) {
+    return result;
+  }
+  if (node.parent.type !== "DOCUMENT" && node.parent.type !== "PAGE") {
     if (
       (node.parent as Layouted).layoutMode === "FIXED" ||
       (node.parent as Layouted).layoutMode === "NONE" ||
       !(node.parent as Layouted).layoutMode
     ) {
-      result.push(`absolute left-[${node.x}] top-[${node.y}]`);
+      result.set("absolute", true);
+      result.set("left", `[${node.x}]`);
+      result.set("top", `[${node.y}]`);
     }
   }
   return result;
