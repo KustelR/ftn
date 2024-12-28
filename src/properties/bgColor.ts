@@ -52,7 +52,7 @@ export default function generateBgFromFills(node: {
         break;
       default:
         console.warn(
-          `Unsupported fill type (${fill.type}) for text node: ${node.name}`,
+          `Unsupported fill type (${fill.type}) for node: ${node.name}`,
         );
     }
   }
