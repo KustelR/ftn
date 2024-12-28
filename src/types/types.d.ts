@@ -30,4 +30,25 @@ declare global {
     className: TailwindProperties;
     children: Array<ResultObject>;
   };
+  type LayoutMode = "NONE" | "HORIZONTAL" | "VERTICAL" | "FIXED";
+  type Layouted = {
+    type: string;
+    parent: BaseNode | null;
+    height: number;
+    maxHeight?: number | null | undefined;
+    minHeight?: number | null | undefined;
+    width: number;
+    maxWidth?: number | null | undefined;
+    minWidth?: number | null | undefined;
+    layoutMode?: LayoutMode;
+    itemSpacing?: number;
+    x: number;
+    y: number;
+    absoluteRenderBounds: Rect | null;
+    relativeTransform: Transform;
+    layoutSizingVertical?: "FIXED" | "HUG" | "FILL";
+    layoutSizingHorizontal?: "FIXED" | "HUG" | "FILL";
+    primaryAxisAlignItems?: "MIN" | "MAX" | "SPACE_BETWEEN" | "CENTER";
+    counterAxisAlignItems?: "MIN" | "MAX" | "BASELINE" | "CENTER";
+  };
 }
