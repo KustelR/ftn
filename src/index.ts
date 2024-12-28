@@ -10,9 +10,6 @@ if (figma.editorType === "figma") {
       selection.forEach(async (node) => {
         const scNode = await figma.getNodeByIdAsync(node.id);
         console.log(figma.currentPage.selection);
-
-        //figma.ui.postMessage({type: "readed-node", data: scNode?.toString()});
-
         if (scNode) {
           //figma.ui.postMessage(toJSX(parseNode(node)));
           figma.ui.postMessage(toJSX(node));

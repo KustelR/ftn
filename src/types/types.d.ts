@@ -51,4 +51,13 @@ declare global {
     primaryAxisAlignItems?: "MIN" | "MAX" | "SPACE_BETWEEN" | "CENTER";
     counterAxisAlignItems?: "MIN" | "MAX" | "BASELINE" | "CENTER";
   };
+  type SvgFill = {
+    id: string;
+    solid?: string;
+    type?: "SOLID" | "GRADIENT_LINEAR";
+    stops?: Array<{
+      offset: number;
+      color: RGBA;
+    }>;
+  };
 }

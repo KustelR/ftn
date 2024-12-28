@@ -1,13 +1,19 @@
 import { toJSX_VectorNode } from "@/nodes";
+import { generateDefs } from "@/properties/svg";
 import generateTailwind from "@/utils/generateTailwind";
 
 export default function toJSX_FrameNodeVectors(node: FrameNode): string {
   const classNames: TailwindProperties = new Map();
   classNames.set("relative", true);
   classNames.set("[&>*]:absolute", true);
-  return `<svg className="${generateTailwind(classNames)}" >${node.children
+  const defs: Set<SvgFill> = new Set();
+  const children: string = node.children
     .map((child) => {
-      return toJSX_VectorNode(child as VectorNode, { noSvg: true });
+      return toJSX_VectorNode(child as VectorNode, {
+        hasOuterSvg: true,
+        fills: defs,
+      });
     })
-    .join("")}</svg>`;
+    .join("");
+  return `<svg className="${generateTailwind(classNames)}" >${generateDefs(defs)}${children}</svg>`;
 }
