@@ -1,4 +1,6 @@
+import generateTailwind from "@/utils/generateTailwind";
 import { ShapeNode } from "./toJSX_ShapeNode";
+import { generateBgColor } from "@/properties";
 
 export default function toJSX_ShapeImageNode(node: ShapeNode): string {
   const classNames: Array<string> = [];
@@ -16,12 +18,11 @@ export default function toJSX_ShapeImageNode(node: ShapeNode): string {
     `src="SRC HERE"`,
     `alt="${node.name}"`,
   );
+  const fills = typeof node.fills != "symbol" ? node.fills : [];
   classNames.push(
     `object-center`,
-    // @ts-expect-error This is literally reason why it is an Image Node...
-    `opacity-[${node.fills[0].opacity}]`,
-    // @ts-expect-error This is literally reason why it is an Image Node...
-    generateBgColor({ name: node.name, fills: [...node.fills] }).join(" "),
+    `opacity-[${fills[0].opacity}]`,
+    generateTailwind(generateBgColor({ name: node.name, fills: [...fills] })),
   );
 
   return `<${tagName} className="${classNames.join(" ")}" ${otherTags.join(" ")}></${tagName}>`;
