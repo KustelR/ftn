@@ -1,6 +1,6 @@
 import { toJSX_SceneNode } from "@/nodes";
 
-export default function toJSX(node: BaseNode): string | null {
+export default function toJSX(node: BaseNode, config: Config): string | null {
   if (node.type === "DOCUMENT") {
     throw new Error("NOT IMPLEMENTED");
     //return toJSX_DocumentNode(node as DocumentNode);
@@ -8,6 +8,6 @@ export default function toJSX(node: BaseNode): string | null {
     throw new Error("NOT IMPLEMENTED");
     //return [toJSX_PageNode(node as PageNode)];
   } else {
-    return toJSX_SceneNode(node);
+    return toJSX_SceneNode(node, config);
   }
 }

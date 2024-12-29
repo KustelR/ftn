@@ -1,6 +1,12 @@
 import toJSX from "./toJsx";
+import { isConfig, generateConfig } from "@/utils/config";
 
 if (figma.editorType === "figma") {
+  let config: Config | undefined = await figma.clientStorage.getAsync("config");
+  if (!isConfig(config)) {
+    config = generateConfig();
+    await figma.clientStorage.setAsync("config", config);
+  }
   figma.showUI(__html__);
   figma.ui.resize(600, 500);
   figma.ui.onmessage = async (msg: { type: string; count: number }) => {
@@ -12,7 +18,7 @@ if (figma.editorType === "figma") {
         console.log(figma.currentPage.selection);
         if (scNode) {
           //figma.ui.postMessage(toJSX(parseNode(node)));
-          figma.ui.postMessage(toJSX(node));
+          figma.ui.postMessage(toJSX(node, config));
         }
       });
     }
