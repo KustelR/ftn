@@ -1,4 +1,45 @@
-export default function generateLayout(node: Layouted): TailwindProperties {
+export default function generateLayout(
+  node: Layouted,
+  options?: {
+    percentageSizes?: boolean;
+  },
+): TailwindProperties {
+  let res: TailwindProperties = new Map();
+  res = new Map([...generateLayoutMode(node), ...res]);
+  res = new Map([...generateAlign(node), ...res]);
+  res = new Map([...generateLayoutSizing(node), ...res]);
+  if (node.maxHeight) res.set("max-h", node.maxHeight);
+  if (node.minHeight) res.set("min-h", node.minHeight);
+  if (node.maxWidth) res.set("max-w", node.maxWidth);
+  if (node.minWidth) res.set("min-w", node.minWidth);
+  res = new Map([...res, ...fixedLayout(node)]);
+  return res;
+}
+
+function fixedLayout(node: Layouted): TailwindProperties {
+  const result: TailwindProperties = new Map();
+  if (
+    !node.parent ||
+    node.parent.type == "DOCUMENT" ||
+    node.parent.type == "PAGE"
+  ) {
+    result.set("w", "full");
+    result.set("min-h", "screen");
+    return result;
+  }
+  if (
+    (node.parent as Layouted).layoutMode === "FIXED" ||
+    (node.parent as Layouted).layoutMode === "NONE" ||
+    !(node.parent as Layouted).layoutMode
+  ) {
+    result.set("absolute", true);
+    result.set("left", `[${node.x}]`);
+    result.set("top", `[${node.y}]`);
+  }
+  return result;
+}
+
+function generateLayoutMode(node: Layouted): TailwindProperties {
   let res: TailwindProperties = new Map();
   switch (node.layoutMode) {
     case "NONE":
@@ -17,6 +58,11 @@ export default function generateLayout(node: Layouted): TailwindProperties {
       break;
     case "FIXED":
   }
+  return res;
+}
+
+function generateAlign(node: Layouted): TailwindProperties {
+  let res: TailwindProperties = new Map();
   switch (node.primaryAxisAlignItems) {
     case "MIN":
       res.set("justify", "start");
@@ -46,22 +92,14 @@ export default function generateLayout(node: Layouted): TailwindProperties {
       res.set("items", "center");
       break;
   }
+  return res;
+}
 
-  if (node.maxHeight) res.set("max-h", node.maxHeight);
-  if (node.minHeight) res.set("min-h", node.minHeight);
-  if (node.maxWidth) res.set("max-w", node.maxWidth);
-  if (node.minWidth) res.set("min-w", node.minWidth);
+function generateLayoutSizing(node: Layouted): TailwindProperties {
+  let res: TailwindProperties = new Map();
 
   switch (node.layoutSizingHorizontal) {
     case "FIXED":
-      if (
-        node.parent &&
-        node.parent.type != "DOCUMENT" &&
-        node.parent.type != "PAGE" &&
-        node.width === node.parent.width
-      ) {
-        res.set("w", "full");
-      }
       res.set("w", `[${node.width}px]`);
       break;
     case "HUG":
@@ -83,29 +121,5 @@ export default function generateLayout(node: Layouted): TailwindProperties {
       break;
   }
 
-  res = new Map([...res.entries(), ...fixedLayout(node)]);
   return res;
-}
-
-function fixedLayout(node: Layouted): TailwindProperties {
-  const result: TailwindProperties = new Map();
-  if (
-    !node.parent ||
-    node.parent.type == "DOCUMENT" ||
-    node.parent.type == "PAGE"
-  ) {
-    result.set("w", "full");
-    result.set("min-h", "screen");
-    return result;
-  }
-  if (
-    (node.parent as Layouted).layoutMode === "FIXED" ||
-    (node.parent as Layouted).layoutMode === "NONE" ||
-    !(node.parent as Layouted).layoutMode
-  ) {
-    result.set("absolute", true);
-    result.set("left", `[${node.x}]`);
-    result.set("top", `[${node.y}]`);
-  }
-  return result;
 }
