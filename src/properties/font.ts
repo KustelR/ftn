@@ -6,16 +6,21 @@ type TextedNode = {
   textAlignVertical: "TOP" | "BOTTOM" | "CENTER";
 };
 
-export default function generateFont(node: TextedNode): TailwindProperties {
-  const result: TailwindProperties = new Map(); //result.push(`break-words`)
-  
-  if (typeof node.fontSize !== `symbol`) {
-    result.set(`text`, `[${node.fontSize}px]`);
+export default function generateFont(
+  node: TextedNode,
+  options?: { calculateResponsiveFont: boolean },
+): TailwindProperties {
+  const result: TailwindProperties = new Map();
+
+  if (typeof node.fontSize == `symbol` || typeof node.fontWeight == `symbol`) {
+    console.warn("");
+    return result;
   }
-  if (typeof node.fontWeight !== `symbol`) {
-    result.set(`font`, `[${node.fontWeight}]`);
+  result.set(`text`, `[${node.fontSize}px]`);
+  result.set(`font`, `[${node.fontWeight}]`);
+  if (node.textAlignHorizontal != "LEFT") {
+    result.set(`text1`, `${node.textAlignHorizontal.toLowerCase()}`);
   }
-  result.set(`text1`, `${node.textAlignHorizontal.toLowerCase()}`);
 
   return result;
 }
