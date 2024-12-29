@@ -1,7 +1,9 @@
 {
   "esModuleInterop": true,
   "compilerOptions": {
-    "target": "es6",
+    "target": "es2017",
+    "module": "es2022",
+    "resolveJsonModule": true,
     "lib": ["es2022"],
     "strict": true,
     "typeRoots": [
