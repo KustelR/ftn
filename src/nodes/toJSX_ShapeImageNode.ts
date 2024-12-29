@@ -1,8 +1,12 @@
 import generateTailwind from "@/utils/generateTailwind";
 import { ShapeNode } from "./toJSX_ShapeNode";
 import { generateBgColor } from "@/properties";
+import { getClassName } from "@/utils/config";
 
-export default function toJSX_ShapeImageNode(node: ShapeNode): string {
+export default function toJSX_ShapeImageNode(
+  node: ShapeNode,
+  config: Config,
+): string {
   const classNames: Array<string> = [];
   const otherTags: Array<string> = [];
 
@@ -25,5 +29,5 @@ export default function toJSX_ShapeImageNode(node: ShapeNode): string {
     generateTailwind(generateBgColor({ name: node.name, fills: [...fills] })),
   );
 
-  return `<${tagName} className="${classNames.join(" ")}" ${otherTags.join(" ")}></${tagName}>`;
+  return `<${tagName} ${getClassName(config)}="${classNames.join(" ")}" ${otherTags.join(" ")}></${tagName}>`;
 }

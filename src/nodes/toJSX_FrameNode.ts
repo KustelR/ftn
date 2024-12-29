@@ -7,8 +7,12 @@ import {
 import toJSX from "@/toJsx";
 import generateTailwind from "@/utils/generateTailwind";
 import { toJSX_FrameNodeVectors } from "@/nodes";
+import { getClassName } from "@/utils/config";
 
-export default function toJSX_FrameNode(node: FrameNode): string {
+export default function toJSX_FrameNode(
+  node: FrameNode,
+  config: Config,
+): string {
   let classNames: Array<string> = [];
   let tagName: string = "div";
   const children: Array<string | null> = [];
@@ -36,15 +40,15 @@ export default function toJSX_FrameNode(node: FrameNode): string {
       svgOnly = false;
     }
   });
-  if (svgOnly) return toJSX_FrameNodeVectors(node);
+  if (svgOnly) return toJSX_FrameNodeVectors(node, config);
 
   node.children.map((child) => {
-    children.push(toJSX(child));
+    children.push(toJSX(child, config));
   });
 
   const otherTags: Array<{ tagName: string; data: string }> = [];
 
-  return `<${tagName} className="overflow-hidden ${classNames.join(" ")}"  ${otherTags.map(
+  return `<${tagName} ${getClassName(config)}="overflow-hidden ${classNames.join(" ")}"  ${otherTags.map(
     (tag) => {
       return `${tag.tagName}="${tag.data}"`;
     },

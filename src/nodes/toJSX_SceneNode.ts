@@ -6,22 +6,25 @@ import {
 } from "@/nodes";
 import toJSX_FrameNode from "@/nodes/toJSX_FrameNode";
 
-export default function toJSX_SceneNode(node: SceneNode): string {
+export default function toJSX_SceneNode(
+  node: SceneNode,
+  config: Config,
+): string {
   switch (node.type) {
     case "FRAME":
-      return toJSX_FrameNode(node);
+      return toJSX_FrameNode(node, config);
     case "VECTOR":
-      return toJSX_VectorNode(node);
+      return toJSX_VectorNode(node, config);
     case "TEXT":
-      return toJSX_TextNode(node);
+      return toJSX_TextNode(node, config);
     case "RECTANGLE":
-      return toJSX_ShapeNode(node);
+      return toJSX_ShapeNode(node, config);
     case "RECTANGLE":
-      return toJSX_ShapeNode(node);
+      return toJSX_ShapeNode(node, config);
     case "ELLIPSE":
-      return toJSX_ShapeNode(node);
+      return toJSX_ShapeNode(node, config);
     case "GROUP":
-      return toJSX_GroupNode(node);
+      return toJSX_GroupNode(node, config);
     default:
       console.warn(`[WARNING!] Unsupported node type: ${node.type}`);
       return `<div className="${`w-[${node.width}] h-[${node.height}]`}">${`Unsupported node type: ${node.type}`}</div>`;

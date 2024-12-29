@@ -1,5 +1,8 @@
 export {};
 declare global {
+  type Config = {
+    outputType: "JSX" | "HTML";
+  };
   type BorderedNode = {
     name: string;
     width?: number;
@@ -59,5 +62,13 @@ declare global {
       offset: number;
       color: RGBA;
     }>;
+  };
+  type TextedNode = {
+    name: string;
+    fontName: { family: string; style: string } | symbol;
+    fontSize: number | symbol;
+    fontWeight: number | symbol;
+    textAlignHorizontal: "LEFT" | "CENTER" | "RIGHT" | "JUSTIFIED";
+    textAlignVertical: "TOP" | "BOTTOM" | "CENTER";
   };
 }

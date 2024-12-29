@@ -1,7 +1,11 @@
 import generateTailwind from "@/utils/generateTailwind";
 import { generateFont, generateLayout, generateTextColor } from "../properties";
+import { getClassName } from "@/utils/config";
 
-export default function toJSXWIP_TextNode(node: TextNode): string {
+export default function toJSXWIP_TextNode(
+  node: TextNode,
+  config: Config,
+): string {
   let tagName: string = "span";
   let classNames: TailwindProperties = new Map();
 
@@ -12,5 +16,6 @@ export default function toJSXWIP_TextNode(node: TextNode): string {
   }
   classNames = new Map([...generateFont(node), ...classNames]);
   classNames = new Map([...generateLayout(node), ...classNames]);
-  return `<${tagName} className="${generateTailwind(classNames)}">${node.characters}</${tagName}>`;
+  console.log(classNames.get("text1"));
+  return `<${tagName} ${getClassName(config)}="${generateTailwind(classNames)}">${node.characters}</${tagName}>`;
 }

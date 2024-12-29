@@ -8,9 +8,11 @@ import {
   generateStrokes,
   generateSvg,
 } from "@/properties/svg";
+import { getClassName } from "@/utils/config";
 
 export default function toJSX_VectorNode(
   node: VectorNode,
+  config: Config,
   options: { hasOuterSvg?: boolean; fills: Set<SvgFill> } = {
     hasOuterSvg: false,
     fills: new Set<SvgFill>(),
@@ -19,7 +21,10 @@ export default function toJSX_VectorNode(
   const itemTags: Array<string> = [];
 
   if (typeof node.fills != "symbol" && options.fills) {
-    if (node.fills.length == 0) itemTags.push(`fillOpacity="0"`);
+    if (node.fills.length == 0)
+      itemTags.push(
+        `${config.outputType === "JSX" ? "fillOpacity" : "fill-opacity"}="0"`,
+      );
     generateFillDefs([...node.fills], options.fills);
     node.fills.forEach((fill) => {
       switch (fill.type) {
@@ -37,7 +42,7 @@ export default function toJSX_VectorNode(
     });
   }
 
-  const strokes = generateStrokes(node);
+  const strokes = generateStrokes(node, config);
   strokes.forEach((value, key) => {
     itemTags.push(`${key}="${value}"`);
   });
@@ -46,7 +51,7 @@ export default function toJSX_VectorNode(
   if (!options.hasOuterSvg) {
     const svgProps = generateSvg(node);
     resultStrings.push(
-      `<svg className="absolute overflow-visible ${svgProps.classNames}">`,
+      `<svg ${getClassName(config)}="absolute overflow-visible ${svgProps.classNames}">`,
       generateDefs(options.fills),
     );
   }

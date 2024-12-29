@@ -1,20 +1,24 @@
 import { toJSX_VectorNode } from "@/nodes";
 import { generateBorders, generateSpacing } from "@/properties";
 import { generateDefs } from "@/properties/svg";
+import { getClassName } from "@/utils/config";
 import generateTailwind from "@/utils/generateTailwind";
 
-export default function toJSX_FrameNodeVectors(node: FrameNode): string {
+export default function toJSX_FrameNodeVectors(
+  node: FrameNode,
+  config: Config,
+): string {
   const className: Map<string, string> = new Map<string, string>();
   className.set("max-w", `[${node.width}]`);
   className.set("max-h", `[${node.height}]`);
   const defs: Set<SvgFill> = new Set();
   const children: string = node.children
     .map((child) => {
-      return toJSX_VectorNode(child as VectorNode, {
+      return toJSX_VectorNode(child as VectorNode, config, {
         hasOuterSvg: true,
         fills: defs,
       });
     })
     .join("");
-  return `<svg className="${generateTailwind(className)}" >${generateDefs(defs)}${children}</svg>`;
+  return `<svg ${getClassName(config)}="${generateTailwind(className)}" >${generateDefs(defs)}${children}</svg>`;
 }

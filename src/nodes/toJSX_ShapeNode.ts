@@ -3,10 +3,13 @@ import { toJSX_ShapeImageNode } from "@/nodes";
 import generateTailwind from "@/utils/generateTailwind";
 
 export type ShapeNode = RectangleNode | EllipseNode;
-export default function toJSX_ShapeNode(node: ShapeNode): string {
+export default function toJSX_ShapeNode(
+  node: ShapeNode,
+  config: Config,
+): string {
   if (typeof node.fills !== "symbol") {
     if (node.fills[0].type === "IMAGE") {
-      return toJSX_ShapeImageNode(node);
+      return toJSX_ShapeImageNode(node, config);
     }
   }
   let tagName = "div";
