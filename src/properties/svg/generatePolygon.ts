@@ -3,7 +3,6 @@ export default function generatePolygon(
   itemTags: Array<string>,
   hasOuterSvg: boolean = false,
 ): string {
-  console.log(node.vectorNetwork);
   const points = node.vectorNetwork.vertices.map((vertice) => {
     return `${vertice.x},${vertice.y}`;
   });
