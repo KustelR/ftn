@@ -5,11 +5,12 @@ import {
   toJSX_GroupNode,
 } from "@/nodes";
 import toJSX_FrameNode from "@/nodes/toJSX_FrameNode";
+import { getClassName } from "@/utils/config";
 
 export default function toJSX_SceneNode(
   node: SceneNode,
   config: Config,
-): string {
+): HtmlObject {
   switch (node.type) {
     case "FRAME":
       return toJSX_FrameNode(node, config);
@@ -27,6 +28,16 @@ export default function toJSX_SceneNode(
       return toJSX_GroupNode(node, config);
     default:
       console.warn(`[WARNING!] Unsupported node type: ${node.type}`);
-      return `<div className="${`w-[${node.width}] h-[${node.height}]`}">${`Unsupported node type: ${node.type}`}</div>`;
+      //return `<div className="${`w-[${node.width}] h-[${node.height}]`}">${`Unsupported node type: ${node.type}`}</div>`;
+      return {
+        tagName: "div",
+        props: [
+          {
+            name: getClassName(config),
+            data: [`w-[${node.width}] h-[${node.height}]`],
+          },
+        ],
+        children: [],
+      };
   }
 }

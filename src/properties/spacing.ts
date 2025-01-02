@@ -4,17 +4,17 @@ type SpacedNode = {
   paddingLeft: number;
   paddingRight: number;
 };
-export default function generateSpacings(node: SpacedNode): Array<string> {
-  let result: Array<string> = [];
+export default function generateSpacings(node: SpacedNode): TailwindProperties {
+  let result: TailwindProperties = new Map();
   if (node.paddingTop == node.paddingBottom) {
-    result.push(`py-[${node.paddingTop}]`);
+    result.set(`py`, `[${node.paddingTop}]`);
   } else {
-    result.push(`pt-[${node.paddingTop}] pb-[${node.paddingBottom}]`);
+    result.set(`pt`, `[${node.paddingTop}] pb-[${node.paddingBottom}]`);
   }
   if (node.paddingLeft == node.paddingRight) {
-    result.push(`px-[${node.paddingLeft}]`);
+    result.set(`px`, `[${node.paddingLeft}]`);
   } else {
-    result.push(`pl-[${node.paddingLeft}] pr-[${node.paddingRight}]`);
+    result.set(`pl`, `[${node.paddingLeft}] pr-[${node.paddingRight}]`);
   }
   return result;
 }

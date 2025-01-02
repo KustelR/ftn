@@ -7,18 +7,35 @@ import generateTailwind from "@/utils/generateTailwind";
 export default function toJSX_FrameNodeVectors(
   node: FrameNode,
   config: Config,
-): string {
+): HtmlObject {
   const className: Map<string, string> = new Map<string, string>();
   className.set("max-w", `[${node.width}]`);
   className.set("max-h", `[${node.height}]`);
   const defs: Set<SvgFill> = new Set();
-  const children: string = node.children
-    .map((child) => {
-      return toJSX_VectorNode(child as VectorNode, config, {
-        hasOuterSvg: true,
-        fills: defs,
-      });
-    })
-    .join("");
-  return `<svg ${getClassName(config)}="${generateTailwind(className)}" >${generateDefs(defs)}${children}</svg>`;
+  const children: Array<HtmlObject> = node.children.map((child) => {
+    return toJSX_VectorNode(child as VectorNode, config, {
+      hasOuterSvg: true,
+      fills: defs,
+    });
+  });
+  return {
+    tagName: "svg",
+    props: [
+      {
+        name: getClassName(config),
+        data: className,
+      },
+    ],
+    children: [...children, generateDefs(defs)],
+  };
+  return {
+    tagName: "svg",
+    props: [
+      {
+        name: getClassName(config),
+        data: className,
+      },
+    ],
+    children: [...children, generateDefs(defs)],
+  };
 }

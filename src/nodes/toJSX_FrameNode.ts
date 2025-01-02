@@ -12,28 +12,10 @@ import { getClassName } from "@/utils/config";
 export default function toJSX_FrameNode(
   node: FrameNode,
   config: Config,
-): string {
-  let classNames: Array<string> = [];
+): HtmlObject {
+  let classNames: TailwindProperties = new Map();
   let tagName: string = "div";
-  const children: Array<string | null> = [];
-  let nodeData = {
-    htmlTag: "div",
-    props: {},
-    children: [],
-  };
-
-  if (typeof node.fills !== "symbol") {
-    const bgColorClasses = generateBgColor({
-      name: node.name,
-      fills: [...node.fills],
-    });
-    classNames.push(generateTailwind(bgColorClasses));
-  }
-  classNames.push(generateTailwind(generateLayout(node)));
-  classNames.push(generateSpacing(node).join(" "));
-  const borders = generateBorders([...node.strokes], node);
-  classNames.push(generateTailwind(borders));
-
+  const children: Array<HtmlObject | null> = [];
   let svgOnly = true;
   node.children.map((child) => {
     if (!child || child.type !== "VECTOR") {
@@ -42,15 +24,41 @@ export default function toJSX_FrameNode(
   });
   if (svgOnly) return toJSX_FrameNodeVectors(node, config);
 
+  if (typeof node.fills !== "symbol") {
+    const bgColorClasses = generateBgColor({
+      name: node.name,
+      fills: [...node.fills],
+    });
+    classNames = new Map([...bgColorClasses, ...classNames]);
+  }
+  classNames = new Map([
+    ...generateLayout(node),
+    ...generateSpacing(node),
+    ...generateBorders([...node.strokes], node),
+    ...classNames,
+  ]);
   node.children.map((child) => {
     children.push(toJSX(child, config));
   });
 
-  const otherTags: Array<{ tagName: string; data: string }> = [];
+  classNames.set("overflow", "hidden");
 
-  return `<${tagName} ${getClassName(config)}="overflow-hidden ${classNames.join(" ")}"  ${otherTags.map(
+  const otherTags: Array<{ tagName: string; data: string }> = [];
+  return {
+    tagName: tagName,
+    props: [
+      {
+        name: getClassName(config),
+        data: classNames,
+      },
+    ],
+    children: children,
+  };
+  /*
+  return `<${tagName} ${getClassName(config)}="overflow-hidden ${generateTailwind(classNames)}"  ${otherTags.map(
     (tag) => {
       return `${tag.tagName}="${tag.data}"`;
     },
   )}>${children.join("")}<\/${tagName}>`;
+  */
 }

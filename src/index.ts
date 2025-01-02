@@ -1,9 +1,18 @@
 import toJSX from "./toJsx";
 import { isConfig, generateConfig } from "@/utils/config";
+import composeHtml from "@/utils/composeHtml";
 
-type UiMessageType = "GET_CODE_FROM_SELECTION" | "GET_LAST_CODE";
-type UiMessage = {
-  type: UiMessageType;
+enum FromUiMessageType {
+  GET_CODE_FROM_SELECTION = 0,
+  GET_LAST_CODE = 1,
+  GET_IMPORTS = 2,
+}
+type FromUiMessage = {
+  type: FromUiMessageType;
+  data: string;
+};
+type ToUiMessage = {
+  type: "CODE";
   data: string;
 };
 
@@ -16,14 +25,21 @@ if (figma.editorType === "figma") {
   let lastCode: string = "";
   figma.showUI(__html__);
   figma.ui.resize(600, 500);
-  figma.ui.onmessage = async (msg: UiMessage) => {
+  figma.ui.onmessage = async (msg: FromUiMessage) => {
     switch (msg.type) {
-      case "GET_CODE_FROM_SELECTION":
+      case FromUiMessageType.GET_CODE_FROM_SELECTION:
         lastCode = "";
         const selection = figma.currentPage.selection;
         lastCode = await getDataFromSelection([...selection], config);
 
-        figma.ui.postMessage(lastCode);
+        figma.ui.postMessage({ type: "CODE", data: lastCode });
+        break;
+      case FromUiMessageType.GET_LAST_CODE:
+        figma.ui.postMessage({ type: "CODE", data: lastCode });
+        break;
+      case FromUiMessageType.GET_IMPORTS:
+        figma.ui.postMessage({ type: "IMPORTS", data: "test" });
+        break;
     }
     //figma.closePlugin();
   };
@@ -47,7 +63,7 @@ async function getDataFromSelection(
   const nodes = await Promise.all(conversionPromises);
   nodes.forEach((node) => {
     if (!node) return;
-    result += toJSX(node, config);
+    result += composeHtml(toJSX(node, config));
   });
   return result;
 }

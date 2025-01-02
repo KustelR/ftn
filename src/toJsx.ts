@@ -1,6 +1,10 @@
 import { toJSX_SceneNode } from "@/nodes";
+import composeHtml from "@/utils/composeHtml";
 
-export default function toJSX(node: BaseNode, config: Config): string | null {
+export default function toJSX(
+  node: BaseNode,
+  config: Config,
+): HtmlObject | null {
   if (node.type === "DOCUMENT") {
     throw new Error("NOT IMPLEMENTED");
     //return toJSX_DocumentNode(node as DocumentNode);

@@ -17,7 +17,7 @@ export default function toJSX_VectorNode(
     hasOuterSvg: false,
     fills: new Set<SvgFill>(),
   },
-): string {
+): HtmlObject {
   const itemTags: Array<string> = [];
 
   if (typeof node.fills != "symbol" && options.fills) {
@@ -47,13 +47,20 @@ export default function toJSX_VectorNode(
     itemTags.push(`${key}="${value}"`);
   });
 
-  const resultStrings: Array<string> = [];
+  let resultObject: HtmlObject;
+  const svgProps = generateSvg(node);
+  resultObject = {
+    tagName: `svg`,
+    children: [],
+    props: [
+      {
+        name: getClassName(config),
+        data: [`absolute`, `overflow-visible`, svgProps.classNames],
+      },
+    ],
+  };
   if (!options.hasOuterSvg) {
-    const svgProps = generateSvg(node);
-    resultStrings.push(
-      `<svg ${getClassName(config)}="absolute overflow-visible ${svgProps.classNames}">`,
-      generateDefs(options.fills),
-    );
+    resultObject.destroyOnRender = true;
   }
   if (typeof node.fills !== "symbol") {
     if (
@@ -61,15 +68,16 @@ export default function toJSX_VectorNode(
         return fill.type === "SOLID";
       })
     ) {
-      resultStrings.push(
+      resultObject.children.push(
         ...node.vectorPaths.map((path) => {
           return generatePath(path, node, itemTags, options.hasOuterSvg);
         }),
       );
     } else {
-      resultStrings.push(generatePolygon(node, itemTags, options.hasOuterSvg));
+      resultObject.children.push(
+        generatePolygon(node, itemTags, options.hasOuterSvg),
+      );
     }
   }
-  if (!options.hasOuterSvg) resultStrings.push("</svg>");
-  return resultStrings.join("");
+  return resultObject;
 }

@@ -5,7 +5,7 @@ import { getClassName } from "@/utils/config";
 export default function toJSXWIP_TextNode(
   node: TextNode,
   config: Config,
-): string {
+): HtmlObject {
   let tagName: string = "span";
   let classNames: TailwindProperties = new Map();
 
@@ -17,5 +17,14 @@ export default function toJSXWIP_TextNode(
   classNames = new Map([...generateFont(node), ...classNames]);
   classNames = new Map([...generateLayout(node), ...classNames]);
   console.log(classNames.get("text1"));
-  return `<${tagName} ${getClassName(config)}="${generateTailwind(classNames)}">${node.characters}</${tagName}>`;
+  return {
+    tagName: tagName,
+    props: [
+      {
+        name: getClassName(config),
+        data: classNames,
+      },
+    ],
+    children: [node.characters],
+  };
 }

@@ -71,4 +71,10 @@ declare global {
     textAlignHorizontal: "LEFT" | "CENTER" | "RIGHT" | "JUSTIFIED";
     textAlignVertical: "TOP" | "BOTTOM" | "CENTER";
   };
+  type HtmlObject = {
+    tagName: string;
+    props: Array<{ name: string; data: TailwindProperties | Array<string> }>;
+    children: Array<HtmlObject | string | null>;
+    destroyOnRender?: boolean;
+  };
 }

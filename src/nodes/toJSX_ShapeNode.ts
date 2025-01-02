@@ -1,33 +1,45 @@
 import { generateBgColor, generateLayout } from "@/properties";
 import { toJSX_ShapeImageNode } from "@/nodes";
 import generateTailwind from "@/utils/generateTailwind";
+import { getClassName } from "@/utils/config";
 
 export type ShapeNode = RectangleNode | EllipseNode;
 export default function toJSX_ShapeNode(
   node: ShapeNode,
   config: Config,
-): string {
+): HtmlObject {
   if (typeof node.fills !== "symbol") {
     if (node.fills[0].type === "IMAGE") {
       return toJSX_ShapeImageNode(node, config);
     }
   }
   let tagName = "div";
-  const classNames: Array<string> = [];
-  const otherTags: Array<string> = [];
+  let classNames: TailwindProperties = new Map();
+  const otherTags: Map<string, string> = new Map();
 
   if (node.type === "ELLIPSE") {
-    classNames.push(`rounded-full`);
+    classNames.set(`rounded`, `full`);
   }
-  classNames.push(generateTailwind(generateLayout(node)));
+  classNames = new Map([...generateLayout(node), ...classNames]);
 
   if (typeof node.fills !== "symbol") {
-    classNames.push(
-      generateTailwind(
-        generateBgColor({ name: node.name, fills: [...node.fills] }),
-      ),
-    );
+    classNames = new Map([
+      ...generateBgColor({ name: node.name, fills: [...node.fills] }),
+      ...classNames,
+    ]);
   }
 
-  return `<${tagName} className="${classNames.join(" ")}" ${otherTags.join(" ")}></${tagName}>`;
+  return {
+    tagName: tagName,
+    props: [
+      {
+        name: getClassName(config),
+        data: classNames,
+      },
+      ...[...otherTags].map((tag) => {
+        return { name: tag[0], data: [tag[1]] };
+      }),
+    ],
+    children: [],
+  };
 }

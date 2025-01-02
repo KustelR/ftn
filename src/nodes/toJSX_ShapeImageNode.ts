@@ -6,28 +6,42 @@ import { getClassName } from "@/utils/config";
 export default function toJSX_ShapeImageNode(
   node: ShapeNode,
   config: Config,
-): string {
-  const classNames: Array<string> = [];
-  const otherTags: Array<string> = [];
+): HtmlObject {
+  let classNames: TailwindProperties = new Map();
+  const otherTags: Map<string, string> = new Map();
 
   const tagName = "Image";
 
   if (node.type === "ELLIPSE") {
-    classNames.push(`rounded-full`);
+    classNames.set(`rounded`, `full`);
   }
+  if (node.absoluteRenderBounds) {
+    otherTags.set("width", `${node.absoluteRenderBounds.width}`);
+    otherTags.set("height", `${node.absoluteRenderBounds.height}`);
+  }
+  otherTags.set("src", `SRC HERE`);
+  otherTags.set("alt", `${node.name}`);
 
-  otherTags.push(
-    `width="${node.absoluteRenderBounds?.width}"`,
-    `height="${node.absoluteRenderBounds?.height}"`,
-    `src="SRC HERE"`,
-    `alt="${node.name}"`,
-  );
   const fills = typeof node.fills != "symbol" ? node.fills : [];
-  classNames.push(
-    `object-center`,
-    `opacity-[${fills[0].opacity}]`,
-    generateTailwind(generateBgColor({ name: node.name, fills: [...fills] })),
-  );
-
-  return `<${tagName} ${getClassName(config)}="${classNames.join(" ")}" ${otherTags.join(" ")}></${tagName}>`;
+  classNames.set(`object`, `center`);
+  classNames.set(`opacity`, `[${fills[0].opacity}]`);
+  if (typeof node.fills != "symbol") {
+    classNames = new Map([
+      ...generateBgColor({ name: node.name, fills: [...node.fills] }),
+      ...classNames,
+    ]);
+  }
+  return {
+    tagName: tagName,
+    props: [
+      {
+        name: getClassName(config),
+        data: classNames,
+      },
+      ...[...otherTags].map((tag) => {
+        return { name: tag[0], data: [tag[1]] };
+      }),
+    ],
+    children: [],
+  };
 }
