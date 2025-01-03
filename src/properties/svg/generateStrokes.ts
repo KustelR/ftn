@@ -1,23 +1,25 @@
+import { getPropName } from "@/utils/config";
 import rgbToHex from "@/utils/rgbToHex";
 
 export default function generateStrokes(
   node: VectorNode,
   config: Config,
-): Map<string, string> {
-  const result = new Map<string, string>();
+): Array<Prop> {
+  const result: Array<Prop> = [];
   if (typeof node.strokes !== "symbol") {
     const fill = node.strokes[0];
     if (!fill) return result;
     switch (fill.type) {
       case "SOLID":
-        result.set("stroke", `${rgbToHex(fill.color)}`);
+        result.push({ name: "stroke", data: [`${rgbToHex(fill.color)}`] });
         break;
     }
   }
   if (node.strokes[0].opacity !== undefined) {
-    const tag =
-      config.outputType === "HTML" ? "stroke-opacity" : "strokeOpacity";
-    result.set("stroke-opacity", `${node.strokes[0].opacity}`);
+    result.push({
+      name: getPropName("stroke-opacity", config),
+      data: [`${node.strokes[0].opacity}`],
+    });
   }
   if (typeof node.strokeCap !== "symbol") {
     if (
@@ -25,19 +27,23 @@ export default function generateStrokes(
       node.strokeCap !== "ARROW_LINES" &&
       node.strokeCap !== "ARROW_EQUILATERAL"
     ) {
-      const tag =
-        config.outputType === "HTML" ? "stroke-linecap" : "strokeLinecap";
-      result.set(tag, `${node.strokeCap.toLowerCase()}`);
+      result.push({
+        name: getPropName("stroke-linecap", config),
+        data: [`${node.strokeCap.toLowerCase()}`],
+      });
     }
   }
   if (typeof node.strokeJoin !== "symbol") {
-    const tag =
-      config.outputType === "HTML" ? "stroke-linejoin" : "strokeLinejoin";
-    result.set(tag, `${node.strokeJoin.toLowerCase()}`);
+    result.push({
+      name: getPropName("stroke-linejoin", config),
+      data: [`${node.strokeJoin.toLowerCase()}`],
+    });
   }
   if (typeof node.strokeWeight !== "symbol") {
-    const tag = config.outputType === "HTML" ? "stroke-width" : "stroke-width";
-    result.set(tag, `${node.strokeWeight}px`);
+    result.push({
+      name: getPropName("stroke-width", config),
+      data: [`${node.strokeWeight}px`],
+    });
   }
   return result;
 }

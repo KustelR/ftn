@@ -1,7 +1,7 @@
 import { toJSX_VectorNode } from "@/nodes";
 import { generateBorders, generateSpacing } from "@/properties";
 import { generateDefs } from "@/properties/svg";
-import { getClassName } from "@/utils/config";
+import { getPropName } from "@/utils/config";
 import generateTailwind from "@/utils/generateTailwind";
 
 export default function toJSX_FrameNodeVectors(
@@ -22,20 +22,10 @@ export default function toJSX_FrameNodeVectors(
     tagName: "svg",
     props: [
       {
-        name: getClassName(config),
+        name: getPropName("class", config),
         data: className,
       },
     ],
-    children: [...children, generateDefs(defs)],
-  };
-  return {
-    tagName: "svg",
-    props: [
-      {
-        name: getClassName(config),
-        data: className,
-      },
-    ],
-    children: [...children, generateDefs(defs)],
+    children: [...children, generateDefs(defs, config)],
   };
 }

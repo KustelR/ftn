@@ -8,7 +8,7 @@ import {
   generateStrokes,
   generateSvg,
 } from "@/properties/svg";
-import { getClassName } from "@/utils/config";
+import { getPropName } from "@/utils/config";
 
 export default function toJSX_VectorNode(
   node: VectorNode,
@@ -18,21 +18,25 @@ export default function toJSX_VectorNode(
     fills: new Set<SvgFill>(),
   },
 ): HtmlObject {
-  const itemTags: Array<string> = [];
+  let itemProps: Array<Prop> = [];
 
   if (typeof node.fills != "symbol" && options.fills) {
     if (node.fills.length == 0)
-      itemTags.push(
-        `${config.outputType === "JSX" ? "fillOpacity" : "fill-opacity"}="0"`,
-      );
+      itemProps.push({
+        name: getPropName("fill-opacity", config),
+        data: ["0"],
+      });
     generateFillDefs([...node.fills], options.fills);
     node.fills.forEach((fill) => {
       switch (fill.type) {
         case "SOLID":
-          itemTags.push(`fill="${rgbToHex(fill.color)}"`);
+          itemProps.push({ name: `fill`, data: [`${rgbToHex(fill.color)}`] });
           break;
         case "GRADIENT_LINEAR":
-          itemTags.push(`fill="url('#${generateId(fill)}')"`);
+          itemProps.push({
+            name: `fill`,
+            data: [`url('#${generateId(fill)}')`],
+          });
           break;
         default:
           console.warn(
@@ -43,9 +47,7 @@ export default function toJSX_VectorNode(
   }
 
   const strokes = generateStrokes(node, config);
-  strokes.forEach((value, key) => {
-    itemTags.push(`${key}="${value}"`);
-  });
+  itemProps = [...strokes, ...itemProps];
 
   let resultObject: HtmlObject;
   const svgProps = generateSvg(node);
@@ -54,12 +56,12 @@ export default function toJSX_VectorNode(
     children: [],
     props: [
       {
-        name: getClassName(config),
+        name: getPropName("class", config),
         data: [`absolute`, `overflow-visible`, svgProps.classNames],
       },
     ],
   };
-  if (!options.hasOuterSvg) {
+  if (options.hasOuterSvg) {
     resultObject.destroyOnRender = true;
   }
   if (typeof node.fills !== "symbol") {
@@ -70,12 +72,12 @@ export default function toJSX_VectorNode(
     ) {
       resultObject.children.push(
         ...node.vectorPaths.map((path) => {
-          return generatePath(path, node, itemTags, options.hasOuterSvg);
+          return generatePath(path, node, itemProps, options.hasOuterSvg);
         }),
       );
     } else {
       resultObject.children.push(
-        generatePolygon(node, itemTags, options.hasOuterSvg),
+        generatePolygon(node, itemProps, options.hasOuterSvg),
       );
     }
   }

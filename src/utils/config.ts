@@ -1,3 +1,5 @@
+import propNameToJsx from "./propNameToJsx";
+
 export function generateConfig(): Config {
   return {
     outputType: "HTML",
@@ -10,9 +12,9 @@ export function isConfig(config: any): config is Config {
   return false;
 }
 
-export function getClassName(config: Config): string {
-  if (config.outputType === "HTML") return "class";
-  if (config.outputType === "JSX") return "className";
+export function getPropName(propName: string, config: Config): string {
+  if (config.outputType === "HTML") return propName;
+  if (config.outputType === "JSX") return propNameToJsx(propName);
   console.warn("Unsupported output type: " + config.outputType);
   return "";
 }

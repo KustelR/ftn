@@ -1,6 +1,6 @@
 import generateTailwind from "@/utils/generateTailwind";
 import { generateFont, generateLayout, generateTextColor } from "../properties";
-import { getClassName } from "@/utils/config";
+import { getPropName } from "@/utils/config";
 
 export default function toJSXWIP_TextNode(
   node: TextNode,
@@ -16,12 +16,11 @@ export default function toJSXWIP_TextNode(
   }
   classNames = new Map([...generateFont(node), ...classNames]);
   classNames = new Map([...generateLayout(node), ...classNames]);
-  console.log(classNames.get("text1"));
   return {
     tagName: tagName,
     props: [
       {
-        name: getClassName(config),
+        name: getPropName("class", config),
         data: classNames,
       },
     ],

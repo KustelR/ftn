@@ -16,7 +16,6 @@ mockBoolean.set("flex", true);
 describe("generateTailwind", () => {
   test("ignores boilerplate data in keys", () => {
     expect(generateTailwind(mockNumbered)).toEqual("from-[0.6]");
-    expect(generateTailwind(mockBoolean)).toEqual("flex");
   });
   test("generate only key in boolean properties", () => {
     expect(generateTailwind(mockBoolean)).toEqual("flex");

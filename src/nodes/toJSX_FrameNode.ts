@@ -7,7 +7,7 @@ import {
 import toJSX from "@/toJsx";
 import generateTailwind from "@/utils/generateTailwind";
 import { toJSX_FrameNodeVectors } from "@/nodes";
-import { getClassName } from "@/utils/config";
+import { getPropName } from "@/utils/config";
 
 export default function toJSX_FrameNode(
   node: FrameNode,
@@ -48,7 +48,7 @@ export default function toJSX_FrameNode(
     tagName: tagName,
     props: [
       {
-        name: getClassName(config),
+        name: getPropName("class", config),
         data: classNames,
       },
     ],

@@ -5,7 +5,7 @@ import {
   toJSX_GroupNode,
 } from "@/nodes";
 import toJSX_FrameNode from "@/nodes/toJSX_FrameNode";
-import { getClassName } from "@/utils/config";
+import { getPropName } from "@/utils/config";
 
 export default function toJSX_SceneNode(
   node: SceneNode,
@@ -33,7 +33,7 @@ export default function toJSX_SceneNode(
         tagName: "div",
         props: [
           {
-            name: getClassName(config),
+            name: getPropName("class", config),
             data: [`w-[${node.width}] h-[${node.height}]`],
           },
         ],

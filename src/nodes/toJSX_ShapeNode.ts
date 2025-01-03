@@ -1,7 +1,7 @@
 import { generateBgColor, generateLayout } from "@/properties";
 import { toJSX_ShapeImageNode } from "@/nodes";
 import generateTailwind from "@/utils/generateTailwind";
-import { getClassName } from "@/utils/config";
+import { getPropName } from "@/utils/config";
 
 export type ShapeNode = RectangleNode | EllipseNode;
 export default function toJSX_ShapeNode(
@@ -33,7 +33,7 @@ export default function toJSX_ShapeNode(
     tagName: tagName,
     props: [
       {
-        name: getClassName(config),
+        name: getPropName("class", config),
         data: classNames,
       },
       ...[...otherTags].map((tag) => {

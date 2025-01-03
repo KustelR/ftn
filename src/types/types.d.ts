@@ -56,8 +56,7 @@ declare global {
   };
   type SvgFill = {
     id: string;
-    solid?: string;
-    type?: "SOLID" | "GRADIENT_LINEAR";
+    type?: "GRADIENT_LINEAR";
     stops?: Array<{
       offset: number;
       color: RGBA;
@@ -73,8 +72,12 @@ declare global {
   };
   type HtmlObject = {
     tagName: string;
-    props: Array<{ name: string; data: TailwindProperties | Array<string> }>;
+    props: Array<Prop>;
     children: Array<HtmlObject | string | null>;
     destroyOnRender?: boolean;
+  };
+  type Prop = {
+    name: string;
+    data: Array<string> | TailwindProperties;
   };
 }
