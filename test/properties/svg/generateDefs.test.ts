@@ -36,7 +36,7 @@ describe("generating defs for svg", () => {
     const linearDefs = generateDefs(mockFill, { outputType: "HTML" });
 
     expect(linearDefs.children[0]).toEqual({
-      tagName: "gradient-linear",
+      tagName: "linear-gradient",
       props: [
         {
           name: "id",

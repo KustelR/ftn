@@ -37,7 +37,7 @@ export default function generateDefs(
           return parsedStop;
         });
         result.push({
-          tagName: getPropName("gradient-linear", config),
+          tagName: getPropName("linear-gradient", config),
           props: [{ name: "id", data: [fill.id] }],
           children: stops ? stops : [],
         });

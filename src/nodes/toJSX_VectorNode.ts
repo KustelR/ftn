@@ -63,6 +63,8 @@ export default function toJSX_VectorNode(
   };
   if (options.hasOuterSvg) {
     resultObject.destroyOnRender = true;
+  } else {
+    resultObject.children.push(generateDefs(options.fills, config));
   }
   if (typeof node.fills !== "symbol") {
     if (
