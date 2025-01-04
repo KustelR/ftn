@@ -22,7 +22,6 @@ if (figma.editorType === "figma") {
     config = generateConfig();
     await figma.clientStorage.setAsync("config", config);
   }
-  config.outputType = "JSX";
   let lastCode: string = "";
   figma.showUI(__html__);
   figma.ui.resize(600, 500);
