@@ -6,6 +6,7 @@ node_modules
 out/
 dist/*
 !dist/manifest.json
+ui/output.css
 code.js
 
 #dev things
