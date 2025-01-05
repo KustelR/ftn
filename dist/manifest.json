@@ -1,0 +1,14 @@
+{
+  "name": "ftn",
+  "id": "1451605187206795188",
+  "api": "1.0.0",
+  "main": "index.js",
+  "capabilities": [],
+  "enableProposedApi": false,
+  "documentAccess": "dynamic-page",
+  "editorType": ["figma"],
+  "ui": "ui/index.html",
+  "networkAccess": {
+    "allowedDomains": ["none"]
+  }
+}

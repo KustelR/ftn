@@ -4,8 +4,8 @@
 node_modules
 
 out/
-dist/
+dist/*
+!dist/manifest.json
 code.js
 
-#app
-config.json
+#dev things
