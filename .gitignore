@@ -5,6 +5,7 @@ node_modules
 
 out/
 dist/*
+buildUi.js
 !dist/manifest.json
 ui/output.css
 code.js
