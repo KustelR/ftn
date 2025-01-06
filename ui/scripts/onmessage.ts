@@ -5,6 +5,7 @@ type ToUiMessage = {
 
 type Config = {
   outputType: "JSX" | "HTML";
+  size: "round" | "original" | "percent"
 };
 
 enum FromUiMessageType {

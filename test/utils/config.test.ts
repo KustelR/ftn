@@ -1,5 +1,10 @@
-import { describe, test, expect } from "@jest/globals";
-import { getPropName } from "@/utils/config";
+import { describe, test, expect, jest } from "@jest/globals";
+import {
+  fillConfig,
+  generateConfig,
+  getConfig,
+  getPropName,
+} from "@/utils/config";
 
 describe("getPropName", () => {
   test("returns the correct prop name for html", () => {
@@ -14,5 +19,63 @@ describe("getPropName", () => {
     expect(getPropName("obscure-jsx-prop", { outputType: "jsx" })).toBe(
       "obscureJsxProp",
     );
+  });
+});
+
+describe("generateConfig", () => {
+  test("returns the correct default config", () => {
+    expect(generateConfig()).toEqual({
+      outputType: "html",
+      size: "original",
+    });
+  });
+});
+
+describe("fillConfig", () => {
+  test("returns the same config if it already has valid properties", () => {
+    const config = generateConfig();
+    config.outputType = "html";
+    expect(fillConfig(config)).toEqual(config);
+  });
+  /* well now there is really nothing to do for that function... waste of time
+  test("returns a new config with default properties if it doesn't", () => {
+    const config = { outputType: "jsx", size: "small" };
+    expect(fillConfig(config)).toEqual({
+      outputType: "html",
+      size: "original",
+    });
+  });
+  */
+});
+
+describe("getConfig", () => {
+  test("returns the parsed config if it's valid JSON", () => {
+    const configString = JSON.stringify({
+      outputType: "html",
+      size: "original",
+    });
+    expect(getConfig(configString)).toEqual({
+      outputType: "html",
+      size: "original",
+    });
+  });
+  test("returns a default config if the input is not valid JSON", () => {
+    const invalidConfig = "invalid-json";
+    expect(getConfig(invalidConfig)).toEqual({
+      outputType: "html",
+      size: "original",
+    });
+  });
+  test("should shitpost to console if config was not valid JSON", () => {
+    const invalidConfig = "invalid-json";
+    jest.spyOn(console, "error");
+    getConfig(invalidConfig);
+    expect(console.error).toHaveBeenCalled();
+  });
+  test("returns a default config if the input is undefined", () => {
+    expect(getConfig(undefined)).toEqual({
+      outputType: "html",
+      size: "original",
+    });
   });
 });

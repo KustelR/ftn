@@ -1,10 +1,5 @@
 import toJSX from "./toJsx";
-import {
-  isConfig,
-  generateConfig,
-  isConfigKey,
-  isOutputType,
-} from "@/utils/config";
+import { setProperty, getConfig, fillConfig } from "@/utils/config";
 import composeHtml from "@/utils/composeHtml";
 
 enum FromUiMessageType {
@@ -21,11 +16,9 @@ type FromUiMessage = {
 };
 
 if (figma.editorType === "figma") {
-  let config: Config | undefined = await figma.clientStorage.getAsync("config");
-  if (!isConfig(config)) {
-    config = generateConfig();
-    await figma.clientStorage.setAsync("config", config);
-  }
+  let config: Config = getConfig(await figma.clientStorage.getAsync("config"));
+  fillConfig(config);
+
   let lastCode: string = "";
   figma.showUI(__html__);
   figma.ui.resize(600, 500);
@@ -90,12 +83,7 @@ async function changeConfig(
   changedProperty: { property: string; value: string },
   config: Config,
 ) {
-  changedProperty.value = changedProperty.value.toLowerCase();
-  if (!isConfigKey(changedProperty.property))
-    throw new Error(`Wrong property name: ${changedProperty.property}`);
-  if (!isOutputType(changedProperty.value))
-    throw new Error(`wrong config value: ${changedProperty.value}`);
+  setProperty(config, changedProperty.property, changedProperty.value);
 
-  config[changedProperty.property] = changedProperty.value;
   await figma.clientStorage.setAsync("config", config);
 }

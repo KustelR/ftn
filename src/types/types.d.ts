@@ -1,8 +1,10 @@
 declare global {
-  type OutputType = "jsx" | "html";
   type Config = {
     outputType: OutputType;
+    size: SizeSetting;
   };
+  type OutputType = "jsx" | "html"
+  type SizeSetting = "original" | "round"
   type ConfigKey = keyof Config;
   type BorderedNode = {
     name: string;
