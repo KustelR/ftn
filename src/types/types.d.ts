@@ -3,8 +3,8 @@ declare global {
     outputType: OutputType;
     size: SizeSetting;
   };
-  type OutputType = "jsx" | "html"
-  type SizeSetting = "original" | "round"
+  type OutputType = "jsx" | "html";
+  type SizeSetting = "original" | "round";
   type ConfigKey = keyof Config;
   type BorderedNode = {
     name: string;
@@ -29,7 +29,12 @@ declare global {
       | "ARROW_EQUILATERAL"
       | symbol;
   };
-  type TailwindProperties = Map<string, string | number | boolean>;
+  type TailwindProperties = Map<string, TailwindType>;
+  type TailwindType = string | Size | boolean;
+  type Size = {
+    absolute: number;
+    relative: number;
+  };
   type ResultObject = {
     tagName: string;
     otherTags: Map<string, string>;
@@ -50,7 +55,6 @@ declare global {
     itemSpacing?: number;
     x: number;
     y: number;
-    absoluteRenderBounds: Rect | null;
     relativeTransform: Transform;
     layoutSizingVertical?: "FIXED" | "HUG" | "FILL";
     layoutSizingHorizontal?: "FIXED" | "HUG" | "FILL";

@@ -50,7 +50,7 @@ export default function toJSX_VectorNode(
   itemProps = [...strokes, ...itemProps];
 
   let resultObject: HtmlObject;
-  const svgProps = generateSvg(node);
+  const svgProps = generateSvg(node, config);
   resultObject = {
     tagName: `svg`,
     children: [],

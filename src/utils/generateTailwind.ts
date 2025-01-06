@@ -10,16 +10,26 @@ export default function generateTailwindString(
   return result.join(" ");
 }
 
-function generateProperty(
-  key: string,
-  value: string | number | boolean,
-): string {
+function isSize(obj: any): obj is Size {
+  if (!obj.absolute && obj.absolute != 0) return false;
+  if (!obj.relative && obj.relative != 0) return false;
+  return true;
+}
+
+function generateProperty(key: string, value: TailwindType): string {
   const selector = key.match(`(\\[&.+\\]:)(.+)`);
   if (selector) {
     return selector[1] + generateProperty(selector[2], value);
   }
-  if (typeof value === "boolean" && value) {
+  if (typeof value === "boolean") {
     return `${key.match("[a-zA-Z\-]+")}`;
   }
-  return `${key.match("[a-zA-Z\-]+")}-${value}`;
+  if (typeof value === "string") {
+    return `${key.match("[a-zA-Z\-]+")}-${value}`;
+  }
+  if (isSize(value)) {
+    return `${key.match("[a-zA-Z\-]+")}-[${value.absolute}px]`;
+  }
+  console.log(value, isSize(value));
+  return ``;
 }

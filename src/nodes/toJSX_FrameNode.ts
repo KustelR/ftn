@@ -33,7 +33,7 @@ export default function toJSX_FrameNode(
     classNames = new Map([...bgColorClasses, ...classNames]);
   }
   classNames = new Map([
-    ...generateLayout(node),
+    ...generateLayout(node, config),
     ...generateSpacing(node),
     ...generateBorders([...node.strokes], node),
     ...classNames,

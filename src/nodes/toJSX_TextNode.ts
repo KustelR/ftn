@@ -15,7 +15,7 @@ export default function toJSXWIP_TextNode(
     );
   }
   classNames = new Map([...generateFont(node), ...classNames]);
-  classNames = new Map([...generateLayout(node), ...classNames]);
+  classNames = new Map([...generateLayout(node, config), ...classNames]);
   return {
     tagName: tagName,
     props: [

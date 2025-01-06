@@ -20,7 +20,7 @@ export default function toJSX_ShapeNode(
   if (node.type === "ELLIPSE") {
     classNames.set(`rounded`, `full`);
   }
-  classNames = new Map([...generateLayout(node), ...classNames]);
+  classNames = new Map([...generateLayout(node, config), ...classNames]);
 
   if (typeof node.fills !== "symbol") {
     classNames = new Map([
