@@ -1,8 +1,9 @@
-export {};
 declare global {
+  type OutputType = "jsx" | "html";
   type Config = {
-    outputType: "JSX" | "HTML";
+    outputType: OutputType;
   };
+  type ConfigKey = keyof Config;
   type BorderedNode = {
     name: string;
     width?: number;
@@ -80,4 +81,9 @@ declare global {
     name: string;
     data: Array<string> | TailwindProperties;
   };
+  type ToUiMessage = {
+    type: "CODE" | "IMPORTS" | "CONFIG";
+    data: string;
+  };
 }
+export {};

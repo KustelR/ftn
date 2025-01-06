@@ -18,7 +18,7 @@ describe("generateStrokes()", () => {
   test("should generate correct stroke properties", () => {
     expect(
       generateStrokes(nodeWithNormalStroke as unknown as VectorNode, {
-        outputType: "HTML",
+        outputType: "html",
       }),
     ).toEqual([
       { name: "stroke", data: ["#800080"] },

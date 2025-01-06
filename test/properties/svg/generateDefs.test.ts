@@ -30,10 +30,10 @@ mockFill.add({
 
 describe("generating defs for svg", () => {
   test("should return empty html object with destroyOnRender true on undefined", () => {
-    expect(generateDefs(undefined, { outputType: "HTML" })).toEqual(EmptyDefs);
+    expect(generateDefs(undefined, { outputType: "html" })).toEqual(EmptyDefs);
   });
   test("should return filled defs for linear gradient", () => {
-    const linearDefs = generateDefs(mockFill, { outputType: "HTML" });
+    const linearDefs = generateDefs(mockFill, { outputType: "html" });
 
     expect(linearDefs.children[0]).toEqual({
       tagName: "linear-gradient",

@@ -3,15 +3,15 @@ import { getPropName } from "@/utils/config";
 
 describe("getPropName", () => {
   test("returns the correct prop name for html", () => {
-    expect(getPropName("obscure-html-prop", { outputType: "HTML" })).toBe(
+    expect(getPropName("obscure-html-prop", { outputType: "html" })).toBe(
       "obscure-html-prop",
     );
   });
   test("should return correct JSX prop name", () => {
-    expect(getPropName("normal-prop", { outputType: "JSX" })).toBe(
+    expect(getPropName("normal-prop", { outputType: "jsx" })).toBe(
       "normalProp",
     );
-    expect(getPropName("obscure-jsx-prop", { outputType: "JSX" })).toBe(
+    expect(getPropName("obscure-jsx-prop", { outputType: "jsx" })).toBe(
       "obscureJsxProp",
     );
   });

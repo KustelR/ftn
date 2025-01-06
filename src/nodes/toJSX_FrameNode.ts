@@ -22,7 +22,8 @@ export default function toJSX_FrameNode(
       svgOnly = false;
     }
   });
-  if (svgOnly) return toJSX_FrameNodeVectors(node, config);
+  if (svgOnly && node.children.length > 0)
+    return toJSX_FrameNodeVectors(node, config);
 
   if (typeof node.fills !== "symbol") {
     const bgColorClasses = generateBgColor({

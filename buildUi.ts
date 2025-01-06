@@ -55,7 +55,11 @@ async function getScripts(scriptsDirPath: string): Promise<string> {
 
 function tsCompile(
   source: string,
-  options = { compilerOptions: { module: ts.ModuleKind.CommonJS } },
+  options = {
+    compilerOptions: {
+      module: ts.ModuleKind.ES2015,
+    },
+  },
 ): string {
   // Default options -- you could also perform a merge, or use the project tsconfig.json
   return ts.transpileModule(source, options).outputText;
@@ -66,7 +70,9 @@ async function getScriptPaths(dirPath: string): Promise<Array<Dirent>> {
   const scripts = await Promise.all(
     scriptFiles.map(async (scriptFile) => {
       if (scriptFile.isDirectory()) {
-        return await getScriptPaths(path.join(scriptFile.parentPath, scriptFile.name));
+        return await getScriptPaths(
+          path.join(scriptFile.parentPath, scriptFile.name),
+        );
       } else {
         return scriptFile;
       }
