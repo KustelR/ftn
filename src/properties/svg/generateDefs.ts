@@ -3,7 +3,7 @@ import rgbToHex from "@/utils/rgbToHex";
 
 export default function generateDefs(
   data: Set<SvgFill> | undefined,
-  config: Config,
+  config: { outputType: OutputType },
 ): HtmlObject {
   let result: Array<HtmlObject> = [];
   if (!data)

@@ -3,7 +3,7 @@ import rgbToHex from "@/utils/rgbToHex";
 
 export default function generateStrokes(
   node: VectorNode,
-  config: Config,
+  config: { outputType: OutputType },
 ): Array<Prop> {
   const result: Array<Prop> = [];
   if (typeof node.strokes !== "symbol") {
