@@ -1,5 +1,6 @@
 import { describe, test, expect } from "@jest/globals";
 import { generateLayout } from "@/properties/index";
+import { generateConfig } from "@/utils/config";
 
 const node: Layouted = {
   type: "literal fake",
@@ -17,8 +18,40 @@ const node: Layouted = {
 
 describe("generateLayout()", () => {
   test("should generate w-full because there is no parent node", () => {
-    expect(
-      generateLayout(node, { outputType: "html", size: "original" }).get("w"),
-    ).toEqual("full");
+    expect(generateLayout(node, generateConfig()).get("w")).toEqual("full");
   });
+  test("should correctly generate max/min height/width", () => {
+    expect(
+      (
+        generateLayout(
+          Object.assign({}, node, { maxHeight: 10 }),
+          generateConfig(),
+        ).get("max-h") as Size
+      ).absolute,
+    ).toBe(10);
+  });
+  expect(
+    (
+      generateLayout(
+        Object.assign({}, node, { maxWidth: 10 }),
+        generateConfig(),
+      ).get("max-w") as Size
+    ).absolute,
+  ).toBe(10);
+  expect(
+    (
+      generateLayout(
+        Object.assign({}, node, { minHeight: 10 }),
+        generateConfig(),
+      ).get("min-h") as Size
+    ).absolute,
+  ).toBe(10);
+  expect(
+    (
+      generateLayout(
+        Object.assign({}, node, { minWidth: 10 }),
+        generateConfig(),
+      ).get("min-w") as Size
+    ).absolute,
+  ).toBe(10);
 });

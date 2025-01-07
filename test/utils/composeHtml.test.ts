@@ -1,4 +1,5 @@
 import composeElement from "@/utils/composeHtml";
+import { generateConfig } from "@/utils/config";
 import { describe, expect, test } from "@jest/globals";
 
 const emptyObject: HtmlObject = {
@@ -38,18 +39,20 @@ const mockObject: HtmlObject = {
   ],
 };
 
+const config = generateConfig();
+
 describe("composeHtml", () => {
   test("renders a string", () => {
-    expect(composeElement("some string")).toBe("some string");
+    expect(composeElement("some string", config)).toBe("some string");
   });
   test("renders nothing with destroyOnRender", () => {
-    expect(composeElement(emptyObject)).toBe("");
+    expect(composeElement(emptyObject, config)).toBe("");
   });
   test("renders only children of the group", () => {
-    expect(composeElement(groupObject)).toBe("<div></div>");
+    expect(composeElement(groupObject, config)).toBe("<div></div>");
   });
   test("renders a element with multiple props and children", () => {
-    expect(composeElement(mockObject)).toBe(
+    expect(composeElement(mockObject, config)).toBe(
       '<div class="flex" width="1440"><div class="flex"></div>some string</div>',
     );
   });
