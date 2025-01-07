@@ -4,9 +4,18 @@ type ToUiMessage = {
 };
 
 type Config = {
-  outputType: "JSX" | "HTML";
-  size: "round" | "original" | "percent"
+  outputType: OutputType;
+  size: SizeSetting;
 };
+type ConfigKey = keyof Config;
+type OutputType = "jsx" | "html";
+type SizeSetting = {
+  sizeRound: SizeRound;
+  sizeType: SizeType;
+};
+type SizeSettingKey = keyof SizeSetting;
+type SizeRound = "none" | "round";
+type SizeType = "absolute" | "relative";
 
 enum FromUiMessageType {
   GET_CODE_FROM_SELECTION = 0,
@@ -94,7 +103,12 @@ function createConfigEditor(config: Config): HTMLElement {
       "class",
       "min-w-10 justify-start items-start relative border-b-[2px] border-black bg-neutral-700",
     );
-    configOptionInput.setAttribute("value", entry[1]);
+    try {
+    configOptionInput.setAttribute("value", JSON.stringify(entry[1]));
+    } catch (e) {
+      console.error("Error parsing JSON", e);
+      configOptionInput.setAttribute("value", entry[1] as OutputType);
+    }
     const configOptionButton = document.createElement("button");
     configOptionButton.textContent = "Set";
     configOptionButton.setAttribute(

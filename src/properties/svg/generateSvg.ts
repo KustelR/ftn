@@ -17,17 +17,12 @@ export default function generateSvg(
   const classNames = generateLayout(node, config);
   classNames.set(
     "h",
-    getSize(node.height, node.parent, "H", (config = config)),
+    getSize(node.height + strokeWeightResize, config, node.parent, "H"),
   );
   classNames.set(
     "w",
-    getSize(
-      node.width + strokeWeightResize,
-      node.parent,
-      "W",
-      (config = config),
-    ),
+    getSize(node.width + strokeWeightResize, config, node.parent, "W"),
   );
 
-  return { classNames: generateTailwind(classNames) };
+  return { classNames: generateTailwind(classNames, config) };
 }

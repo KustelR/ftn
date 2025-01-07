@@ -74,7 +74,7 @@ async function getDataFromSelection(
   const nodes = await Promise.all(conversionPromises);
   nodes.forEach((node) => {
     if (!node) return;
-    result += composeHtml(toJSX(node, config));
+    result += composeHtml(toJSX(node, config), config);
   });
   return result;
 }

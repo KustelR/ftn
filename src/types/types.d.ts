@@ -3,9 +3,15 @@ declare global {
     outputType: OutputType;
     size: SizeSetting;
   };
-  type OutputType = "jsx" | "html";
-  type SizeSetting = "original" | "round";
   type ConfigKey = keyof Config;
+  type OutputType = "jsx" | "html";
+  type SizeSetting = {
+    sizeRound: SizeRound,
+    sizeType: SizeType;
+  }
+  type SizeSettingKey = keyof SizeSetting;
+  type SizeRound = "none" | "round"
+  type SizeType = "absolute" | "relative" 
   type BorderedNode = {
     name: string;
     width?: number;

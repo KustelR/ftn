@@ -1,10 +1,9 @@
 export default function getSize(
   size: number,
+  config: Config,
   parent?: BaseNode | Layouted | null,
   dimension?: "W" | "H",
-  config?: Config,
 ): Size {
-  const sizeSetting = config ? config.size : "original";
   let parentSize = 0;
   if (parent && parent.type !== "DOCUMENT" && parent.type !== "PAGE") {
     if (dimension === "W") {
@@ -14,16 +13,16 @@ export default function getSize(
     }
   }
   if (parentSize === 0) {
-    return { absolute: round(size, sizeSetting), relative: 0 };
+    return { absolute: round(size, config.size), relative: 0 };
   }
   return {
-    absolute: round(size, sizeSetting),
-    relative: round(size / parentSize, sizeSetting),
+    absolute: round(size, config.size),
+    relative: round(size, config.size) / round(parentSize, config.size),
   };
 }
 
 function round(value: number, setting: SizeSetting): number {
-  if (setting === "round") {
+  if (setting.sizeRound === "round") {
     return Math.round(value);
   }
   return value;

@@ -7,24 +7,15 @@ export default function generateLayout(
   let res: TailwindProperties = new Map();
   res = new Map([...generateLayoutMode(node, config), ...res]);
   res = new Map([...generateAlign(node), ...res]);
-  res = new Map([...generateLayoutSizing(node), ...res]);
+  res = new Map([...generateLayoutSizing(node, config), ...res]);
   if (node.maxHeight)
-    res.set("max-h", getSize(node.maxHeight, node.parent, "H"));
+    res.set("max-h", getSize(node.maxHeight, config, node.parent, "H"));
   if (node.minHeight)
-    res.set(
-      "min-h",
-      getSize(node.minHeight, node.parent, "H", (config = config)),
-    );
+    res.set("min-h", getSize(node.minHeight, config, node.parent, "H"));
   if (node.maxWidth)
-    res.set(
-      "max-w",
-      getSize(node.maxWidth, node.parent, "W", (config = config)),
-    );
+    res.set("max-w", getSize(node.maxWidth, config, node.parent, "W"));
   if (node.minWidth)
-    res.set(
-      "min-w",
-      getSize(node.minWidth, node.parent, "W", (config = config)),
-    );
+    res.set("min-w", getSize(node.minWidth, config, node.parent, "W"));
   res = new Map([...res, ...fixedLayout(node, config)]);
   return res;
 }
@@ -37,7 +28,7 @@ function fixedLayout(node: Layouted, config: Config): TailwindProperties {
     node.parent.type == "PAGE"
   ) {
     result.set("w", "full");
-    result.set("min-h", "screen");
+    if (!node.minHeight) result.set("min-h", "screen");
     return result;
   }
   if (
@@ -46,8 +37,8 @@ function fixedLayout(node: Layouted, config: Config): TailwindProperties {
     !(node.parent as Layouted).layoutMode
   ) {
     result.set("absolute", true);
-    result.set("left", getSize(node.x, node.parent, "W", (config = config)));
-    result.set("top", getSize(node.y, node.parent, "H", (config = config)));
+    result.set("left", getSize(node.x, config, node.parent, "W"));
+    result.set("top", getSize(node.y, config, node.parent, "H"));
   }
   return result;
 }
@@ -67,12 +58,7 @@ function generateLayoutMode(
       res.set("flex-row", true);
       res.set(
         "space-x",
-        getSize(
-          node.itemSpacing ? node.itemSpacing : 0,
-          node,
-          "W",
-          (config = config),
-        ),
+        getSize(node.itemSpacing ? node.itemSpacing : 0, config, node, "W"),
       );
       break;
     case "VERTICAL":
@@ -80,12 +66,7 @@ function generateLayoutMode(
       res.set("flex-col", true);
       res.set(
         "space-y",
-        getSize(
-          node.itemSpacing ? node.itemSpacing : 0,
-          node,
-          "H",
-          (config = config),
-        ),
+        getSize(node.itemSpacing ? node.itemSpacing : 0, config, node, "H"),
       );
       break;
     case "FIXED":
@@ -127,12 +108,15 @@ function generateAlign(node: Layouted): TailwindProperties {
   return res;
 }
 
-function generateLayoutSizing(node: Layouted): TailwindProperties {
+function generateLayoutSizing(
+  node: Layouted,
+  config: Config,
+): TailwindProperties {
   let res: TailwindProperties = new Map();
 
   switch (node.layoutSizingHorizontal) {
     case "FIXED":
-      res.set("w", getSize(node.width, node.parent, "W"));
+      res.set("w", getSize(node.width, config, node.parent, "W"));
       break;
     case "HUG":
       res.set("w", "fit");
@@ -143,7 +127,7 @@ function generateLayoutSizing(node: Layouted): TailwindProperties {
   }
   switch (node.layoutSizingVertical) {
     case "FIXED":
-      res.set("h", getSize(node.height, node.parent, "H"));
+      res.set("h", getSize(node.height, config, node.parent, "H"));
       break;
     case "HUG":
       res.set("h", "fit");

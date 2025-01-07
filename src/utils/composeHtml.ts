@@ -2,6 +2,7 @@ import generateTailwind from "@/utils/generateTailwind";
 
 export default function composeElement(
   obj: HtmlObject | string | null,
+  config: Config,
 ): string {
   if (!obj) {
     return "";
@@ -10,7 +11,7 @@ export default function composeElement(
     return obj;
   }
   if (obj.destroyOnRender) {
-    return obj.children.map((child) => composeElement(child)).join("");
+    return obj.children.map((child) => composeElement(child, config)).join("");
   }
 
   const props: Array<string> = [];
@@ -19,13 +20,13 @@ export default function composeElement(
       props.push(`${prop.name}="${prop.data.join(" ")}"`);
     } else if (prop.name === "class" || prop.name === "className") {
       props.push(
-        `${prop.name}="${generateTailwind(prop.data as TailwindProperties)}"`,
+        `${prop.name}="${generateTailwind(prop.data as TailwindProperties, config)}"`,
       );
     }
   });
   return [
     `<${obj.tagName}`,
     `${props.length > 0 ? " " + props.join(" ") : ""}>`,
-    `${obj.children.map((child) => composeElement(child)).join("")}</${obj.tagName}>`,
+    `${obj.children.map((child) => composeElement(child, config)).join("")}</${obj.tagName}>`,
   ].join("");
 }

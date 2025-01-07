@@ -4,7 +4,10 @@ export { generateConfig, fillConfig, getConfig, getPropName };
 function generateConfig(): Config {
   return {
     outputType: "html",
-    size: "original",
+    size: {
+      sizeRound: "none",
+      sizeType: "absolute",
+    },
   };
 }
 
@@ -13,7 +16,10 @@ function fillConfig(config: Config): Config {
     config.outputType = "html";
   }
   if (!config.size) {
-    config.size = "original";
+    config.size = {
+      sizeRound: "none",
+      sizeType: "absolute",
+    };
   }
 
   return config;
@@ -29,6 +35,13 @@ function getConfig(config: string | Config | undefined): Config {
     console.error("Error parsing config: ", error);
     return generateConfig();
   }
+}
+
+function generateSizeSetting(): SizeSetting {
+  return {
+    sizeRound: "none",
+    sizeType: "absolute",
+  };
 }
 
 function isConfig(config: any): config is Config {
@@ -56,8 +69,11 @@ function isOutputType(s: string): s is OutputType {
   return ["jsx", "html"].includes(s.toLowerCase());
 }
 
-function isSizeSetting(s: string): s is SizeSetting {
-  return ["original", "round"].includes(s.toLowerCase());
+function isSizeSetting(s: any): s is SizeSetting {
+  if (!s) return false;
+  return (
+    Object.keys(s).toString() === Object.keys(generateSizeSetting()).toString()
+  );
 }
 function setOutputType(config: Config, outType: string) {
   if (isOutputType(outType)) config.outputType = outType;
@@ -65,7 +81,14 @@ function setOutputType(config: Config, outType: string) {
 }
 
 function setSize(config: Config, size: string) {
-  if (isSizeSetting(size)) config.size = size;
+  let parsedSize: Size;
+  try {
+    parsedSize = JSON.parse(size);
+  } catch (err) {
+    config.size = generateSizeSetting();
+    return;
+  }
+  if (isSizeSetting(parsedSize)) config.size = parsedSize;
   else console.warn("Unsupported size setting: " + size);
 }
 
