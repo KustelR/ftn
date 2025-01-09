@@ -66,6 +66,7 @@ async function getDataFromSelection(
   selection: Array<SceneNode>,
   config: Config,
 ): Promise<string> {
+  console.log(selection);
   let result = "";
   let conversionPromises: Array<Promise<BaseNode | null>> = [];
   selection.forEach((node) => {

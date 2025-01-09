@@ -57,7 +57,7 @@ export default function toJSX_VectorNode(
     props: [
       {
         name: getPropName("class", config),
-        data: [`absolute`, `overflow-visible`, svgProps.classNames],
+        data: [`overflow-visible`, svgProps.classNames],
       },
     ],
   };
