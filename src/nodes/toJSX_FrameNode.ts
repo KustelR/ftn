@@ -5,7 +5,6 @@ import {
   generateSpacing,
 } from "@/properties";
 import toJSX from "@/toJsx";
-import generateTailwind from "@/utils/generateTailwind";
 import { toJSX_FrameNodeVectors } from "@/nodes";
 import { getPropName } from "@/utils/config";
 
@@ -34,7 +33,7 @@ export default function toJSX_FrameNode(
   }
   classNames = new Map([
     ...generateLayout(node, config),
-    ...generateSpacing(node),
+    ...generateSpacing(node, config),
     ...generateBorders([...node.strokes], node),
     ...classNames,
   ]);
@@ -44,7 +43,6 @@ export default function toJSX_FrameNode(
 
   classNames.set("overflow", "hidden");
 
-  const otherTags: Array<{ tagName: string; data: string }> = [];
   return {
     tagName: tagName,
     props: [
@@ -55,11 +53,4 @@ export default function toJSX_FrameNode(
     ],
     children: children,
   };
-  /*
-  return `<${tagName} ${getClassName(config)}="overflow-hidden ${generateTailwind(classNames)}"  ${otherTags.map(
-    (tag) => {
-      return `${tag.tagName}="${tag.data}"`;
-    },
-  )}>${children.join("")}<\/${tagName}>`;
-  */
 }

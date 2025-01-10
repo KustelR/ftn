@@ -4,10 +4,11 @@ import * as ts from "typescript";
 import { Dirent } from "fs";
 
 export async function build() {
-  const uiDir = path.resolve(__dirname, "./ui");
+  const uiDir = path.resolve(__dirname, "./src/ui");
   const style = `<style>\n${await fs.readFile(path.join(uiDir, "output.css"))}\n</style>`;
-  const script = await getScripts(path.join(uiDir, "scripts"));
+  const script = await getScript("./dist/uiIndex.js");
   //const script = `<script>${await fs.readFile(path.join(uiDir, "script.js"))}</script>`;
+  console.log(style);
   const html = (await fs.readFile(path.join(uiDir, "ui.html")))
     .toString()
     .split("\n");
@@ -29,6 +30,11 @@ export async function build() {
 }
 
 build();
+
+async function getScript(path: string): Promise<string> {
+  const script = await fs.readFile(path);
+  return "<script>" + `\n\n${script}\n` + "</script>";
+}
 
 async function getScripts(scriptsDirPath: string): Promise<string> {
   let result = "";

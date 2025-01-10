@@ -4,7 +4,7 @@
     "target": "es2017",
     "module": "es2022",
     "resolveJsonModule": true,
-    "lib": ["es2022"],
+    "lib": ["es2022", "dom"],
     "strict": true,
     "typeRoots": [
       "./node_modules/@types",

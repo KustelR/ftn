@@ -7,7 +7,8 @@ module.exports = (env, argv) => ({
   // This is necessary because Figma's 'eval' works differently than normal eval
   devtool: argv.mode === "production" ? false : "inline-source-map",
   entry: {
-    index: "./src/index.ts", // This is the entry point for our plugin code.
+    index: "./src/index.ts",
+    uiIndex: "./src/ui/scripts/index.ts" // This is the entry point for our plugin code.
   },
   module: {
     rules: [
