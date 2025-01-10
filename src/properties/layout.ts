@@ -37,19 +37,15 @@ function fixedLayout(node: Layouted, config: Config): TailwindProperties {
     !(node.parent as Layouted).layoutMode
   ) {
     result.set("absolute", true);
+    let left = node.x;
+    let top = node.y;
     if (node.parent.type === "GROUP") {
-      result.set(
-        "left",
-        getSize(node.x - node.parent.x, config, node.parent, "W"),
-      );
-      result.set(
-        "top",
-        getSize(node.y - node.parent.y, config, node.parent, "H"),
-      );
-    } else {
-      result.set("left", getSize(node.x, config, node.parent, "W"));
-      result.set("top", getSize(node.y, config, node.parent, "H"));
+      top = node.y - node.parent.y;
+      left = node.x - node.parent.x;
     }
+    if (node.x !== 0)
+      result.set("left", getSize(left, config, node.parent, "W"));
+    if (node.y !== 0) result.set("top", getSize(top, config, node.parent, "H"));
   }
   return result;
 }

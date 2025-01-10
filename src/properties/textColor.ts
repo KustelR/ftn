@@ -1,5 +1,4 @@
 import generateTailwindColor from "@/utils/generateTailwindColor";
-import rgbToHex from "@/utils/rgbToHex";
 
 export default function generateTextColorFromFills(node: {
   name: string;

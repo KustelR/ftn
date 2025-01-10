@@ -6,12 +6,12 @@ declare global {
   type ConfigKey = keyof Config;
   type OutputType = "jsx" | "html";
   type SizeSetting = {
-    sizeRound: SizeRound,
+    sizeRound: SizeRound;
     sizeType: SizeType;
-  }
+  };
   type SizeSettingKey = keyof SizeSetting;
-  type SizeRound = "none" | "round"
-  type SizeType = "absolute" | "relative" 
+  type SizeRound = "none" | "round";
+  type SizeType = "absolute" | "relative";
   type BorderedNode = {
     name: string;
     width?: number;
@@ -96,6 +96,13 @@ declare global {
   type ToUiMessage = {
     type: "CODE" | "IMPORTS" | "CONFIG";
     data: string;
+  };
+  type SpacedNode = {
+    parent: BaseNode | null;
+    paddingTop: number;
+    paddingBottom: number;
+    paddingLeft: number;
+    paddingRight: number;
   };
 }
 export {};

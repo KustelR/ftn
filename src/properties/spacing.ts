@@ -1,20 +1,25 @@
-type SpacedNode = {
-  paddingTop: number;
-  paddingBottom: number;
-  paddingLeft: number;
-  paddingRight: number;
-};
-export default function generateSpacings(node: SpacedNode): TailwindProperties {
+import getSize from "@/utils/getSize";
+
+export default function generateSpacings(
+  node: SpacedNode,
+  config: Config,
+): TailwindProperties {
   let result: TailwindProperties = new Map();
-  if (node.paddingTop == node.paddingBottom) {
-    result.set(`py`, `[${node.paddingTop}]`);
+  if (node.paddingTop == node.paddingBottom && node.paddingTop != 0) {
+    result.set(`py`, getSize(node.paddingTop, config, node.parent, "H"));
   } else {
-    result.set(`pt`, `[${node.paddingTop}] pb-[${node.paddingBottom}]`);
+    if (node.paddingTop !== 0)
+      result.set(`pt`, getSize(node.paddingTop, config, node.parent, "H"));
+    if (node.paddingLeft !== 0)
+      result.set(`pb`, getSize(node.paddingBottom, config, node.parent, "H"));
   }
-  if (node.paddingLeft == node.paddingRight) {
-    result.set(`px`, `[${node.paddingLeft}]`);
+  if (node.paddingLeft == node.paddingRight && node.paddingRight != 0) {
+    result.set(`px`, getSize(node.paddingLeft, config, node.parent, "W"));
   } else {
-    result.set(`pl`, `[${node.paddingLeft}] pr-[${node.paddingRight}]`);
+    if (node.paddingLeft !== 0)
+      result.set(`pl`, getSize(node.paddingLeft, config, node.parent, "W"));
+    if (node.paddingRight !== 0)
+      result.set(`pr`, getSize(node.paddingRight, config, node.parent, "W"));
   }
   return result;
 }
