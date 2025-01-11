@@ -1,8 +1,3 @@
-
-export default function addButtonCode() {
-const code = document.getElementById("open-code");
-if (!code) throw new Error("Open code button not found");
-code.onclick = () => {
+export default function buttonCode() {
   parent.postMessage({ pluginMessage: { type: 1 } }, "*");
-};
 }
