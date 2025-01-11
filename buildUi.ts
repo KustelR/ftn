@@ -7,8 +7,6 @@ export async function build() {
   const uiDir = path.resolve(__dirname, "./src/ui");
   const style = `<style>\n${await fs.readFile(path.join(uiDir, "output.css"))}\n</style>`;
   const script = await getScript("./dist/uiIndex.js");
-  //const script = `<script>${await fs.readFile(path.join(uiDir, "script.js"))}</script>`;
-  console.log(style);
   const html = (await fs.readFile(path.join(uiDir, "ui.html")))
     .toString()
     .split("\n");
