@@ -1,7 +1,7 @@
 import createInput from "./input";
 import createSelect from "./select";
 
-const formClasses = ["flex", "flex-col"];
+const formClasses = ["flex", "flex-col bg-white/[0.02] rounded-md p-2"];
 
 interface ItemString extends Item {
   type: "string";
