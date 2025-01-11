@@ -1,10 +1,54 @@
-export {default as addButtonClear} from './buttonClear';
-export {default as addButtonCode} from './buttonCode';
-export {default as addButtonConfig} from './buttonConfig';
-export {default as addButtonGenerate} from './buttonGenerate';
-export {default as addButtonImports} from './buttonImports';
+import createGenericButton from "./createGenericButton";
+
+import buttonClear from "./buttonClear";
+import buttonCode from "./buttonCode";
+import buttonConfig from "./buttonConfig";
+import buttonGenerate from "./buttonGenerate";
+import buttonImports from "./buttonImports";
 /*
 export {default as addButton} from './button';
 export {default as addButton} from './button';
 export {default as addButton} from './button';
 */
+
+export function addTopNavButtons() {
+  const code = createGenericButton("CODE", undefined, undefined, buttonCode);
+  const config = createGenericButton(
+    "CONFIG",
+    undefined,
+    undefined,
+    buttonConfig,
+  );
+  const imports = createGenericButton(
+    "IMPORTS",
+    undefined,
+    undefined,
+    buttonImports,
+  );
+  const explorer = createGenericButton(
+    "EXPLORER",
+    undefined,
+    undefined,
+    () => {},
+  );
+  const topNav = document.getElementById("topNav");
+  if (!topNav) throw new Error("Can't add nav button, topnav was not found");
+  topNav.appendChild(code);
+  topNav.appendChild(imports);
+  topNav.appendChild(config);
+  topNav.appendChild(explorer);
+}
+
+export function addBotNavButtons() {
+  const generate = createGenericButton(
+    "GENERATE",
+    undefined,
+    undefined,
+    buttonGenerate,
+  );
+  const clear = createGenericButton("CLEAR", undefined, undefined, buttonClear);
+  const botNav = document.getElementById("botNav");
+  if (!botNav) throw new Error("Can't add nav button, topnav was not found");
+  botNav.appendChild(generate);
+  botNav.appendChild(clear);
+}
