@@ -94,7 +94,7 @@ declare global {
     data: Array<string> | TailwindProperties;
   };
   type ToUiMessage = {
-    type: "CODE" | "IMPORTS" | "CONFIG";
+    type: "CODE" | "LAST_CODE" | "IMPORTS" | "CONFIG";
     data: string;
   };
   type SpacedNode = {

@@ -3,14 +3,10 @@ import createConfigEditor from "@/ui/scripts/createConfigEditor";
 export default function addOnMessage() {
   onmessage = (event) => {
     const message: ToUiMessage = event.data.pluginMessage;
-    if (message.data == "") {
-      alert("Sorry! Not found data to process");
-      return;
-    }
-    if (!message.data || !message.type) {
-      alert("something wrong with the message from api. check console");
-    }
+    console.log(message);
     switch (message.type) {
+      case "LAST_CODE":
+        if (message.data === "") return;
       case "CODE":
         let nodeData = createCodeBlock();
         const splittedMessage = message.data.match(

@@ -32,11 +32,7 @@ if (figma.editorType === "figma") {
         figma.ui.postMessage({ type: "CODE", data: lastCode });
         break;
       case FromUiMessageType.GET_LAST_CODE:
-        if (lastCode === "") {
-          const selection = figma.currentPage.selection;
-          lastCode = await getDataFromSelection([...selection], config);
-        }
-        figma.ui.postMessage({ type: "CODE", data: lastCode });
+        figma.ui.postMessage({ type: "LAST_CODE", data: lastCode });
         break;
       case FromUiMessageType.GET_IMPORTS:
         figma.ui.postMessage({ type: "IMPORTS", data: "test" });
