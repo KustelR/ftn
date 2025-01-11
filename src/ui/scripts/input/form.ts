@@ -1,6 +1,7 @@
 import createInput from "./input";
 import createSelect from "./select";
 
+const formClasses = ["flex", "flex-col"];
 
 interface ItemString extends Item {
   type: "string";
@@ -19,38 +20,52 @@ interface Item {
 
 export function createJsonForm(
   itemTypes: Array<ItemString | ItemSelect>,
-  obj: { [key: string]: string | Array<string> },
+  obj: { [key: string]: string },
 ): HTMLFormElement {
   const form = document.createElement("form");
+  form.setAttribute("class", formClasses.join(" "));
   itemTypes.forEach((entry) => {
     let child: HTMLElement | undefined = undefined;
     switch (entry.type) {
       case "string":
-        const input = createInput(undefined, entry.name);
-        if (typeof obj[entry.name] !== "string") {
-          console.warn(
-            "Wrong type of data provided for string value in form generator",
-          );
-        } else {
-          input.value = obj[entry.name] as string;
-        }
-        child = input;
+        const stringValue: string | null =
+          typeof obj[entry.name] === "string"
+            ? (obj[entry.name] as string)
+            : null;
+        child = createInputFromItem(entry.name, stringValue);
         break;
       case "select":
-        if (!obj[entry.name] || !Array.isArray(obj[entry.name])) {
-          throw new Error("Can't generate select: no options provided");
-        }
-        const select = createSelect(
-          entry.name,
-          obj[entry.name] as Array<string>,
-        );
-        child = select;
+        const selected: string | null =
+          typeof obj[entry.name] === "string"
+            ? (obj[entry.name] as string)
+            : null;
+        child = createSelectFromItem(entry.name, entry.data, selected);
         break;
       default:
         break;
-      }
+    }
     if (child) form.appendChild(child);
   });
 
   return form;
+}
+
+function createInputFromItem(
+  name: string,
+  value: string | null,
+): HTMLInputElement {
+  const input = createInput(undefined, name);
+  if (value) input.value = value;
+  return input;
+}
+
+function createSelectFromItem(
+  name: string,
+  value: Array<string> | null,
+  selected: string | null,
+) {
+  if (!value) {
+    throw new Error("Can't generate select: no options provided");
+  }
+  return createSelect(name, value, selected ? selected : undefined);
 }
