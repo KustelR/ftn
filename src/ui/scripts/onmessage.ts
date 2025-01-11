@@ -1,34 +1,4 @@
-type ToUiMessage = {
-  type: "CODE" | "IMPORTS" | "CONFIG";
-  data: string;
-};
-
-type Config = {
-  outputType: OutputType;
-  size: SizeSetting;
-};
-type ConfigKey = keyof Config;
-type OutputType = "jsx" | "html";
-type SizeSetting = {
-  sizeRound: SizeRound;
-  sizeType: SizeType;
-};
-type SizeSettingKey = keyof SizeSetting;
-type SizeRound = "none" | "round";
-type SizeType = "absolute" | "relative";
-
-enum FromUiMessageType {
-  GET_CODE_FROM_SELECTION = 0,
-  GET_LAST_CODE = 1,
-  GET_IMPORTS = 2,
-  GET_CONFIG = 3,
-  SET_CONFIG = 4,
-}
-
-type FromUiMessage = {
-  type: FromUiMessageType;
-  data: string;
-};
+import createConfigEditor from "@/ui/scripts/createConfigEditor";
 
 export default function addOnMessage() {
   onmessage = (event) => {
@@ -89,52 +59,5 @@ export default function addOnMessage() {
     }
     nodeData.innerHTML = "";
     return nodeData;
-  }
-
-  function createConfigEditor(config: Config): HTMLElement {
-    let list = document.createElement("ul");
-    const entries = Object.entries(config);
-    entries.forEach((entry) => {
-      const item = document.createElement("li");
-      item.setAttribute("class", "flex flex-row space-x-1 px-2");
-      const configOptionName = document.createElement("h3");
-      configOptionName.textContent = entry[0];
-      const configOptionInput = document.createElement("input");
-      configOptionInput.setAttribute(
-        "class",
-        "min-w-10 justify-start items-start relative border-b-[2px] border-black bg-neutral-700",
-      );
-      try {
-        configOptionInput.setAttribute("value", JSON.stringify(entry[1]));
-      } catch (e) {
-        console.error("Error parsing JSON", e);
-        configOptionInput.setAttribute("value", entry[1] as OutputType);
-      }
-      const configOptionButton = document.createElement("button");
-      configOptionButton.textContent = "Set";
-      configOptionButton.setAttribute(
-        "class",
-        "block bg-neutral-700 hover:bg-neutral-800 px-2",
-      );
-      configOptionButton.onclick = () => {
-        parent.postMessage(
-          {
-            pluginMessage: {
-              type: FromUiMessageType.SET_CONFIG,
-              data: JSON.stringify({
-                property: configOptionName.textContent,
-                value: configOptionInput.value,
-              }),
-            },
-          },
-          "*",
-        );
-      };
-      item.appendChild(configOptionName);
-      item.appendChild(configOptionInput);
-      item.appendChild(configOptionButton);
-      list.appendChild(item);
-    });
-    return list;
   }
 }
