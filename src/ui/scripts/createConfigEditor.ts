@@ -13,7 +13,7 @@ export default function createConfigEditor(config: Config): HTMLElement {
     const item = document.createElement("li");
     item.setAttribute(
       "class",
-      "justify-stretch space-x-1 px-2 w-full grid grid-cols-9",
+      "justify-stretch space-x-1 mx-1 p-2 w-full grid grid-cols-9 rounded-md bg-white/[0.05]",
     );
     const configOptionName = document.createElement("h3");
     configOptionName.setAttribute("class", "col-span-3 text-lg font-bold");
@@ -35,21 +35,26 @@ export default function createConfigEditor(config: Config): HTMLElement {
     } else if (propertyName === "size") {
       const currentSize: SizeSetting = entry[1] as SizeSetting;
       try {
-      const [form, valueHolder] = createJsonForm(
-        [
-          { name: "sizeRound", type: "select", data: ["original", "round"] },
-          { name: "sizeType", type: "select", data: ["relative", "absolute"] },
-        ],
-        currentSize,
-      );
-    
-      inputHolder.appendChild(form);
-      valueSource = valueHolder;
-    } catch (error) {
-      const failDiv = document.createElement("div");
-      failDiv.textContent = "something went wrong while generating form. see console"
-      inputHolder.appendChild(failDiv);
-    }
+        const [form, valueHolder] = createJsonForm(
+          [
+            { name: "sizeRound", type: "select", data: ["original", "round"] },
+            {
+              name: "sizeType",
+              type: "select",
+              data: ["relative", "absolute"],
+            },
+          ],
+          currentSize,
+        );
+
+        inputHolder.appendChild(form);
+        valueSource = valueHolder;
+      } catch (error) {
+        const failDiv = document.createElement("div");
+        failDiv.textContent =
+          "something went wrong while generating form. see console";
+        inputHolder.appendChild(failDiv);
+      }
     }
     const configOptionButton = createGenericButton("set");
     configOptionButton.onclick = () => {
