@@ -6,6 +6,7 @@ export default function addOnMessage() {
     console.log(message);
     switch (message.type) {
       case "LAST_CODE":
+        createCodeBlock();
         if (message.data === "") return;
       case "CODE":
         let nodeData = createCodeBlock();
