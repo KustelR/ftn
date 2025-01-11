@@ -18,38 +18,43 @@ interface Item {
   type: "string" | "select";
 }
 
+type Json = {
+  [key: string]: string;
+};
+
 export function createJsonForm(
   itemTypes: Array<ItemString | ItemSelect>,
-  obj: { [key: string]: string },
+  obj: Json,
 ): HTMLFormElement {
   const form = document.createElement("form");
   form.setAttribute("class", formClasses.join(" "));
   itemTypes.forEach((entry) => {
-    let child: HTMLElement | undefined = undefined;
-    switch (entry.type) {
-      case "string":
-        const stringValue: string | null =
-          typeof obj[entry.name] === "string"
-            ? (obj[entry.name] as string)
-            : null;
-        child = createInputFromItem(entry.name, stringValue);
-        break;
-      case "select":
-        const selected: string | null =
-          typeof obj[entry.name] === "string"
-            ? (obj[entry.name] as string)
-            : null;
-        child = createSelectFromItem(entry.name, entry.data, selected);
-        break;
-      default:
-        break;
-    }
-    if (child) form.appendChild(child);
+    const itemContainer = document.createElement("div");
+
+    const label = document.createElement("h4");
+    label.textContent = entry.name;
+    itemContainer.appendChild(label);
+
+    const child = createInteractiveFromItem(entry, obj);
+    if (child) itemContainer.appendChild(child);
+
+    form.appendChild(itemContainer);
   });
 
   return form;
 }
-
+function createInteractiveFromItem(entry: ItemSelect | ItemString, obj: Json) {
+  let value = obj[entry.name];
+  switch (entry.type) {
+    case "string":
+      if (typeof value !== "string") return;
+      return createInputFromItem(entry.name, value);
+    case "select":
+      return createSelectFromItem(entry.name, entry.data, value);
+    default:
+      console.warn("Unknown item type");
+  }
+}
 function createInputFromItem(
   name: string,
   value: string | null,
