@@ -21,7 +21,7 @@ if (figma.editorType === "figma") {
 
   let lastCode: string = "";
   figma.showUI(__html__);
-  figma.ui.resize(600, 500);
+  figma.ui.resize(450, 500);
   figma.ui.onmessage = async (msg: FromUiMessage) => {
     switch (msg.type) {
       case FromUiMessageType.GET_CODE_FROM_SELECTION:
