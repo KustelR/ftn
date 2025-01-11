@@ -18,7 +18,7 @@ export default function createConfigEditor(config: Config): HTMLElement {
     const configOptionName = document.createElement("h3");
     configOptionName.setAttribute("class", "col-span-3 text-lg font-bold");
     configOptionName.textContent = propertyName;
-    let valueSource: HTMLSelectElement | HTMLInputElement;
+    let valueSource: () => string;
     const inputHolder = document.createElement("span");
     inputHolder.setAttribute(
       "class",
@@ -29,29 +29,27 @@ export default function createConfigEditor(config: Config): HTMLElement {
       const configSelect = createSelect(entry[0], ["jsx", "html"], selected);
 
       inputHolder.appendChild(configSelect);
-      valueSource = configSelect;
+      valueSource = () => {
+        return configSelect.value;
+      };
     } else if (propertyName === "size") {
       const currentSize: SizeSetting = entry[1] as SizeSetting;
-      const form = createJsonForm(
+      try {
+      const [form, valueHolder] = createJsonForm(
         [
-          { name: "sizeRound", type: "string", data: currentSize.sizeRound },
-          { name: "sizeType", type: "string", data: currentSize.sizeType },
+          { name: "sizeRound", type: "select", data: ["original", "round"] },
+          { name: "sizeType", type: "select", data: ["relative", "absolute"] },
         ],
         currentSize,
       );
+    
       inputHolder.appendChild(form);
-      /*
-      const input = createInput(undefined, "size");
-      try {
-        const inputValue: string = JSON.stringify(entry[1]);
-        input.value = inputValue;
-      } catch (e) {
-        console.error("Error occured while parsing JSON", e);
-        input.value = "Error occured while parsing JSON";
-      }
-      valueSource = input;
-      inputHolder.appendChild(input);
-      */
+      valueSource = valueHolder;
+    } catch (error) {
+      const failDiv = document.createElement("div");
+      failDiv.textContent = "something went wrong while generating form. see console"
+      inputHolder.appendChild(failDiv);
+    }
     }
     const configOptionButton = createGenericButton("set");
     configOptionButton.onclick = () => {
@@ -61,7 +59,7 @@ export default function createConfigEditor(config: Config): HTMLElement {
             type: FromUiMessageType.SET_CONFIG,
             data: JSON.stringify({
               property: configOptionName.textContent,
-              value: valueSource.value,
+              value: valueSource(),
             }),
           },
         },
