@@ -1,6 +1,7 @@
 import { FromUiMessageType } from "@/types/FromUiType";
 import createGenericButton from "./buttons/createGenericButton";
 import createSelect from "@/ui/scripts/input/select";
+import createInput from "./input/input";
 
 export default function createConfigEditor(config: Config): HTMLElement {
   let list = document.createElement("ul");
@@ -28,20 +29,17 @@ export default function createConfigEditor(config: Config): HTMLElement {
 
       inputHolder.appendChild(configSelect);
       valueSource = configSelect;
-    } else {
-      const input = document.createElement("input");
-      input.setAttribute(
-        "class",
-        "w-full justify-start items-start relative border-b-[2px] border-black bg-neutral-700",
-      );
+    } else if (propertyName === "size") {
+      const input = createInput(undefined, "size");
       try {
-        input.setAttribute("value", JSON.stringify(entry[1]));
+        const inputValue: string = JSON.stringify(entry[1]);
+        input.value = inputValue;
       } catch (e) {
-        console.error("Error parsing JSON", e);
-        input.setAttribute("value", entry[1] as OutputType);
+        console.error("Error occured while parsing JSON", e);
+        input.value = "Error occured while parsing JSON";
       }
-      inputHolder.appendChild(input);
       valueSource = input;
+      inputHolder.appendChild(input);
     }
     const configOptionButton = createGenericButton("set");
     configOptionButton.onclick = () => {
