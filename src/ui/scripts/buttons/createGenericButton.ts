@@ -28,6 +28,7 @@ export default function createGenericButton(
 ): HTMLElement {
   const btn: HTMLElement = document.createElement("button");
   btn.textContent = label;
+  if (className) btnClasses.push(className);
   btn.setAttribute("class", btnClasses.join(" "));
   if (id) btn.id = id;
   if (onclick)
