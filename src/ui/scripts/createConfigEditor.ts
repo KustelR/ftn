@@ -17,25 +17,31 @@ export default function createConfigEditor(config: Config): HTMLElement {
     configOptionName.setAttribute("class", "col-span-3 text-lg font-bold");
     configOptionName.textContent = propertyName;
     let valueSource: HTMLSelectElement | HTMLInputElement;
+    const inputHolder = document.createElement("span");
+    inputHolder.setAttribute(
+      "class",
+      "col-span-5 justify-start items-start relative",
+    );
     if (propertyName === "outputType") {
       const selected: string = entry[1] as OutputType;
       const configSelect = createSelect(entry[0], selected, ["jsx", "html"]);
-      item.appendChild(configSelect);
+
+      inputHolder.appendChild(configSelect);
       valueSource = configSelect;
     } else {
-      const configOptionInput = document.createElement("input");
-      configOptionInput.setAttribute(
+      const input = document.createElement("input");
+      input.setAttribute(
         "class",
-        "col-span-5 min-w-10 justify-start items-start relative border-b-[2px] border-black bg-neutral-700",
+        "w-full justify-start items-start relative border-b-[2px] border-black bg-neutral-700",
       );
       try {
-        configOptionInput.setAttribute("value", JSON.stringify(entry[1]));
+        input.setAttribute("value", JSON.stringify(entry[1]));
       } catch (e) {
         console.error("Error parsing JSON", e);
-        configOptionInput.setAttribute("value", entry[1] as OutputType);
+        input.setAttribute("value", entry[1] as OutputType);
       }
-      item.appendChild(configOptionInput);
-      valueSource = configOptionInput;
+      inputHolder.appendChild(input);
+      valueSource = input;
     }
     const configOptionButton = createGenericButton("set");
     configOptionButton.onclick = () => {
@@ -53,6 +59,7 @@ export default function createConfigEditor(config: Config): HTMLElement {
       );
     };
     item.appendChild(configOptionName);
+    item.appendChild(inputHolder);
     item.appendChild(configOptionButton);
     list.appendChild(item);
   });
