@@ -3,77 +3,21 @@
   <div
     class="overflow-hidden bg-[#1f1f1f] w-full h-[263px] justify-start items-center flex flex-col space-y-[0px] min-h-screen py-[0] px-[0] rounded-bl-[10] border-[1px] border-[#252525]"
   >
-    <div
-      class="overflow-hidden w-full h-fit justify-start items-start flex flex-row space-x-[0px] py-[0] px-[0]"
-    >
-      <button
-        id="open-code"
-        class="overflow-hidden bg-[#ffffff]/[0.029999999329447746] w-fit h-fit justify-center items-center flex flex-row space-x-[10px] py-[0] px-[5] border-r-[1px] border-[#363636]"
-      >
-        <span
-          class="w-fit h-fit font-['Roboto'] text-[16px] font-[400] text-[#ffffff]"
-        >
-          code
-        </span>
-      </button>
-      <button
-        id="open-imports"
-        class="overflow-hidden bg-[#ffffff]/[0.029999999329447746] w-fit h-fit justify-center items-center flex flex-row space-x-[10px] py-[0] px-[5] border-r-[1px] border-[#363636]"
-      >
-        <span
-          class="w-fit h-fit font-['Roboto'] text-[16px] font-[400] text-[#ffffff]"
-        >
-          imports
-        </span>
-      </button>
-      <div
-        class="overflow-hidden bg-[#ffffff]/[0.029999999329447746] w-fit h-fit justify-center items-center flex flex-row space-x-[10px] py-[0] px-[5] border-r-[1px] border-[#363636]"
-      >
-        <button
-          id="open-config"
-          class="w-fit h-fit font-['Roboto'] text-[16px] font-[400] text-[#ffffff]"
-        >
-          config
-        </button>
-      </div>
+    <div class="w-full justify-start items-start flex flex-row">
+      <ul
+        id="topNav"
+        class="text-white flex flex-row h-14 items-center space-x-4 px-4"
+      ></ul>
     </div>
     <div
       id="appRoot"
       class="text-[#ffffff] relative whitespace-nowrap overflow-scroll w-full h-full justify-start items-start flex flex-col space-y-[10px] min-h-200 py-[10] px-[0] border-t-[2px] border-b-[2px] border-[#313131]"
     ></div>
-    <div
-      class="overflow-hidden w-full h-fit justify-start items-start flex flex-row space-x-[0px] py-[0] px-[0]"
-    >
-      <button
-        id="generate"
-        class="hover:bg-white hover:bg-opacity-10 overflow-hidden bg-[#ffffff]/[0.029999999329447746] w-fit h-fit justify-center items-center flex flex-row space-x-[10px] py-[0] px-[5]"
-      >
-        <span
-          class="w-fit h-fit font-['Roboto'] text-[16px] font-[400] text-[#ffffff]"
-        >
-          generate
-        </span>
-      </button>
-      <button
-        id="clear-code"
-        class="hover:bg-cyan-50 hover:bg-opacity-10 overflow-hidden bg-[#ffffff]/[0.029999999329447746] w-fit h-fit justify-center items-center flex flex-row space-x-[10px] py-[0] px-[5]"
-      >
-        <span
-          class="w-fit h-fit font-['Roboto'] text-[16px] font-[400] text-[#ffffff]"
-        >
-          clear
-        </span>
-      </button>
-      <button
-        id="open-explorer"
-        class="hover:bg-cyan-50 hover:bg-opacity-10 overflow-hidden bg-[#ffffff]/[0.029999999329447746] w-fit h-fit justify-center items-center flex flex-row space-x-[10px] py-[0] px-[5]"
-      >
-        <span
-          class="w-fit h-fit font-['Roboto'] text-[16px] font-[400] text-[#ffffff]"
-        >
-          explorer
-        </span>
-      </button>
+    <div class="w-full h-fit justify-start items-start flex flex-row">
+      <ul
+        id="botNav"
+        class="text-white flex flex-row h-14 items-center space-x-4 px-4"
+      ></ul>
     </div>
   </div>
 </body>
