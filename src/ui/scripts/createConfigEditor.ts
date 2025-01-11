@@ -2,6 +2,7 @@ import { FromUiMessageType } from "@/types/FromUiType";
 import createGenericButton from "./buttons/createGenericButton";
 import createSelect from "@/ui/scripts/input/select";
 import createInput from "./input/input";
+import { createJsonForm } from "./input/form";
 
 export default function createConfigEditor(config: Config): HTMLElement {
   let list = document.createElement("ul");
@@ -25,11 +26,21 @@ export default function createConfigEditor(config: Config): HTMLElement {
     );
     if (propertyName === "outputType") {
       const selected: string = entry[1] as OutputType;
-      const configSelect = createSelect(entry[0], selected, ["jsx", "html"]);
+      const configSelect = createSelect(entry[0], ["jsx", "html"], selected);
 
       inputHolder.appendChild(configSelect);
       valueSource = configSelect;
     } else if (propertyName === "size") {
+      const currentSize: SizeSetting = entry[1] as SizeSetting;
+      const form = createJsonForm(
+        [
+          { name: "sizeRound", type: "string", data: currentSize.sizeRound },
+          { name: "sizeType", type: "string", data: currentSize.sizeType },
+        ],
+        currentSize,
+      );
+      inputHolder.appendChild(form);
+      /*
       const input = createInput(undefined, "size");
       try {
         const inputValue: string = JSON.stringify(entry[1]);
@@ -40,6 +51,7 @@ export default function createConfigEditor(config: Config): HTMLElement {
       }
       valueSource = input;
       inputHolder.appendChild(input);
+      */
     }
     const configOptionButton = createGenericButton("set");
     configOptionButton.onclick = () => {
