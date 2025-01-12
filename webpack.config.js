@@ -26,11 +26,6 @@ module.exports = (env, argv) => ({
     alias: {
       "@": path.resolve(__dirname, "src/"),
     },
-
-    fallback: {
-      crypto: false, // require.resolve("crypto-browserify"),
-      //buffer: require.resolve("buffer")
-    },
   },
   output: {
     filename: "[name].js",
