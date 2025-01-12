@@ -59,6 +59,8 @@ declare global {
     minWidth?: number | null | undefined;
     layoutMode?: LayoutMode;
     itemSpacing?: number;
+    absoluteBoundingBox: Rect | null;
+    absoluteRenderBounds: Rect | null;
     x: number;
     y: number;
     relativeTransform: Transform;
@@ -69,11 +71,16 @@ declare global {
   };
   type SvgFill = {
     id: string;
-    type?: "GRADIENT_LINEAR";
+    type?: "GRADIENT_LINEAR" | "IMAGE";
     stops?: Array<{
       offset: number;
       color: RGBA;
     }>;
+    pattern?: {
+      name: string;
+      height: number;
+      width: number;
+    };
   };
   type TextedNode = {
     name: string;
