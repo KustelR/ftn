@@ -1,26 +1,34 @@
 import { getPropName } from "@/utils/config";
 import rgbToHex from "@/utils/rgbToHex";
+import generateDefs from "./generateDefs";
+import generateFillDefs from "./generateFillDefs";
+import { generateFillProp } from ".";
 
 export default function generateStrokes(
   node: VectorNode,
   config: { outputType: OutputType },
+  defs: Set<SvgFill>,
 ): Array<Prop> {
   const result: Array<Prop> = [];
+  if (node.strokes.length === 0) return result;
   if (typeof node.strokes !== "symbol") {
     const fill = node.strokes[0];
-    if (!fill) return result;
-    switch (fill.type) {
-      case "SOLID":
-        result.push({ name: "stroke", data: [`${rgbToHex(fill.color)}`] });
-        break;
+    const strokeProps = generateFillProp(fill);
+    console.log(strokeProps);
+    if (strokeProps.opacity) {
+      result.push({
+        name: "stroke-opacity",
+        data: [strokeProps.opacity.toString()],
+      });
     }
-  }
-  if (node.strokes[0].opacity !== undefined) {
     result.push({
-      name: getPropName("stroke-opacity", config),
-      data: [`${node.strokes[0].opacity}`],
+      name: "stroke",
+      data: [strokeProps.fill],
     });
   }
+  generateFillDefs([...node.strokes], defs, node);
+  generateDefs(defs, config);
+
   if (typeof node.strokeCap !== "symbol") {
     if (
       node.strokeCap !== "NONE" &&
@@ -28,20 +36,20 @@ export default function generateStrokes(
       node.strokeCap !== "ARROW_EQUILATERAL"
     ) {
       result.push({
-        name: getPropName("stroke-linecap", config),
+        name: "stroke-linecap",
         data: [`${node.strokeCap.toLowerCase()}`],
       });
     }
   }
   if (typeof node.strokeJoin !== "symbol") {
     result.push({
-      name: getPropName("stroke-linejoin", config),
+      name: "stroke-linejoin",
       data: [`${node.strokeJoin.toLowerCase()}`],
     });
   }
   if (typeof node.strokeWeight !== "symbol") {
     result.push({
-      name: getPropName("stroke-width", config),
+      name: "stroke-width",
       data: [`${node.strokeWeight}px`],
     });
   }
