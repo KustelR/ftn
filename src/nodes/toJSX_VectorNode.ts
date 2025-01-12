@@ -2,6 +2,7 @@ import rgbToHex from "@/utils/rgbToHex";
 import {
   generateDefs,
   generateFillDefs,
+  generateFillProp,
   generateId,
   generatePath,
   generatePolygon,
@@ -21,32 +22,34 @@ export default function toJSX_VectorNode(
   let itemProps: Array<Prop> = [];
 
   if (typeof node.fills != "symbol" && options.fills) {
-    if (node.fills.length == 0)
+    generateFillDefs([...node.fills], options.fills, node);
+    if (node.fills.length === 0) {
       itemProps.push({
-        name: getPropName("fill-opacity", config),
+        name: "fill-opacity",
         data: ["0"],
       });
-    generateFillDefs([...node.fills], options.fills);
+    }
+    if (node.strokes.length === 0) {
+      itemProps.push({
+        name: "stroke-opacity",
+        data: ["0"],
+      });
+    }
     node.fills.forEach((fill) => {
-      switch (fill.type) {
-        case "SOLID":
-          itemProps.push({ name: `fill`, data: [`${rgbToHex(fill.color)}`] });
-          break;
-        case "GRADIENT_LINEAR":
-          itemProps.push({
-            name: `fill`,
-            data: [`url('#${generateId(fill)}')`],
-          });
-          break;
-        default:
-          console.warn(
-            `Unsupported fill type ${fill.type} for svg gradient for node ${node.name}`,
-          );
-      }
+      const fillProps = generateFillProp(fill);
+      if (fillProps.opacity)
+        itemProps.push({
+          name: "fill-opacity",
+          data: [`${fillProps.opacity}`],
+        });
+      itemProps.push({
+        name: "fill",
+        data: [fillProps.fill],
+      });
     });
   }
 
-  const strokes = generateStrokes(node, config);
+  const strokes = generateStrokes(node, config, options.fills);
   itemProps = [...strokes, ...itemProps];
 
   let resultObject: HtmlObject;
