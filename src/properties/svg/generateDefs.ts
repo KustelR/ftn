@@ -37,12 +37,44 @@ export default function generateDefs(
           return parsedStop;
         });
         result.push({
-          tagName: getPropName("linear-gradient", config),
+          tagName: "linear-gradient",
           props: [{ name: "id", data: [fill.id] }],
           children: stops ? stops : [],
         });
         break;
+      case "IMAGE":
+        if (!fill.pattern) {
+          throw new Error(
+            `Trying to create Image fill from no pattern\nfill: ${fill}`,
+          );
+        }
+        result.push({
+          tagName: "pattern",
+          props: [
+            { name: "id", data: [fill.id] },
+            { name: "width", data: ["100%"] },
+            { name: "height", data: ["100%"] },
+          ],
+          children: [
+            {
+              tagName: "image",
+              props: [
+                {
+                  name: "href",
+                  data: [
+                    `https://placehold.co/${Math.round(fill.pattern.width)}x${Math.round(fill.pattern.height)}?text=${fill.pattern.name}`,
+                  ],
+                },
+                { name: "width", data: ["100%"] },
+                { name: "height", data: ["100%"] },
+              ],
+              children: [],
+            },
+          ],
+        });
+        break;
       default:
+        console.warn(`Unsupported fill type: ${fill.type}`);
     }
   });
   if (result.length === 0)
