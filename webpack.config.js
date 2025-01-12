@@ -8,7 +8,7 @@ module.exports = (env, argv) => ({
   devtool: argv.mode === "production" ? false : "inline-source-map",
   entry: {
     index: "./src/index.ts",
-    uiIndex: "./src/ui/scripts/index.ts" // This is the entry point for our plugin code.
+    uiIndex: "./src/ui/scripts/index.ts", // This is the entry point for our plugin code.
   },
   module: {
     rules: [
@@ -25,6 +25,11 @@ module.exports = (env, argv) => ({
     extensions: [".ts", ".js"],
     alias: {
       "@": path.resolve(__dirname, "src/"),
+    },
+
+    fallback: {
+      crypto: false, // require.resolve("crypto-browserify"),
+      //buffer: require.resolve("buffer")
     },
   },
   output: {

@@ -19,9 +19,13 @@ const defs: Set<SvgFill> = new Set();
 describe("generateStrokes()", () => {
   test("should generate correct stroke properties", () => {
     expect(
-      generateStrokes(nodeWithNormalStroke as unknown as VectorNode, {
-        outputType: "html",
-      }, defs),
+      generateStrokes(
+        nodeWithNormalStroke as unknown as VectorNode,
+        {
+          outputType: "html",
+        },
+        defs,
+      ),
     ).toEqual([
       { name: "stroke", data: ["#800080"] },
       { name: "stroke-opacity", data: ["0.9"] },
