@@ -19,7 +19,7 @@ export default function generateFillDefs(
         });
         break;
       default:
-        console.warn("Unsupported fill type for svg gradient");
+        console.warn(`Unsupported fill type for svg gradient: ${fill.type}`);
     }
   }
 }
