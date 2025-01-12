@@ -15,6 +15,8 @@ export default function composeElement(
     return obj.children.map((child) => composeElement(child, config)).join("");
   }
 
+  const tagName = getPropName(obj.tagName, config);
+
   const props: Array<string> = [];
   obj.props.forEach((prop) => {
     const name = getPropName(prop.name, config);
@@ -27,8 +29,8 @@ export default function composeElement(
     }
   });
   return [
-    `<${obj.tagName}`,
+    `<${tagName}`,
     `${props.length > 0 ? " " + props.join(" ") : ""}>`,
-    `${obj.children.map((child) => composeElement(child, config)).join("")}</${obj.tagName}>`,
+    `${obj.children.map((child) => composeElement(child, config)).join("")}</${tagName}>`,
   ].join("");
 }
