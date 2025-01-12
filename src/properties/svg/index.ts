@@ -5,3 +5,4 @@ export { default as generatePath } from "./generatePath";
 export { default as generatePolygon } from "./generatePolygon";
 export { default as generateStrokes } from "./generateStrokes";
 export { default as generateSvg } from "./generateSvg";
+export { default as generateFillProp } from "./generateFillProp";
