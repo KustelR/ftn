@@ -1,4 +1,5 @@
 import generateTailwind from "@/utils/generateTailwind";
+import { getPropName } from "./config";
 
 export default function composeElement(
   obj: HtmlObject | string | null,
@@ -16,11 +17,12 @@ export default function composeElement(
 
   const props: Array<string> = [];
   obj.props.forEach((prop) => {
+    const name = getPropName(prop.name, config);
     if (Array.isArray(prop.data)) {
-      props.push(`${prop.name}="${prop.data.join(" ")}"`);
-    } else if (prop.name === "class" || prop.name === "className") {
+      props.push(`${name}="${prop.data.join(" ")}"`);
+    } else if (name === "class" || name === "className") {
       props.push(
-        `${prop.name}="${generateTailwind(prop.data as TailwindProperties, config)}"`,
+        `${name}="${generateTailwind(prop.data as TailwindProperties, config)}"`,
       );
     }
   });
