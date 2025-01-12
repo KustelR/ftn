@@ -27,8 +27,8 @@ describe("generateStrokes()", () => {
         defs,
       ),
     ).toEqual([
-      { name: "stroke", data: ["#800080"] },
       { name: "stroke-opacity", data: ["0.9"] },
+      { name: "stroke", data: ["#800080"] },
       { name: "stroke-linecap", data: ["round"] },
       { name: "stroke-linejoin", data: ["miter"] },
       { name: "stroke-width", data: ["1px"] },
