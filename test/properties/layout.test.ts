@@ -9,6 +9,18 @@ const node: Layouted = {
   width: 200,
   x: 0,
   y: 0,
+  absoluteBoundingBox: {
+    x: 0,
+    y: 0,
+    width: 200,
+    height: 100,
+  },
+  absoluteRenderBounds: {
+    x: 0,
+    y: 0,
+    width: 200,
+    height: 100,
+  },
   layoutMode: "NONE",
   relativeTransform: [
     [1, 0, 0],
