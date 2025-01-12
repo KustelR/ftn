@@ -37,15 +37,9 @@ function fixedLayout(node: Layouted, config: Config): TailwindProperties {
     !(node.parent as Layouted).layoutMode
   ) {
     result.set("absolute", true);
-    let left = node.x;
-    let top = node.y;
-    if (node.parent.type === "GROUP") {
-      top = node.y - node.parent.y;
-      left = node.x - node.parent.x;
-    }
-    if (node.x !== 0)
-      result.set("left", getSize(left, config, node.parent, "W"));
-    if (node.y !== 0) result.set("top", getSize(top, config, node.parent, "H"));
+    const [left, top] = getCoordinates(node);
+    if (left !== 0) result.set("left", getSize(left, config, node.parent, "W"));
+    if (top !== 0) result.set("top", getSize(top, config, node.parent, "H"));
   }
   return result;
 }
@@ -145,4 +139,34 @@ function generateLayoutSizing(
   }
 
   return res;
+}
+
+function getCoordinates(node: Layouted) {
+  if (
+    !node.parent ||
+    node.parent.type === "DOCUMENT" ||
+    node.parent.type === "PAGE"
+  ) {
+    return [0, 0, 0, 0];
+  }
+  let left = node.x;
+  let top = node.y;
+
+  if (node.parent.type === "GROUP") {
+    /*
+    if (node.absoluteRenderBounds && node.parent.absoluteRenderBounds) {
+      
+    } else */ if (node.absoluteBoundingBox && node.parent.absoluteBoundingBox) {
+      top = node.absoluteBoundingBox.y - node.parent.absoluteBoundingBox.y;
+      left = node.absoluteBoundingBox.x - node.parent.absoluteBoundingBox.x;
+    } else if (node.absoluteRenderBounds && node.parent.absoluteRenderBounds) {
+      top = node.absoluteRenderBounds.y - node.parent.absoluteRenderBounds.y;
+      left = node.absoluteRenderBounds.x - node.parent.absoluteRenderBounds.x;
+    } else {
+      top = node.y - node.parent.y;
+      left = node.x - node.parent.x;
+    }
+  }
+
+  return [left, top];
 }
