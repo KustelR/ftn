@@ -20,7 +20,7 @@ export default function toJSXWIP_TextNode(
     tagName: tagName,
     props: [
       {
-        name: getPropName("class", config),
+        name: "class",
         data: classNames,
       },
     ],
