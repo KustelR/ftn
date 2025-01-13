@@ -13,29 +13,40 @@ export default function toJSX_SceneNode(
   node: SceneNode,
   config: Config,
 ): HtmlObject {
+  let parsedNode: HtmlObject;
+  let nodeClasses: TailwindProperties = new Map();
   switch (node.type) {
     case "FRAME":
-      return toJSX_FrameNode(node, config);
+      parsedNode = toJSX_FrameNode(node, config);
+      break;
     case "VECTOR":
-      return toJSX_VectorNode(node, config);
+      parsedNode = toJSX_VectorNode(node, config);
+      break;
     case "TEXT":
-      return toJSX_TextNode(node, config);
+      parsedNode = toJSX_TextNode(node, config);
+      break;
     case "RECTANGLE":
-      return toJSX_ShapeNode(node, config);
+      parsedNode = toJSX_ShapeNode(node, config);
+      break;
     case "RECTANGLE":
-      return toJSX_ShapeNode(node, config);
+      parsedNode = toJSX_ShapeNode(node, config);
+      break;
     case "ELLIPSE":
-      return toJSX_ShapeNode(node, config);
+      parsedNode = toJSX_ShapeNode(node, config);
+      break;
     case "GROUP":
-      return toJSX_GroupNode(node, config);
+      parsedNode = toJSX_GroupNode(node, config);
+      break;
     case "COMPONENT":
-      return toJSX_ComponentNode(node, config);
+      parsedNode = toJSX_ComponentNode(node, config);
+      break;
     case "SECTION":
-      return toJSX_SectionNode(node, config);
+      parsedNode = toJSX_SectionNode(node, config);
+      break;
     default:
       console.warn(`[WARNING!] Unsupported node type: ${node.type}`);
-      //return `<div className="${`w-[${node.width}] h-[${node.height}]`}">${`Unsupported node type: ${node.type}`}</div>`;
-      return {
+      //parsedNode = `<div className="${`w-[${node.width}] h-[${node.height}]`}">${`Unsupported node type: ${node.type}`}</div>`;
+      parsedNode = {
         tagName: "div",
         props: [
           {
@@ -46,4 +57,24 @@ export default function toJSX_SceneNode(
         children: [],
       };
   }
+  if (
+    node.type !== "STICKY" &&
+    node.type !== "CODE_BLOCK" &&
+    node.type !== "WIDGET" &&
+    node.type !== "EMBED" &&
+    node.type !== "LINK_UNFURL" &&
+    node.type !== "MEDIA" &&
+    node.type !== "SECTION" &&
+    node.type !== "TABLE"
+  )
+    nodeClasses.set("rotate", `[${node.rotation}deg]`);
+  console.log(parsedNode);
+  if (parsedNode.props[0].name === "class") {
+    const classes = parsedNode.props[0].data as TailwindProperties;
+    parsedNode.props[0] = {
+      name: "class",
+      data: new Map([...classes, ...nodeClasses]),
+    };
+  }
+  return parsedNode;
 }
