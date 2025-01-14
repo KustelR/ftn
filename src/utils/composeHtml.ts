@@ -17,17 +17,14 @@ export default function composeElement(
 
   const tagName = getPropName(obj.tagName, config);
 
-  const props: Array<string> = [];
-  obj.props.forEach((prop) => {
-    const name = getPropName(prop.name, config);
-    if (Array.isArray(prop.data)) {
-      props.push(`${name}="${prop.data.join(" ")}"`);
-    } else if (name === "class" || name === "className") {
-      props.push(
-        `${name}="${generateTailwind(prop.data as TailwindProperties, config)}"`,
-      );
+  const props: Array<string> = Object.entries(obj.props).map(([key, value]) => {
+    if (Array.isArray(value)) {
+      return `${key}="${value.join(" ")}"`;
+    } else {
+      return `${key}="${generateTailwind(value, config)}"`;
     }
   });
+
   return [
     `<${tagName}`,
     `${props.length > 0 ? " " + props.join(" ") : ""}>`,

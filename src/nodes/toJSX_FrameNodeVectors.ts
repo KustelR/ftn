@@ -20,12 +20,9 @@ export default function toJSX_FrameNodeVectors(
   });
   return {
     tagName: "svg",
-    props: [
-      {
-        name: getPropName("class", config),
-        data: className,
-      },
-    ],
+    props: {
+      class: className,
+    },
     children: [...children, generateDefs(defs, config)],
   };
 }

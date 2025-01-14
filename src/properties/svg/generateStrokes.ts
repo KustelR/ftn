@@ -8,23 +8,17 @@ export default function generateStrokes(
   node: VectorNode,
   config: { outputType: OutputType },
   defs: Set<SvgFill>,
-): Array<Prop> {
-  const result: Array<Prop> = [];
+): Props {
+  const result: Props = {};
   if (node.strokes.length === 0) return result;
   if (typeof node.strokes !== "symbol") {
     const fill = node.strokes[0];
     const strokeProps = generateFillProp(fill);
     console.log(strokeProps);
     if (strokeProps.opacity) {
-      result.push({
-        name: "stroke-opacity",
-        data: [strokeProps.opacity.toString()],
-      });
+      result["stroke-opacity"] = [strokeProps.opacity.toString()];
     }
-    result.push({
-      name: "stroke",
-      data: [strokeProps.fill],
-    });
+    result["stroke"] = [strokeProps.fill];
   }
   generateFillDefs([...node.strokes], defs, node);
   generateDefs(defs, config);
@@ -35,23 +29,14 @@ export default function generateStrokes(
       node.strokeCap !== "ARROW_LINES" &&
       node.strokeCap !== "ARROW_EQUILATERAL"
     ) {
-      result.push({
-        name: "stroke-linecap",
-        data: [`${node.strokeCap.toLowerCase()}`],
-      });
+      result["stroke-linecap"] = [`${node.strokeCap.toLowerCase()}`];
     }
   }
   if (typeof node.strokeJoin !== "symbol") {
-    result.push({
-      name: "stroke-linejoin",
-      data: [`${node.strokeJoin.toLowerCase()}`],
-    });
+    result["stroke-linejoin"] = [`${node.strokeJoin.toLowerCase()}`];
   }
   if (typeof node.strokeWeight !== "symbol") {
-    result.push({
-      name: "stroke-width",
-      data: [`${node.strokeWeight}px`],
-    });
+    result["stroke-width"] = [`${node.strokeWeight}px`];
   }
   return result;
 }

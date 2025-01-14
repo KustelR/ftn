@@ -45,12 +45,9 @@ export default function toJSX_FrameNode(
 
   return {
     tagName: tagName,
-    props: [
-      {
-        name: getPropName("class", config),
-        data: classNames,
-      },
-    ],
+    props: {
+      class: classNames,
+    },
     children: children,
   };
 }

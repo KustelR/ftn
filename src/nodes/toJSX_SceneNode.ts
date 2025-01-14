@@ -48,12 +48,9 @@ export default function toJSX_SceneNode(
       //parsedNode = `<div className="${`w-[${node.width}] h-[${node.height}]`}">${`Unsupported node type: ${node.type}`}</div>`;
       parsedNode = {
         tagName: "div",
-        props: [
-          {
-            name: getPropName("class", config),
-            data: [`w-[${node.width}] h-[${node.height}]`],
-          },
-        ],
+        props: {
+          class: [`w-[${node.width}] h-[${node.height}]`],
+        },
         children: [],
       };
   }
@@ -69,12 +66,9 @@ export default function toJSX_SceneNode(
   )
     nodeClasses.set("rotate", `[${-node.rotation}deg]`);
   console.log(parsedNode);
-  if (parsedNode.props[0].name === "class") {
-    const classes = parsedNode.props[0].data as TailwindProperties;
-    parsedNode.props[0] = {
-      name: "class",
-      data: new Map([...classes, ...nodeClasses]),
-    };
+  if (parsedNode.props["class"]) {
+    const classes = parsedNode.props["class"] as TailwindProperties;
+    parsedNode.props["class"] = new Map([...classes, ...nodeClasses]);
   }
   return parsedNode;
 }

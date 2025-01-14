@@ -18,12 +18,9 @@ export default function toJSXWIP_TextNode(
   classNames = new Map([...generateLayout(node, config), ...classNames]);
   return {
     tagName: tagName,
-    props: [
-      {
-        name: "class",
-        data: classNames,
-      },
-    ],
+    props: {
+      class: classNames,
+    },
     children: [node.characters],
   };
 }

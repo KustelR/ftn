@@ -90,16 +90,16 @@ declare global {
     textAlignHorizontal: "LEFT" | "CENTER" | "RIGHT" | "JUSTIFIED";
     textAlignVertical: "TOP" | "BOTTOM" | "CENTER";
   };
+  type Props = {
+    [key: string]: Prop;
+  };
   type HtmlObject = {
     tagName: string;
-    props: Array<Prop>;
+    props: Props;
     children: Array<HtmlObject | string | null>;
     destroyOnRender?: boolean;
   };
-  type Prop = {
-    name: string;
-    data: Array<string> | TailwindProperties;
-  };
+  type Prop = Array<string> | TailwindProperties;
   type ToUiMessage = {
     type: "CODE" | "LAST_CODE" | "IMPORTS" | "CONFIG";
     data: string;

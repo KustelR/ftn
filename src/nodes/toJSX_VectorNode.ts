@@ -19,50 +19,36 @@ export default function toJSX_VectorNode(
     fills: new Set<SvgFill>(),
   },
 ): HtmlObject {
-  let itemProps: Array<Prop> = [];
+  let itemProps: Props = {};
 
   if (typeof node.fills != "symbol" && options.fills) {
     generateFillDefs([...node.fills], options.fills, node);
     if (node.fills.length === 0) {
-      itemProps.push({
-        name: "fill-opacity",
-        data: ["0"],
-      });
+      itemProps["fill-opacity"] = ["0"];
     }
     if (node.strokes.length === 0) {
-      itemProps.push({
-        name: "stroke-opacity",
-        data: ["0"],
-      });
+      itemProps["stroke-opacity"] = ["0"];
     }
     node.fills.forEach((fill) => {
       const fillProps = generateFillProp(fill);
-      if (fillProps.opacity)
-        itemProps.push({
-          name: "fill-opacity",
-          data: [`${fillProps.opacity}`],
-        });
-      itemProps.push({
-        name: "fill",
-        data: [fillProps.fill],
-      });
+      if (fillProps.opacity) {
+        itemProps["fill-opacity"] = [`${fillProps.opacity}`];
+      }
+      itemProps["fill"] = [fillProps.fill];
     });
   }
 
   const strokes = generateStrokes(node, config, options.fills);
-  itemProps = [...strokes, ...itemProps];
+  itemProps = Object.assign(itemProps, strokes);
 
   let resultObject: HtmlObject;
   const svgProps = generateSvg(node, config);
   resultObject = {
     tagName: `svg`,
     children: [],
-    props: [
-      {
-        name: getPropName("class", config),
-        data: [`overflow-visible`, svgProps.classNames],
-      },
-    ],
+    props: {
+      class: [`overflow-visible`, svgProps.classNames],
+    },
   };
   if (options.hasOuterSvg) {
     resultObject.destroyOnRender = true;

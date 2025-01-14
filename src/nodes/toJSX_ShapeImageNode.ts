@@ -31,17 +31,16 @@ export default function toJSX_ShapeImageNode(
       ...classNames,
     ]);
   }
-  return {
+  const result: HtmlObject = {
     tagName: tagName,
-    props: [
-      {
-        name: getPropName("class", config),
-        data: classNames,
-      },
-      ...[...otherTags].map((tag) => {
-        return { name: tag[0], data: [tag[1]] };
-      }),
-    ],
+    props: {
+      class: classNames,
+    },
     children: [],
   };
+  otherTags.forEach((value, key) => {
+    result.props[key] = [value];
+  });
+
+  return result;
 }

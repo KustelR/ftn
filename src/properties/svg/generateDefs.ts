@@ -10,7 +10,7 @@ export default function generateDefs(
     return {
       tagName: "defs",
       children: [],
-      props: [],
+      props: {},
       destroyOnRender: true,
     };
   data.forEach((fill) => {
@@ -19,26 +19,20 @@ export default function generateDefs(
         const stops = fill.stops?.map((stop) => {
           const parsedStop: HtmlObject = {
             tagName: "stop",
-            props: [
-              { name: "offset", data: [`${stop.offset}`] },
-              {
-                name: getPropName("stop-color", config),
-                data: [`${rgbToHex(stop.color)}`],
-              },
-            ],
+            props: {
+              offset: [`${stop.offset}`],
+              "stop-color": [`${rgbToHex(stop.color)}`],
+            },
             children: [],
           };
           if (stop.color.a !== 1) {
-            parsedStop.props.push({
-              name: getPropName("stop-opacity", config),
-              data: [`${stop.color.a}`],
-            });
+            parsedStop.props["stop-opacity"] = [`${stop.color.a}`];
           }
           return parsedStop;
         });
         result.push({
           tagName: "linear-gradient",
-          props: [{ name: "id", data: [fill.id] }],
+          props: { id: [fill.id] },
           children: stops ? stops : [],
         });
         break;
@@ -50,24 +44,17 @@ export default function generateDefs(
         }
         result.push({
           tagName: "pattern",
-          props: [
-            { name: "id", data: [fill.id] },
-            { name: "width", data: ["100%"] },
-            { name: "height", data: ["100%"] },
-          ],
+          props: { id: [fill.id], width: ["100%"], height: ["100%"] },
           children: [
             {
               tagName: "image",
-              props: [
-                {
-                  name: "href",
-                  data: [
-                    `https://placehold.co/${Math.round(fill.pattern.width)}x${Math.round(fill.pattern.height)}?text=${fill.pattern.name}`,
-                  ],
-                },
-                { name: "width", data: ["100%"] },
-                { name: "height", data: ["100%"] },
-              ],
+              props: {
+                href: [
+                  `https://placehold.co/${Math.round(fill.pattern.width)}x${Math.round(fill.pattern.height)}?text=${fill.pattern.name}`,
+                ],
+                width: ["100%"],
+                height: ["100%"],
+              },
               children: [],
             },
           ],
@@ -81,12 +68,12 @@ export default function generateDefs(
     return {
       tagName: "defs",
       children: [],
-      props: [],
+      props: {},
       destroyOnRender: true,
     };
   return {
     tagName: "defs",
     children: result,
-    props: [],
+    props: {},
   };
 }

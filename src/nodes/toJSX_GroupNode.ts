@@ -6,12 +6,12 @@ export default function toJSX_GroupNode(
   node: GroupNode,
   config: Config,
 ): HtmlObject {
-  const props: Array<Prop> = [];
+  const props: Props = {};
   let classNames: TailwindProperties = new Map();
 
   classNames = new Map([...generateLayout(node, config), ...classNames]);
 
-  props.push({ name: getPropName("class", config), data: classNames });
+  props["class"] = classNames;
   return {
     tagName: "div",
     props: props,
