@@ -14,4 +14,7 @@ describe("propToJsx", () => {
   test("correctly convert long props", () => {
     expect(propToJsx("long-long-long-prop")).toBe("longLongLongProp");
   });
+  test("correctly convert class", () => {
+    expect(propToJsx("class")).toBe("className");
+  });
 });
