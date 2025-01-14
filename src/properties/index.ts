@@ -5,3 +5,4 @@ export { default as generateBorders } from "./borders";
 export { default as generateTextColor } from "./textColor";
 export { default as generateFont } from "./font";
 export { default as getRotation } from "./rotation";
+export { default as getBlendMode } from "./blendMode";

@@ -7,7 +7,7 @@ import {
   toJSX_SectionNode,
 } from "@/nodes";
 import toJSX_FrameNode from "@/nodes/toJSX_FrameNode";
-import { getRotation } from "@/properties";
+import { getBlendMode, getRotation } from "@/properties";
 import getSize from "@/utils/getSize";
 
 export default function toJSX_SceneNode(
@@ -67,6 +67,13 @@ export default function toJSX_SceneNode(
     parsedNode.props["class"] = new Map([...classes, ...rotation]);
   } else {
     parsedNode.props["class"] = rotation;
+  }
+  const blendMode = getBlendMode(node);
+  if (parsedNode.props["class"]) {
+    const classes = parsedNode.props["class"] as TailwindProperties;
+    parsedNode.props["class"] = new Map([...classes, ...blendMode]);
+  } else {
+    parsedNode.props["class"] = blendMode;
   }
   return parsedNode;
 }
