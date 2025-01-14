@@ -5,9 +5,7 @@ import getSize from "@/utils/getSize";
 export default function generateSvg(
   node: VectorNode,
   config: Config,
-): {
-  classNames: string;
-} {
+): TailwindProperties {
   let strokeWeightResize = 0;
   if (node.width === 0 || node.height === 0) {
     if (typeof node.strokeWeight != "symbol") {
@@ -24,5 +22,5 @@ export default function generateSvg(
     getSize(node.width + strokeWeightResize, config, node.parent, "W"),
   );
 
-  return { classNames: generateTailwind(classNames, config) };
+  return classNames;
 }
