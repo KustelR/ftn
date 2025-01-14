@@ -1,6 +1,5 @@
 import { generateLayout } from "@/properties";
 import { default as toJSX } from "@/toJsx";
-import { getPropName } from "@/utils/config";
 
 export default function toJSX_GroupNode(
   node: GroupNode,

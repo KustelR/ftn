@@ -6,7 +6,6 @@ import {
 } from "@/properties";
 import toJSX from "@/toJsx";
 import { toJSX_FrameNodeVectors } from "@/nodes";
-import { getPropName } from "@/utils/config";
 
 export default function toJSX_FrameNode(
   node: FrameNode,

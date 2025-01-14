@@ -1,6 +1,6 @@
 import propNameToJsx from "./propNameToJsx";
 
-export { generateConfig, fillConfig, getConfig, getPropName };
+export { generateConfig, fillConfig, getConfig, adaptName };
 function generateConfig(): Config {
   return {
     outputType: "html",
@@ -55,7 +55,7 @@ function isConfig(config: any): config is Config {
   return true;
 }
 
-function getPropName(
+function adaptName(
   propName: string,
   config: { outputType: OutputType },
 ): string {

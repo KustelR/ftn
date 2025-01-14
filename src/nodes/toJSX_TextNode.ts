@@ -1,6 +1,5 @@
 import generateTailwind from "@/utils/generateTailwind";
 import { generateFont, generateLayout, generateTextColor } from "../properties";
-import { getPropName } from "@/utils/config";
 
 export default function toJSXWIP_TextNode(
   node: TextNode,

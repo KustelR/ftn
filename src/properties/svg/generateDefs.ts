@@ -1,4 +1,3 @@
-import { getPropName } from "@/utils/config";
 import rgbToHex from "@/utils/rgbToHex";
 
 export default function generateDefs(

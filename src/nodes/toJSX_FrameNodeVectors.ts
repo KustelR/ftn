@@ -1,8 +1,5 @@
 import { toJSX_VectorNode } from "@/nodes";
-import { generateBorders, generateSpacing } from "@/properties";
 import { generateDefs } from "@/properties/svg";
-import { getPropName } from "@/utils/config";
-import generateTailwind from "@/utils/generateTailwind";
 
 export default function toJSX_FrameNodeVectors(
   node: FrameNode,

@@ -1,7 +1,5 @@
 import { generateBgColor, generateLayout } from "@/properties";
 import { toJSX_ShapeImageNode } from "@/nodes";
-import generateTailwind from "@/utils/generateTailwind";
-import { getPropName } from "@/utils/config";
 
 export type ShapeNode = RectangleNode | EllipseNode;
 export default function toJSX_ShapeNode(

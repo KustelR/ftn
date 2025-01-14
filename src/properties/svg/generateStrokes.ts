@@ -1,5 +1,3 @@
-import { getPropName } from "@/utils/config";
-import rgbToHex from "@/utils/rgbToHex";
 import generateDefs from "./generateDefs";
 import generateFillDefs from "./generateFillDefs";
 import { generateFillProp } from ".";

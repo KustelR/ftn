@@ -1,15 +1,12 @@
-import rgbToHex from "@/utils/rgbToHex";
 import {
   generateDefs,
   generateFillDefs,
   generateFillProp,
-  generateId,
   generatePath,
   generatePolygon,
   generateStrokes,
   generateSvg,
 } from "@/properties/svg";
-import { getPropName } from "@/utils/config";
 
 export default function toJSX_VectorNode(
   node: VectorNode,

@@ -1,5 +1,5 @@
 import generateTailwind from "@/utils/generateTailwind";
-import { getPropName } from "./config";
+import { adaptName } from "./config";
 
 export default function composeElement(
   obj: HtmlObject | string | null,
@@ -15,14 +15,16 @@ export default function composeElement(
     return obj.children.map((child) => composeElement(child, config)).join("");
   }
 
-  const tagName = getPropName(obj.tagName, config);
+  const tagName = adaptName(obj.tagName, config);
 
   const props: Array<string> = Object.entries(obj.props).map(([key, value]) => {
+    const adaptedKey = adaptName(key, config);
     if (Array.isArray(value)) {
-      return `${key}="${value.join(" ")}"`;
-    } else {
-      return `${key}="${generateTailwind(value, config)}"`;
+      return `${adaptedKey}="${value.join(" ")}"`;
+    } else if (key === "class") {
+      return `${adaptedKey}="${generateTailwind(value, config)}"`;
     }
+    throw new Error(`Invalid prop provided:\n${key}:\n${JSON.stringify(key)}`);
   });
 
   return [
