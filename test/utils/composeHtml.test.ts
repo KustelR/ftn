@@ -33,10 +33,10 @@ const mockObject: HtmlObject = {
     },
     "some string",
   ],
-  props: { 
+  props: {
     class: mockTailwind,
-     width: ["1440"]
-  }
+    width: ["1440"],
+  },
 };
 
 const config = generateConfig();
@@ -55,5 +55,14 @@ describe("composeHtml", () => {
     expect(composeElement(mockObject, config)).toBe(
       '<div class="flex" width="1440"><div class="flex"></div>some string</div>',
     );
+  });
+  test("Should throw invalid prop error", () => {
+    expect(() =>
+      composeElement(
+        // @ts-expect-error
+        { tagName: "div", props: { idk: { idk: "sdfsdf" } } },
+        config,
+      ),
+    ).toThrow('Invalid prop provided:\nidk:\n"idk"');
   });
 });
