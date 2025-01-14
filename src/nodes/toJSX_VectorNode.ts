@@ -43,11 +43,12 @@ export default function toJSX_VectorNode(
 
   let resultObject: HtmlObject;
   const svgProps = generateSvg(node, config);
+  svgProps.set("overflow", "visible");
   resultObject = {
     tagName: `svg`,
     children: [],
     props: {
-      class: [`overflow-visible`, svgProps.classNames],
+      class: svgProps,
     },
   };
   if (options.hasOuterSvg) {
