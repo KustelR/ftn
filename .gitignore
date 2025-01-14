@@ -10,4 +10,5 @@ buildUi.js
 output.css
 code.js
 
-#dev things
+#tests
+coverage 
