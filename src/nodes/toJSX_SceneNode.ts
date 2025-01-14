@@ -7,7 +7,8 @@ import {
   toJSX_SectionNode,
 } from "@/nodes";
 import toJSX_FrameNode from "@/nodes/toJSX_FrameNode";
-import { getPropName } from "@/utils/config";
+import { getRotation } from "@/properties";
+import getSize from "@/utils/getSize";
 
 export default function toJSX_SceneNode(
   node: SceneNode,
@@ -45,30 +46,27 @@ export default function toJSX_SceneNode(
       break;
     default:
       console.warn(`[WARNING!] Unsupported node type: ${node.type}`);
-      //parsedNode = `<div className="${`w-[${node.width}] h-[${node.height}]`}">${`Unsupported node type: ${node.type}`}</div>`;
       parsedNode = {
         tagName: "div",
-        props: {
-          class: [`w-[${node.width}] h-[${node.height}]`],
-        },
+        props: {},
         children: [],
       };
+      parsedNode.props.class = new Map();
+      parsedNode.props.class.set(
+        "w",
+        getSize(node.width, config, node.parent, "W"),
+      );
+      parsedNode.props.class.set(
+        "h",
+        getSize(node.width, config, node.parent, "H"),
+      );
   }
-  if (
-    node.type !== "STICKY" &&
-    node.type !== "CODE_BLOCK" &&
-    node.type !== "WIDGET" &&
-    node.type !== "EMBED" &&
-    node.type !== "LINK_UNFURL" &&
-    node.type !== "MEDIA" &&
-    node.type !== "SECTION" &&
-    node.type !== "TABLE"
-  )
-    nodeClasses.set("rotate", `[${-node.rotation}deg]`);
-  console.log(parsedNode);
+  const rotation = getRotation(node);
   if (parsedNode.props["class"]) {
     const classes = parsedNode.props["class"] as TailwindProperties;
-    parsedNode.props["class"] = new Map([...classes, ...nodeClasses]);
+    parsedNode.props["class"] = new Map([...classes, ...rotation]);
+  } else {
+    parsedNode.props["class"] = rotation;
   }
   return parsedNode;
 }
