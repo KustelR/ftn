@@ -1,4 +1,4 @@
-import { FromUiMessageType } from "@/types/FromUiType";
+import { FromUiMessageType } from "@/types/FromUiEnum";
 import createGenericButton from "./buttons/createGenericButton";
 import createSelect from "@/ui/scripts/input/select";
 import createInput from "./input/input";
