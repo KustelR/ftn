@@ -67,7 +67,7 @@ export default function toJSX_SceneNode(
     node.type !== "SECTION" &&
     node.type !== "TABLE"
   )
-    nodeClasses.set("rotate", `[${node.rotation}deg]`);
+    nodeClasses.set("rotate", `[${-node.rotation}deg]`);
   console.log(parsedNode);
   if (parsedNode.props[0].name === "class") {
     const classes = parsedNode.props[0].data as TailwindProperties;
