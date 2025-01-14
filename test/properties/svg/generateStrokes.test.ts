@@ -26,12 +26,12 @@ describe("generateStrokes()", () => {
         },
         defs,
       ),
-    ).toEqual([
-      { name: "stroke-opacity", data: ["0.9"] },
-      { name: "stroke", data: ["#800080"] },
-      { name: "stroke-linecap", data: ["round"] },
-      { name: "stroke-linejoin", data: ["miter"] },
-      { name: "stroke-width", data: ["1px"] },
-    ]);
+    ).toEqual({
+      "stroke-opacity": ["0.9"],
+      stroke: ["#800080"],
+      "stroke-linecap": ["round"],
+      "stroke-linejoin": ["miter"],
+      "stroke-width": ["1px"],
+    });
   });
 });

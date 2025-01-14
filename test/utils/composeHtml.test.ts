@@ -5,7 +5,7 @@ import { describe, expect, test } from "@jest/globals";
 const emptyObject: HtmlObject = {
   tagName: "mock",
   children: [],
-  props: [],
+  props: {},
   destroyOnRender: true,
 };
 const groupObject: HtmlObject = {
@@ -14,10 +14,10 @@ const groupObject: HtmlObject = {
     {
       tagName: "div",
       children: [],
-      props: [],
+      props: {},
     },
   ],
-  props: [],
+  props: {},
   destroyOnRender: true,
 };
 
@@ -28,15 +28,15 @@ const mockObject: HtmlObject = {
   children: [
     {
       tagName: "div",
-      props: [{ name: "class", data: mockTailwind }],
+      props: { class: mockTailwind },
       children: [],
     },
     "some string",
   ],
-  props: [
-    { name: "class", data: mockTailwind },
-    { name: "width", data: ["1440"] },
-  ],
+  props: { 
+    class: mockTailwind,
+     width: ["1440"]
+  }
 };
 
 const config = generateConfig();

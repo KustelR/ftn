@@ -8,7 +8,7 @@ const relativeTransform = [
 
 const vectorPath = { data: "somePath" };
 
-const props: Array<Prop> = [];
+const props: Props = {};
 
 describe("generatePath", () => {
   test("should generate correct path without translate property", () => {
@@ -16,18 +16,15 @@ describe("generatePath", () => {
       generatePath(
         vectorPath as VectorPath,
         { relativeTransform: relativeTransform } as unknown as VectorNode,
-        [...props],
+        Object.assign({}, props),
         false,
       ),
     ).toEqual({
       tagName: "path",
       children: [],
-      props: [
-        {
-          name: "d",
-          data: ["somePath"],
-        },
-      ],
+      props: {
+        d: ["somePath"],
+      },
     });
   });
   test("should generate correct path with translate property", () => {
@@ -35,22 +32,16 @@ describe("generatePath", () => {
       generatePath(
         vectorPath as VectorPath,
         { relativeTransform: relativeTransform } as unknown as VectorNode,
-        [...props],
+        Object.assign({}, props),
         true,
       ),
     ).toEqual({
       tagName: "path",
       children: [],
-      props: [
-        {
-          name: "d",
-          data: ["somePath"],
-        },
-        {
-          name: "transform",
-          data: ["translate(0,0)"],
-        },
-      ],
+      props: {
+        d: ["somePath"],
+        transform: ["translate(0,0)"],
+      },
     });
   });
   test("loads outer props correctly", () => {
@@ -58,9 +49,9 @@ describe("generatePath", () => {
       generatePath(
         vectorPath as VectorPath,
         { relativeTransform: relativeTransform } as unknown as VectorNode,
-        [{ name: "fill", data: ["someFill"] }],
+        { fill: ["someFill"] },
         true,
-      ).props[0],
-    ).toEqual({ name: "fill", data: ["someFill"] });
+      ).props.fill,
+    ).toEqual(["someFill"]);
   });
 });

@@ -33,7 +33,7 @@ describe("toJSX_GroupNode", () => {
       (
         (
           toJSX_GroupNode(groupChild as unknown as GroupNode, generateConfig())
-            .props[0].data as TailwindProperties
+            .props["class"] as TailwindProperties
         ).get("top") as Size
       ).absolute,
     ).toEqual(10);
@@ -41,7 +41,7 @@ describe("toJSX_GroupNode", () => {
       (
         (
           toJSX_GroupNode(groupChild as unknown as GroupNode, generateConfig())
-            .props[0].data as TailwindProperties
+            .props["class"] as TailwindProperties
         ).get("left") as Size
       ).absolute,
     ).toEqual(26);

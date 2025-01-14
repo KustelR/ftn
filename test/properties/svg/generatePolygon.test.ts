@@ -12,7 +12,7 @@ const relativeTransform = [
   [0, 1, 0],
 ];
 
-const props: Array<Prop> = [];
+const props: Props = {};
 
 describe("generatePolygon", () => {
   test("generating correct html object from polygon with no outer svg specified", () => {
@@ -22,17 +22,14 @@ describe("generatePolygon", () => {
           vectorNetwork: { vertices: vertices },
           relativeTransform: relativeTransform,
         } as unknown as VectorNode,
-        [...props],
+        Object.assign({}, props),
       ),
     ).toEqual({
       tagName: "polygon",
       children: [],
-      props: [
-        {
-          name: "points",
-          data: ["0,0", "1,1", "2,3", "0,0"],
-        },
-      ],
+      props: {
+        points: ["0,0", "1,1", "2,3", "0,0"],
+      },
     });
   });
   test("generating correct html object from polygon with outer svg specified", () => {
@@ -42,22 +39,16 @@ describe("generatePolygon", () => {
           vectorNetwork: { vertices: vertices },
           relativeTransform: relativeTransform,
         } as unknown as VectorNode,
-        [...props],
+        Object.assign({}, props),
         true,
       ),
     ).toEqual({
       tagName: "polygon",
       children: [],
-      props: [
-        {
-          name: "points",
-          data: ["0,0", "1,1", "2,3", "0,0"],
-        },
-        {
-          name: "transform",
-          data: ["translate(0,0)"],
-        },
-      ],
+      props: {
+        points: ["0,0", "1,1", "2,3", "0,0"],
+        transform: ["translate(0,0)"],
+      },
     });
   });
   test("loads external props correctly", () => {
@@ -67,8 +58,8 @@ describe("generatePolygon", () => {
           vectorNetwork: { vertices: vertices },
           relativeTransform: relativeTransform,
         } as unknown as VectorNode,
-        [{ name: "fill", data: ["someFill"] }],
-      ).props[0],
-    ).toEqual({ name: "fill", data: ["someFill"] });
+        { fill: ["someFill"] },
+      ).props.fill,
+    ).toEqual(["someFill"]);
   });
 });

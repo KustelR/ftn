@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, test } from "@jest/globals";
 const EmptyDefs: HtmlObject = {
   tagName: "defs",
   children: [],
-  props: [],
+  props: {},
   destroyOnRender: true,
 };
 
@@ -37,61 +37,34 @@ describe("generating defs for svg", () => {
 
     expect(linearDefs.children[0]).toEqual({
       tagName: "linear-gradient",
-      props: [
-        {
-          name: "id",
-          data: ["mockfill"],
-        },
-      ],
+      props: {
+        id: ["mockfill"],
+      },
       children: [
         {
           tagName: "stop",
-          props: [
-            {
-              name: "offset",
-              data: ["0"],
-            },
-            {
-              name: "stop-color",
-              data: ["#ff0000"],
-            },
-          ],
+          props: {
+            offset: ["0"],
+            "stop-color": ["#ff0000"],
+          },
           children: [],
         },
         {
           tagName: "stop",
-          props: [
-            {
-              name: "offset",
-              data: ["0.5"],
-            },
-            {
-              name: "stop-color",
-              data: ["#ff8000"],
-            },
-            {
-              name: "stop-opacity",
-              data: ["0.5"],
-            },
-          ],
+          props: {
+            offset: ["0.5"],
+            "stop-color": ["#ff8000"],
+            "stop-opacity": ["0.5"],
+          },
           children: [],
         },
         {
           tagName: "stop",
-          props: [
-            {
-              name: "offset",
-              data: ["1"],
-            },
-            {
-              name: "stop-color",
-              data: ["#800080"],
-            },
-            {
-              name: "stop-opacity",
-              data: ["0.1"],
-            },
-          ],
+          props: {
+            offset: ["1"],
+            "stop-color": ["#800080"],
+            "stop-opacity": ["0.1"],
+          },
           children: [],
         },
       ],
