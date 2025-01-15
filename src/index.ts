@@ -6,7 +6,7 @@ import { FromUiMessageType } from "./types/FromUiEnum";
 if (figma.editorType === "figma") {
   let config: Config = getConfig(await figma.clientStorage.getAsync("config"));
   fillConfig(config);
-
+  let selectedNodes: Array<HtmlObject>;
   let lastCode: string = "";
   figma.showUI(__html__);
   figma.ui.resize(450, 500);
@@ -39,6 +39,19 @@ if (figma.editorType === "figma") {
         await changeConfig(changedProperty, config);
         figma.ui.postMessage({ type: "CONFIG", data: JSON.stringify(config) });
         break;
+      case FromUiMessageType.GET_NODES:
+        figma.ui.postMessage({
+          type: "NODES",
+          data: JSON.stringify(selectedNodes, (key, value) => {
+            if (value instanceof Map) {
+              return {
+                dataType: "Map",
+                value: Array.from(value.entries()),
+              };
+            }
+            return value;
+          }),
+        });
     }
     //figma.closePlugin();
   };
