@@ -5,6 +5,7 @@ import buttonCode from "./buttonCode";
 import buttonConfig from "./buttonConfig";
 import buttonGenerate from "./buttonGenerate";
 import buttonImports from "./buttonImports";
+import addButtonExplorer from "./buttonExplorer";
 /*
 export {default as addButton} from './button';
 export {default as addButton} from './button';
@@ -29,7 +30,7 @@ export function addTopNavButtons() {
     "EXPLORER",
     undefined,
     undefined,
-    () => {},
+    addButtonExplorer,
   );
   const topNav = document.getElementById("topNav");
   if (!topNav) throw new Error("Can't add nav button, topnav was not found");
