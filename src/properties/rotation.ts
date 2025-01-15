@@ -14,6 +14,7 @@ export default function getRotation(node: SceneNode): TailwindProperties {
   }
   if (node.rotation == 0) return result;
   result.set("rotate", `[${-node.rotation}deg]`);
+  result.set("origin", `top-left`);
 
   return result;
 }

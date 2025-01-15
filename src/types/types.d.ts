@@ -61,6 +61,7 @@ declare global {
     minWidth?: number | null | undefined;
     layoutMode?: LayoutMode;
     itemSpacing?: number;
+    rotation?: number;
     absoluteBoundingBox: Rect | null;
     absoluteRenderBounds: Rect | null;
     x: number;

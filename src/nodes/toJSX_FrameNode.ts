@@ -33,9 +33,11 @@ export default function toJSX_FrameNode(
   classNames = new Map([
     ...generateLayout(node, config),
     ...generateSpacing(node, config),
-    ...generateBorders([...node.strokes], node),
     ...classNames,
   ]);
+  if (typeof node.strokes !== "symbol" && node.strokes) {
+    classNames = new Map([...generateBorders([...node.strokes], node)]);
+  }
   node.children.map((child) => {
     children.push(toJSX(child, config));
   });

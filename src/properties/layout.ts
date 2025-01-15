@@ -22,17 +22,10 @@ export default function generateLayout(
 
 function fixedLayout(node: Layouted, config: Config): TailwindProperties {
   const result: TailwindProperties = new Map();
-  if (
-    !node.parent ||
-    (node.parent as Layouted).layoutMode === "FIXED" ||
-    (node.parent as Layouted).layoutMode === "NONE" ||
-    !(node.parent as Layouted).layoutMode
-  ) {
-    result.set("absolute", true);
-    const [left, top] = getCoordinates(node);
-    if (left !== 0) result.set("left", getSize(left, config, node.parent, "W"));
-    if (top !== 0) result.set("top", getSize(top, config, node.parent, "H"));
-  }
+  result.set("absolute", true);
+  const [left, top] = getCoordinates(node);
+  if (left !== 0) result.set("left", getSize(left, config, node.parent, "W"));
+  if (top !== 0) result.set("top", getSize(top, config, node.parent, "H"));
   return result;
 }
 
@@ -141,24 +134,15 @@ function getCoordinates(node: Layouted) {
   ) {
     return [0, 0, 0, 0];
   }
-  let left = node.x;
-  let top = node.y;
 
+  const rotation: number = node.rotation ? node.rotation : 0;
+  let left = node.x; // + node.width * Math.sin((rotation / 180) * Math.PI);
+  let top = node.y; // - node.height * Math.cos((rotation / 180) * Math.PI);
+  let [offsetLeft, offsetTop] = [0, 0];
   if (node.parent.type === "GROUP") {
-    /*
-    if (node.absoluteRenderBounds && node.parent.absoluteRenderBounds) {
-      
-    } else */ if (node.absoluteBoundingBox && node.parent.absoluteBoundingBox) {
-      top = node.absoluteBoundingBox.y - node.parent.absoluteBoundingBox.y;
-      left = node.absoluteBoundingBox.x - node.parent.absoluteBoundingBox.x;
-    } else if (node.absoluteRenderBounds && node.parent.absoluteRenderBounds) {
-      top = node.absoluteRenderBounds.y - node.parent.absoluteRenderBounds.y;
-      left = node.absoluteRenderBounds.x - node.parent.absoluteRenderBounds.x;
-    } else {
-      top = node.y - node.parent.y;
-      left = node.x - node.parent.x;
-    }
+    offsetTop = node.parent.y;
+    offsetLeft = node.parent.x;
   }
 
-  return [left, top];
+  return [left - offsetLeft, top - offsetTop];
 }
