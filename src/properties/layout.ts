@@ -24,14 +24,6 @@ function fixedLayout(node: Layouted, config: Config): TailwindProperties {
   const result: TailwindProperties = new Map();
   if (
     !node.parent ||
-    node.parent.type == "DOCUMENT" ||
-    node.parent.type == "PAGE"
-  ) {
-    result.set("w", "full");
-    if (!node.minHeight) result.set("min-h", "screen");
-    return result;
-  }
-  if (
     (node.parent as Layouted).layoutMode === "FIXED" ||
     (node.parent as Layouted).layoutMode === "NONE" ||
     !(node.parent as Layouted).layoutMode
