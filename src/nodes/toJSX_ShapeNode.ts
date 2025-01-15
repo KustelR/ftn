@@ -6,7 +6,7 @@ export default function toJSX_ShapeNode(
   node: ShapeNode,
   config: Config,
 ): HtmlObject {
-  if (typeof node.fills !== "symbol") {
+  if (typeof node.fills !== "symbol" && node.fills.length > 0) {
     if (node.fills[0].type === "IMAGE") {
       return toJSX_ShapeImageNode(node, config);
     }
