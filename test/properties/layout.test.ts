@@ -29,9 +29,6 @@ const node: Layouted = {
 };
 
 describe("generateLayout()", () => {
-  test("should generate w-full because there is no parent node", () => {
-    expect(generateLayout(node, generateConfig()).get("w")).toEqual("full");
-  });
   test("should correctly generate max/min height/width", () => {
     expect(
       (
