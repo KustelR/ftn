@@ -1,3 +1,5 @@
+import { FromUiMessageType } from "./FromUiEnum";
+
 declare global {
   type Config = {
     outputType: OutputType;
@@ -101,7 +103,7 @@ declare global {
   };
   type Prop = Array<string> | TailwindProperties;
   type ToUiMessage = {
-    type: "CODE" | "LAST_CODE" | "IMPORTS" | "CONFIG";
+    type: "CODE" | "LAST_CODE" | "IMPORTS" | "CONFIG" | "NODES";
     data: string;
   };
   type SpacedNode = {
@@ -110,6 +112,10 @@ declare global {
     paddingBottom: number;
     paddingLeft: number;
     paddingRight: number;
+  };
+  type FromUiMessage = {
+    type: FromUiMessageType;
+    data: string;
   };
 }
 export {};
