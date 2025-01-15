@@ -12,7 +12,6 @@ export default function generateStrokes(
   if (typeof node.strokes !== "symbol") {
     const fill = node.strokes[0];
     const strokeProps = generateFillProp(fill);
-    console.log(strokeProps);
     if (strokeProps.opacity) {
       result["stroke-opacity"] = [strokeProps.opacity.toString()];
     }
