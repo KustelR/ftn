@@ -15,8 +15,12 @@ if (figma.editorType === "figma") {
       case FromUiMessageType.GET_CODE_FROM_SELECTION:
         lastCode = "";
         const selection = figma.currentPage.selection;
-        lastCode = await getDataFromSelection([...selection], config);
-
+        selectedNodes = await getDataFromSelection([...selection], config);
+        lastCode = selectedNodes
+          .map((node) => {
+            return composeHtml(node, config);
+          })
+          .join(``);
         figma.ui.postMessage({ type: "CODE", data: lastCode });
         break;
       case FromUiMessageType.GET_LAST_CODE:
@@ -49,9 +53,8 @@ if (figma.editorType === "figjam") {
 async function getDataFromSelection(
   selection: Array<SceneNode>,
   config: Config,
-): Promise<string> {
-  console.log(selection);
-  let result = "";
+): Promise<Array<HtmlObject>> {
+  let result: Array<HtmlObject | null> = [];
   let conversionPromises: Array<Promise<BaseNode | null>> = [];
   selection.forEach((node) => {
     conversionPromises.push(figma.getNodeByIdAsync(node.id));
@@ -59,9 +62,9 @@ async function getDataFromSelection(
   const nodes = await Promise.all(conversionPromises);
   nodes.forEach((node) => {
     if (!node) return;
-    result += composeHtml(toJSX(node, config), config);
+    result.push(toJSX(node, config));
   });
-  return result;
+  return result.filter((node) => !!node);
 }
 
 async function changeConfig(
