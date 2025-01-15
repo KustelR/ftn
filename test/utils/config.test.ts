@@ -40,15 +40,6 @@ describe("fillConfig", () => {
     config.outputType = "html";
     expect(fillConfig(config)).toEqual(config);
   });
-  /* well now there is really nothing to do for that function... waste of time
-  test("returns a new config with default properties if it doesn't", () => {
-    const config = { outputType: "jsx", size: "small" };
-    expect(fillConfig(config)).toEqual({
-      outputType: "html",
-      size: "original",
-    });
-  });
-  */
 });
 
 describe("getConfig", () => {

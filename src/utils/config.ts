@@ -77,7 +77,7 @@ function isSizeSetting(s: any): s is SizeSetting {
 }
 function setOutputType(config: Config, outType: string) {
   if (isOutputType(outType)) config.outputType = outType;
-  else console.warn("Unsupported output type: " + outType);
+  else throw new Error("Unsupported output type: " + outType);
 }
 
 function setSize(config: Config, size: string) {
@@ -89,7 +89,7 @@ function setSize(config: Config, size: string) {
     return;
   }
   if (isSizeSetting(parsedSize)) config.size = parsedSize;
-  else console.warn("Unsupported size setting: " + size);
+  else throw new Error("Unsupported size setting: " + size);
 }
 
 export function setProperty(config: Config, name: string, value: string) {
@@ -101,10 +101,9 @@ export function setProperty(config: Config, name: string, value: string) {
       setSize(config, value);
       break;
     default:
-      console.warn("Unsupported property: " + name);
-      break;
+      throw new Error("Unsupported property: " + name);
   }
 }
 function isConfigKey(s: string): s is ConfigKey {
-  return ["outputType", "size"].includes(s);
+  return Object.keys(generateConfig).includes(s);
 }
