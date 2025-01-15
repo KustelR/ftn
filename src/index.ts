@@ -1,19 +1,7 @@
 import toJSX from "./toJsx";
 import { setProperty, getConfig, fillConfig } from "@/utils/config";
 import composeHtml from "@/utils/composeHtml";
-
-enum FromUiMessageType {
-  GET_CODE_FROM_SELECTION = 0,
-  GET_LAST_CODE = 1,
-  GET_IMPORTS = 2,
-  GET_CONFIG = 3,
-  SET_CONFIG = 4,
-}
-
-type FromUiMessage = {
-  type: FromUiMessageType;
-  data: string;
-};
+import { FromUiMessageType } from "./types/FromUiEnum";
 
 if (figma.editorType === "figma") {
   let config: Config = getConfig(await figma.clientStorage.getAsync("config"));
