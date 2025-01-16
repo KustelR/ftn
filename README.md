@@ -17,13 +17,13 @@ Figma Plugin for conversion Figma designs to JSX.
 
 ## How to build
 
-Create build of plugin
+Create normal plugib build
 
 ```
 npm run build
 ```
 
-Watch changes and create build
+Watch changes and rebuild on the fly
 
 ```
 npm run dev
