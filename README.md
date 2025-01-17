@@ -6,7 +6,7 @@ Figma Plugin for conversion Figma designs to JSX.
 1. Select figma element
 ![selection](https://imgur.com/co4FYZM.png)
 2. Open plugin
-3. Press "generate button"
+3. Press "generate" button
 ![generate button](https://imgur.com/PD3QHkh.png)
 4. Copy code
 ![copy code](https://imgur.com/J3Z9oMT.png)
