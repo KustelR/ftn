@@ -63,6 +63,7 @@ function createCodeBlock(): HTMLElement {
     const appRoot = document.getElementById("appRoot");
     if (!appRoot) throw new Error("appRoot not found wtf");
     nodeData = document.createElement("code");
+    nodeData.setAttribute("id", "nodeData");
     appRoot.innerHTML = "";
     appRoot.appendChild(nodeData);
   }
