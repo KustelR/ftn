@@ -9,13 +9,13 @@ export default function generateLayout(
   res = new Map([...generateAlign(node), ...res]);
   res = new Map([...generateLayoutSizing(node, config), ...res]);
   if (node.maxHeight)
-    res.set("max-h", getSize(node.maxHeight, config, node.parent, "H"));
+    res.set("max-h", getSize(node.maxHeight, config, node.parent, "Y"));
   if (node.minHeight)
-    res.set("min-h", getSize(node.minHeight, config, node.parent, "H"));
+    res.set("min-h", getSize(node.minHeight, config, node.parent, "Y"));
   if (node.maxWidth)
-    res.set("max-w", getSize(node.maxWidth, config, node.parent, "W"));
+    res.set("max-w", getSize(node.maxWidth, config, node.parent, "X"));
   if (node.minWidth)
-    res.set("min-w", getSize(node.minWidth, config, node.parent, "W"));
+    res.set("min-w", getSize(node.minWidth, config, node.parent, "X"));
   res = new Map([...res, ...fixedLayout(node, config)]);
   return res;
 }
@@ -24,8 +24,8 @@ function fixedLayout(node: Layouted, config: Config): TailwindProperties {
   const result: TailwindProperties = new Map();
   result.set("absolute", true);
   const [left, top] = getCoordinates(node);
-  if (left !== 0) result.set("left", getSize(left, config, node.parent, "W"));
-  if (top !== 0) result.set("top", getSize(top, config, node.parent, "H"));
+  if (left !== 0) result.set("left", getSize(left, config, node.parent, "X"));
+  if (top !== 0) result.set("top", getSize(top, config, node.parent, "Y"));
   return result;
 }
 
@@ -44,7 +44,7 @@ function generateLayoutMode(
       res.set("flex-row", true);
       res.set(
         "space-x",
-        getSize(node.itemSpacing ? node.itemSpacing : 0, config, node, "W"),
+        getSize(node.itemSpacing ? node.itemSpacing : 0, config, node, "X"),
       );
       break;
     case "VERTICAL":
@@ -52,7 +52,7 @@ function generateLayoutMode(
       res.set("flex-col", true);
       res.set(
         "space-y",
-        getSize(node.itemSpacing ? node.itemSpacing : 0, config, node, "H"),
+        getSize(node.itemSpacing ? node.itemSpacing : 0, config, node, "Y"),
       );
       break;
     case "FIXED":
@@ -102,7 +102,7 @@ function generateLayoutSizing(
 
   switch (node.layoutSizingHorizontal) {
     case "FIXED":
-      res.set("w", getSize(node.width, config, node.parent, "W"));
+      res.set("w", getSize(node.width, config, node.parent, "X"));
       break;
     case "HUG":
       res.set("w", "fit");
@@ -113,7 +113,7 @@ function generateLayoutSizing(
   }
   switch (node.layoutSizingVertical) {
     case "FIXED":
-      res.set("h", getSize(node.height, config, node.parent, "H"));
+      res.set("h", getSize(node.height, config, node.parent, "Y"));
       break;
     case "HUG":
       res.set("h", "fit");

@@ -15,11 +15,11 @@ export default function generateSvg(
   const classNames = generateLayout(node, config);
   classNames.set(
     "h",
-    getSize(node.height + strokeWeightResize, config, node.parent, "H"),
+    getSize(node.height + strokeWeightResize, config, node.parent, "Y"),
   );
   classNames.set(
     "w",
-    getSize(node.width + strokeWeightResize, config, node.parent, "W"),
+    getSize(node.width + strokeWeightResize, config, node.parent, "X"),
   );
 
   return classNames;
