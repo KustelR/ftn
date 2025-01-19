@@ -6,6 +6,7 @@ import buttonConfig from "./buttonConfig";
 import buttonGenerate from "./buttonGenerate";
 import buttonImports from "./buttonImports";
 import addButtonExplorer from "./buttonExplorer";
+import { buttonCopy } from "./buttonCopy";
 /*
 export {default as addButton} from './button';
 export {default as addButton} from './button';
@@ -26,6 +27,7 @@ export function addTopNavButtons() {
     undefined,
     buttonImports,
   );
+
   const explorer = createGenericButton(
     "EXPLORER",
     undefined,
@@ -47,9 +49,11 @@ export function addBotNavButtons() {
     undefined,
     buttonGenerate,
   );
+  const copy = createGenericButton("COPY", undefined, undefined, buttonCopy);
   const clear = createGenericButton("CLEAR", undefined, undefined, buttonClear);
   const botNav = document.getElementById("botNav");
   if (!botNav) throw new Error("Can't add nav button, topnav was not found");
   botNav.appendChild(generate);
   botNav.appendChild(clear);
+  botNav.appendChild(copy);
 }

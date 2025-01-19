@@ -15,6 +15,7 @@ if (figma.editorType === "figma") {
       case FromUiMessageType.GET_CODE_FROM_SELECTION:
         lastCode = "";
         const selection = figma.currentPage.selection;
+        console.log(selection);
         selectedNodes = await getDataFromSelection([...selection], config);
         lastCode = selectedNodes
           .map((node) => {
