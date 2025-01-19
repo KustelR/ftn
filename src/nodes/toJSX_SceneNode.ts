@@ -9,13 +9,19 @@ import {
 import toJSX_FrameNode from "@/nodes/toJSX_FrameNode";
 import { getBlendMode, getRotation } from "@/properties";
 import getSize from "@/utils/getSize";
+import { addTailwindProperties } from "@/utils/changeTailwindProperties";
+import {
+  BlendModeBlacklist,
+  TextColorWhitelist,
+  BackgroundColorBlacklist,
+} from "./parserLists";
+import { generateBgColor as getBgColor } from "@/properties";
 
 export default function toJSX_SceneNode(
   node: SceneNode,
   config: Config,
 ): HtmlObject {
   let parsedNode: HtmlObject;
-  let nodeClasses: TailwindProperties = new Map();
   switch (node.type) {
     case "FRAME":
       parsedNode = toJSX_FrameNode(node, config);
@@ -54,26 +60,16 @@ export default function toJSX_SceneNode(
       parsedNode.props.class = new Map();
       parsedNode.props.class.set(
         "w",
-        getSize(node.width, config, node.parent, "W"),
+        getSize(node.width, config, node.parent, "X"),
       );
       parsedNode.props.class.set(
         "h",
-        getSize(node.width, config, node.parent, "H"),
+        getSize(node.width, config, node.parent, "Y"),
       );
   }
-  const rotation = getRotation(node);
-  if (parsedNode.props["class"]) {
-    const classes = parsedNode.props["class"] as TailwindProperties;
-    parsedNode.props["class"] = new Map([...classes, ...rotation]);
-  } else {
-    parsedNode.props["class"] = rotation;
-  }
-  const blendMode = getBlendMode(node);
-  if (parsedNode.props["class"]) {
-    const classes = parsedNode.props["class"] as TailwindProperties;
-    parsedNode.props["class"] = new Map([...classes, ...blendMode]);
-  } else {
-    parsedNode.props["class"] = blendMode;
-  }
+
+  addTailwindProperties(parsedNode, getRotation(node));
+  addTailwindProperties(parsedNode, getBlendMode(node, BlendModeBlacklist));
+  addTailwindProperties(parsedNode, getBgColor(node, BackgroundColorBlacklist));
   return parsedNode;
 }

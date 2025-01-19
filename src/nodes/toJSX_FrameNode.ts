@@ -23,13 +23,6 @@ export default function toJSX_FrameNode(
   if (svgOnly && node.children.length > 0)
     return toJSX_FrameNodeVectors(node, config);
 
-  if (typeof node.fills !== "symbol") {
-    const bgColorClasses = generateBgColor({
-      name: node.name,
-      fills: [...node.fills],
-    });
-    classNames = new Map([...bgColorClasses, ...classNames]);
-  }
   classNames = new Map([
     ...generateLayout(node, config),
     ...generateSpacing(node, config),

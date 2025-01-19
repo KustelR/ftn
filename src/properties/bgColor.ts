@@ -1,15 +1,29 @@
-//import { ResultObject } from "@/types";
 import generateTailwindColor from "@/utils/generateTailwindColor";
-//type HtmlData = Map<string, string | Array<string | TailwindProperty>>;
 
-export default function generateBgFromFills(node: {
-  name: string;
-  fills: Array<Paint>;
-}): TailwindProperties {
+/**
+ * @throws {FigmaMixedError} Error if node has mixed fills
+ */
+export default function generateBgFromFills(
+  node: SceneNode,
+  blacklist: Array<string>,
+): TailwindProperties {
   const localClassNames: TailwindProperties = new Map();
+
+  if (blacklist.includes(node.type)) {
+    return localClassNames;
+  }
+
+  node = node as RectangleNode;
+
+  if (typeof node.fills === "symbol") {
+    throw new FigmaMixedError(
+      "Figma Mixed type is not supported for BG color now",
+    );
+  }
+
   for (let i = 0; i < node.fills.length; i++) {
     const fill = node.fills[i];
-    //if (!fill) continue;
+
     if (!fill.visible) continue;
 
     switch (fill.type) {

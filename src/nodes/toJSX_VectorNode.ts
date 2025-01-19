@@ -61,7 +61,13 @@ export default function toJSX_VectorNode(
     ) {
       resultObject.children.push(
         ...node.vectorPaths.map((path) => {
-          return generatePath(path, node, itemProps, options.hasOuterSvg);
+          return generatePath(
+            path,
+            node,
+            itemProps,
+            options.hasOuterSvg,
+            config,
+          );
         }),
       );
     } else {

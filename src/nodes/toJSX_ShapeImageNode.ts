@@ -24,12 +24,7 @@ export default function toJSX_ShapeImageNode(
   const fills = typeof node.fills != "symbol" ? node.fills : [];
   classNames.set(`object`, `center`);
   classNames.set(`opacity`, `[${fills[0].opacity}]`);
-  if (typeof node.fills != "symbol") {
-    classNames = new Map([
-      ...generateBgColor({ name: node.name, fills: [...node.fills] }),
-      ...classNames,
-    ]);
-  }
+
   const result: HtmlObject = {
     tagName: tagName,
     props: {

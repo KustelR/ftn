@@ -20,13 +20,6 @@ export default function toJSX_ShapeNode(
   }
   classNames = new Map([...generateLayout(node, config), ...classNames]);
 
-  if (typeof node.fills !== "symbol") {
-    classNames = new Map([
-      ...generateBgColor({ name: node.name, fills: [...node.fills] }),
-      ...classNames,
-    ]);
-  }
-
   const result: HtmlObject = {
     tagName: tagName,
     props: {
