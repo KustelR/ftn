@@ -1,15 +1,12 @@
-export default function getBlendMode(node: SceneNode): TailwindProperties {
+export default function getBlendMode(
+  node: SceneNode,
+  blackList: Array<string>,
+): TailwindProperties {
   const result: TailwindProperties = new Map();
-  if (
-    node.type === "SLICE" ||
-    node.type === "WIDGET" ||
-    node.type === "EMBED" ||
-    node.type === "LINK_UNFURL" ||
-    node.type === "MEDIA" ||
-    node.type === "SECTION"
-  ) {
+  if (blackList.includes(node.type) && Object.hasOwn(node, "blendMode")) {
     return result;
   }
+  node = node as RectangleNode;
 
   switch (node.blendMode) {
     case "PASS_THROUGH":
