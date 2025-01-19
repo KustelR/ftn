@@ -2,13 +2,14 @@ export default function getSize(
   size: number,
   config: Config,
   parent?: BaseNode | Layouted | null,
+  dimension?: "X" | "Y",
   dimension?: "W" | "H",
 ): Size {
   let parentSize = 0;
   if (parent && parent.type !== "DOCUMENT" && parent.type !== "PAGE") {
-    if (dimension === "W") {
+    if (dimension === "X") {
       parentSize = (parent as SceneNode).width;
-    } else if (dimension === "H") {
+    } else if (dimension === "Y") {
       parentSize = (parent as SceneNode).height;
     }
   }
