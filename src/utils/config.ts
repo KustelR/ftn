@@ -37,10 +37,14 @@ function getConfig(config: string | Config | undefined): Config {
   }
 }
 
+/**
+ * Generates basic size setting
+ */
 function generateSizeSetting(): SizeSetting {
   return {
     sizeRound: "none",
     sizeType: "absolute",
+    roundExtent: undefined,
   };
 }
 

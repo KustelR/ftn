@@ -8,6 +8,11 @@ interface ItemString extends Item {
   data: string;
 }
 
+interface ItemNumber extends Item {
+  type: "number";
+  data: number;
+}
+
 interface ItemSelect extends Item {
   type: "select";
   data: Array<string>;
@@ -15,21 +20,23 @@ interface ItemSelect extends Item {
 
 interface Item {
   name: string;
-  type: "string" | "select";
+  type: string;
 }
 
 type Json = {
-  [key: string]: string;
+  [key: string]: string | number | undefined;
 };
 
+type ValueHolder = () => string | number;
+
 export function createJsonForm(
-  itemTypes: Array<ItemString | ItemSelect>,
+  itemTypes: Array<ItemString | ItemSelect | ItemNumber>,
   obj: Json,
-): [HTMLFormElement, () => string] {
+): [HTMLFormElement, ValueHolder] {
   const form = document.createElement("form");
   form.setAttribute("class", formClasses.join(" "));
 
-  const valueGenerators: Map<string, () => string> = new Map();
+  const valueGenerators: Map<string, ValueHolder> = new Map();
 
   itemTypes.forEach((entry) => {
     const itemContainer = document.createElement("div");
@@ -40,7 +47,7 @@ export function createJsonForm(
 
     const genResult = createInteractiveFromItem(entry, obj);
     let child: HTMLElement;
-    let generator: () => string;
+    let generator: ValueHolder;
     if (genResult) [child, generator] = genResult;
     else throw new Error("can't generate form from json");
     if (child) itemContainer.appendChild(child);
@@ -51,7 +58,7 @@ export function createJsonForm(
   return [
     form,
     () => {
-      const result: { [key: string]: string } = {};
+      const result: { [key: string]: string | number } = {};
       valueGenerators.forEach((func, name) => {
         result[name] = func();
       });
@@ -60,17 +67,20 @@ export function createJsonForm(
   ];
 }
 function createInteractiveFromItem(
-  entry: ItemSelect | ItemString,
+  entry: ItemString | ItemSelect | ItemNumber,
   obj: Json,
-): [HTMLElement, () => string] | undefined {
+): [HTMLElement, () => string | number] | undefined {
   let value = obj[entry.name];
+  if (!value) {
+    value = "";
+  }
   switch (entry.type) {
     case "string":
-      if (typeof value !== "string")
-        throw new Error("wrong string input type while generating json form");
-      return createInputFromItem(entry.name, value);
+      return createInputFromItem(entry.name, value.toString());
+    case "number":
+      return createInputFromItem(entry.name, value.toString(), "number");
     case "select":
-      return createSelectFromItem(entry.name, entry.data, value);
+      return createSelectFromItem(entry.name, entry.data, value.toString());
     default:
       throw new Error("Unknown item type provided for form generator");
   }
@@ -78,20 +88,22 @@ function createInteractiveFromItem(
 function createInputFromItem(
   name: string,
   value: string | null,
-): [HTMLInputElement, () => string] {
+  typecastTo?: "number",
+): [HTMLInputElement, () => string | number] {
   const input = createInput(undefined, name);
   if (value) input.value = value;
-  return [
-    input,
-    () => {
-      return input.value;
-    },
-  ];
+  let valueHolder: () => string | number;
+  if (typecastTo === "number") {
+    valueHolder = () => Number(input.value);
+  } else {
+    valueHolder = () => input.value;
+  }
+  return [input, valueHolder];
 }
 
 function createSelectFromItem(
   name: string,
-  value: Array<string> | null,
+  value: SelectItems | null,
   selected: string | null,
 ): [HTMLSelectElement, () => string] {
   if (!value) {

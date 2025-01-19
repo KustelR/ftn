@@ -8,7 +8,10 @@ const inputClasses = [
   "bg-neutral-700",
 ];
 
-export default function createInput(value?: string, placeholder?: string) {
+export default function createInput(
+  value?: string,
+  placeholder?: string,
+): HTMLInputElement {
   const input = document.createElement("input");
   input.setAttribute("type", "text");
   if (placeholder) input.setAttribute("placeholder", placeholder);
