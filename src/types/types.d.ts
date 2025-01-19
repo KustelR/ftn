@@ -7,9 +7,15 @@ declare global {
   };
   type ConfigKey = keyof Config;
   type OutputType = "jsx" | "html";
+  /**
+   * Describes user-defined setting for size generation
+   *
+   * See also: {@getSize}
+   */
   type SizeSetting = {
     sizeRound: SizeRound;
     sizeType: SizeType;
+    roundExtent?: number;
   };
   type SizeSettingKey = keyof SizeSetting;
   type SizeRound = "none" | "round";
@@ -42,6 +48,7 @@ declare global {
   type Size = {
     absolute: number;
     relative: number;
+    dropValue?: boolean;
   };
   type ResultObject = {
     tagName: string;
@@ -118,5 +125,6 @@ declare global {
     type: FromUiMessageType;
     data: string;
   };
+  type SelectItems = Array<string | number>;
 }
 export {};
