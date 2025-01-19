@@ -4,6 +4,9 @@ import createSelect from "@/ui/scripts/input/select";
 import createInput from "./input/input";
 import { createJsonForm } from "./input/form";
 
+/**
+ * Creates frontend for generating config editor
+ */
 export default function createConfigEditor(config: Config): HTMLElement {
   let list = document.createElement("ul");
   list.setAttribute("class", "w-full space-y-2");
@@ -18,7 +21,7 @@ export default function createConfigEditor(config: Config): HTMLElement {
     const configOptionName = document.createElement("h3");
     configOptionName.setAttribute("class", "col-span-3 text-lg font-bold");
     configOptionName.textContent = propertyName;
-    let valueSource: () => string;
+    let valueSource: () => string | number;
     const inputHolder = document.createElement("span");
     inputHolder.setAttribute(
       "class",
@@ -35,25 +38,16 @@ export default function createConfigEditor(config: Config): HTMLElement {
     } else if (propertyName === "size") {
       const currentSize: SizeSetting = entry[1] as SizeSetting;
       try {
-        const [form, valueHolder] = createJsonForm(
-          [
-            { name: "sizeRound", type: "select", data: ["original", "round"] },
-            {
-              name: "sizeType",
-              type: "select",
-              data: ["relative", "absolute"],
-            },
-          ],
-          currentSize,
-        );
-
-        inputHolder.appendChild(form);
-        valueSource = valueHolder;
+        const [input, valueSrc] = getForm(currentSize);
+        valueSource = valueSrc;
+        inputHolder.appendChild(input);
       } catch (error) {
         const failDiv = document.createElement("div");
         failDiv.textContent =
           "something went wrong while generating form. see console";
         inputHolder.appendChild(failDiv);
+
+        console.error(error);
       }
     }
     const configOptionButton = createGenericButton("set");
@@ -77,4 +71,27 @@ export default function createConfigEditor(config: Config): HTMLElement {
     list.appendChild(item);
   });
   return list;
+}
+
+function getForm(
+  currentSize: SizeSetting,
+): [HTMLFormElement, () => string | number] {
+  let roundExtent;
+
+  return createJsonForm(
+    [
+      { name: "sizeRound", type: "select", data: ["original", "round"] },
+      {
+        name: "sizeType",
+        type: "select",
+        data: ["relative", "absolute"],
+      },
+      {
+        name: "roundExtent",
+        type: "number",
+        data: currentSize.roundExtent ? currentSize.roundExtent : 1,
+      },
+    ],
+    currentSize,
+  );
 }
