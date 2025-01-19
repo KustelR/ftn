@@ -52,8 +52,10 @@ function processPath(path: string, config: Config): string {
 
   return moves
     .map(
-      (move) =>
-        `${move.action} ${move.points.map((point) => point.absolute).join(" ")}`,
+      (move) => {
+        if (move.points.length === 0) return  [move.action]
+        return `${move.action} ${move.points.map((point) => point.absolute).join(" ")}`
+      }
     )
     .join(" ");
 }
