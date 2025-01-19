@@ -46,10 +46,9 @@ function generateProperty(
       console.warn(
         `relative size is less or equal to 0, using absolute size for: ${key}`,
       );
-      return `${key.match("[a-zA-Z\-]+")}-[${value.absolute}px]`;
+      return `${key.match("[a-zA-Z\-]+")}-[${value.absolute}${value.dropValue ? "px" : ""}]`;
     }
     return `${key.match("[a-zA-Z\-]+")}-[${value.relative * 100}%]`;
   }
-  console.log(value, isSize(value));
   return ``;
 }
