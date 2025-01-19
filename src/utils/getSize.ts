@@ -3,7 +3,7 @@ export default function getSize(
   config: Config,
   parent?: BaseNode | Layouted | null,
   dimension?: "X" | "Y",
-  dimension?: "W" | "H",
+  dropValue?: boolean,
 ): Size {
   let parentSize = 0;
   if (parent && parent.type !== "DOCUMENT" && parent.type !== "PAGE") {
@@ -19,12 +19,16 @@ export default function getSize(
   return {
     absolute: round(size, config.size),
     relative: round(size, config.size) / round(parentSize, config.size),
+    dropValue: dropValue,
   };
 }
 
 function round(value: number, setting: SizeSetting): number {
+  const roundExtent = setting.roundExtent ? setting.roundExtent : 1;
   if (setting.sizeRound === "round") {
-    return Math.round(value);
+    return (
+      Math.round(value * Math.pow(10, roundExtent)) / Math.pow(10, roundExtent)
+    );
   }
   return value;
 }
