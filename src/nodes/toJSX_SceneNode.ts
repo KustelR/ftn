@@ -20,7 +20,9 @@ import {
   BackgroundColorBlacklist,
 } from "./parserLists";
 import { generateBgColor as getBgColor } from "@/properties";
-
+/**
+ * @throws {UnsupportedNodeTypeError} if provided node type is not supported by api
+ */
 export default function toJSX_SceneNode(
   node: SceneNode,
   config: Config,
