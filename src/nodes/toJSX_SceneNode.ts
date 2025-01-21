@@ -1,3 +1,7 @@
+
+/**
+ * @throws {UnsupportedNodeTypeError} if provided node type is not supported by api
+ */
 import {
   toJSX_ShapeNode,
   toJSX_VectorNode,
@@ -51,6 +55,8 @@ export default function toJSX_SceneNode(
       parsedNode = toJSX_SectionNode(node, config);
       break;
     default:
+      throw new UnsupportedNodeTypeError(`Unknown node type: ${node.type}`)
+      /*
       console.warn(`[WARNING!] Unsupported node type: ${node.type}`);
       parsedNode = {
         tagName: "div",
@@ -66,6 +72,7 @@ export default function toJSX_SceneNode(
         "h",
         getSize(node.width, config, node.parent, "Y"),
       );
+      */
   }
 
   addTailwindProperties(parsedNode, getRotation(node));
