@@ -1,11 +1,9 @@
 import {
   generateBgColor,
   generateBorders,
-  generateLayout,
   generateSpacing,
 } from "@/properties";
 import toJSX from "@/toJsx";
-import { toJSX_FrameNodeVectors } from "@/nodes";
 
 export default function toJSX_FrameNode(
   node: FrameNode,
@@ -14,20 +12,8 @@ export default function toJSX_FrameNode(
   let classNames: TailwindProperties = new Map();
   let tagName: string = "div";
   const children: Array<HtmlObject | null> = [];
-  let svgOnly = true;
-  node.children.map((child) => {
-    if (!child || child.type !== "VECTOR") {
-      svgOnly = false;
-    }
-  });
-  if (svgOnly && node.children.length > 0)
-    return toJSX_FrameNodeVectors(node, config);
 
-  classNames = new Map([
-    ...generateLayout(node, config),
-    ...generateSpacing(node, config),
-    ...classNames,
-  ]);
+  classNames = new Map([...generateSpacing(node, config), ...classNames]);
   if (typeof node.strokes !== "symbol" && node.strokes) {
     classNames = new Map([...generateBorders([...node.strokes], node)]);
   }

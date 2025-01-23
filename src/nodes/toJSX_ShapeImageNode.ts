@@ -1,6 +1,4 @@
-import generateTailwind from "@/utils/generateTailwind";
 import { ShapeNode } from "./toJSX_ShapeNode";
-import { generateBgColor } from "@/properties";
 
 export default function toJSX_ShapeImageNode(
   node: ShapeNode,

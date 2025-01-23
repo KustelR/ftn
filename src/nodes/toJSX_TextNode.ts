@@ -1,5 +1,5 @@
 import generateTailwind from "@/utils/generateTailwind";
-import { generateFont, generateLayout, generateTextColor } from "../properties";
+import { generateFont, generateTextColor } from "../properties";
 
 export default function toJSXWIP_TextNode(
   node: TextNode,
@@ -14,7 +14,6 @@ export default function toJSXWIP_TextNode(
     );
   }
   classNames = new Map([...generateFont(node), ...classNames]);
-  classNames = new Map([...generateLayout(node, config), ...classNames]);
   classNames.set("overflow", "visible");
   return {
     tagName: tagName,

@@ -1,4 +1,3 @@
-import { generateBgColor, generateLayout } from "@/properties";
 import { toJSX_ShapeImageNode } from "@/nodes";
 
 export type ShapeNode = RectangleNode | EllipseNode;
@@ -18,7 +17,6 @@ export default function toJSX_ShapeNode(
   if (node.type === "ELLIPSE") {
     classNames.set(`rounded`, `full`);
   }
-  classNames = new Map([...generateLayout(node, config), ...classNames]);
 
   const result: HtmlObject = {
     tagName: tagName,

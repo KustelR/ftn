@@ -1,7 +1,3 @@
-
-/**
- * @throws {UnsupportedNodeTypeError} if provided node type is not supported by api
- */
 import {
   toJSX_ShapeNode,
   toJSX_VectorNode,
@@ -11,15 +7,17 @@ import {
   toJSX_SectionNode,
 } from "@/nodes";
 import toJSX_FrameNode from "@/nodes/toJSX_FrameNode";
-import { getBlendMode, getRotation } from "@/properties";
-import getSize from "@/utils/getSize";
-import { addTailwindProperties } from "@/utils/changeTailwindProperties";
 import {
-  BlendModeBlacklist,
-  TextColorWhitelist,
-  BackgroundColorBlacklist,
-} from "./parserLists";
+  getBlendMode,
+  getRotation,
+  getAutolayout,
+  getAbsolutePosition,
+  getNodeSize,
+} from "@/properties";
+import { addTailwindProperties } from "@/utils/changeTailwindProperties";
+import { BlendModeBlacklist, BackgroundColorBlacklist } from "./parserLists";
 import { generateBgColor as getBgColor } from "@/properties";
+import postProcess from "@/post";
 /**
  * @throws {UnsupportedNodeTypeError} if provided node type is not supported by api
  */
@@ -57,8 +55,10 @@ export default function toJSX_SceneNode(
       parsedNode = toJSX_SectionNode(node, config);
       break;
     default:
-      throw new UnsupportedNodeTypeError(`Unknown node type: ${node.type}`)
-      /*
+      throw new UnsupportedNodeTypeError(`Unknown node type: ${node.type}`, {
+        cause: node,
+      });
+    /*
       console.warn(`[WARNING!] Unsupported node type: ${node.type}`);
       parsedNode = {
         tagName: "div",
@@ -80,5 +80,19 @@ export default function toJSX_SceneNode(
   addTailwindProperties(parsedNode, getRotation(node));
   addTailwindProperties(parsedNode, getBlendMode(node, BlendModeBlacklist));
   addTailwindProperties(parsedNode, getBgColor(node, BackgroundColorBlacklist));
+  if (node.type === "FRAME") {
+    addTailwindProperties(parsedNode, getAutolayout(node, config));
+  }
+  if (
+    node.parent &&
+    ((node.parent.type === "FRAME" && node.parent.layoutMode === "NONE") ||
+      node.parent.type !== "FRAME")
+  ) {
+    addTailwindProperties(parsedNode, getAbsolutePosition(node, config));
+  }
+  addTailwindProperties(parsedNode, getNodeSize(node, config));
+
+  //postProcess(parsedNode, config);
+
   return parsedNode;
 }

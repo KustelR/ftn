@@ -1,4 +1,3 @@
-import { generateLayout } from "@/properties";
 import { default as toJSX } from "@/toJsx";
 
 export default function toJSX_GroupNode(
@@ -7,8 +6,6 @@ export default function toJSX_GroupNode(
 ): HtmlObject {
   const props: Props = {};
   let classNames: TailwindProperties = new Map();
-
-  classNames = new Map([...generateLayout(node, config), ...classNames]);
 
   props["class"] = classNames;
   return {
