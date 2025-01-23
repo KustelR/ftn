@@ -12,6 +12,7 @@ export default function generateTailwindString(
 }
 
 function isSize(obj: any): obj is Size {
+  if (!obj) return false;
   if (!obj.absolute && obj.absolute != 0) return false;
   if (!obj.relative && obj.relative != 0) return false;
   return true;
