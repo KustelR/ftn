@@ -1,5 +1,4 @@
 import generateTailwind from "@/utils/generateTailwind";
-import generateLayout from "@/properties/layout";
 import getSize from "@/utils/getSize";
 
 export default function generateSvg(
@@ -12,7 +11,7 @@ export default function generateSvg(
       strokeWeightResize = node.strokeWeight / 2;
     }
   }
-  const classNames = generateLayout(node, config);
+  const classNames: TailwindProperties = new Map();
   classNames.set(
     "h",
     getSize(node.height + strokeWeightResize, config, node.parent, "Y"),
