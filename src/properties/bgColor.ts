@@ -2,6 +2,7 @@ import generateTailwindColor from "@/utils/generateTailwindColor";
 
 /**
  * @throws {FigmaMixedError} Error if node has mixed fills
+ * @throws {UnsupportedFillTypeError} Thrown  on unsupported fill type
  */
 export default function generateBgFromFills(
   node: SceneNode,
@@ -65,8 +66,8 @@ export default function generateBgFromFills(
         }
         break;
       default:
-        console.warn(
-          `Unsupported fill type (${fill.type}) for node: ${node.name}`,
+        throw new UnsupportedFillTypeError(
+          `Unsupported fill type (${fill.type}) for background in node: ${node.name}`,
         );
     }
   }
