@@ -7,7 +7,7 @@ export default function generatePath(
   hasOuterSvg: boolean = false,
   config: Config,
 ): HtmlObject {
-  props["d"] = [processPath(path.data, config)];
+  props["d"] = [joinMoves(splitPath(path.data, config))];
   if (hasOuterSvg) {
     props["transform"] = [
       `translate(${node.relativeTransform[0][2]},${node.relativeTransform[1][2]})`,
@@ -25,13 +25,13 @@ type PathMove = {
   points: Array<Size>;
 };
 
-function processPath(path: string, config: Config): string {
+export function splitPath(path: string, config: Config): Array<PathMove> {
   let moves: Array<PathMove> = [];
 
   const parsedPath = path.match(/[MQCLZ](?:\ {0,1}\-{0,1}[0-9]+\.*[0-9]*)*/gm);
-  if (!parsedPath) return "";
+  if (!parsedPath) return [];
 
-  moves = parsedPath.map((action) => {
+  return parsedPath.map((action) => {
     const points = action.match(/([0-9]+\.*[0-9]*)/gm);
     const actionName = action[0];
     if (
@@ -41,7 +41,9 @@ function processPath(path: string, config: Config): string {
       actionName !== "L" &&
       actionName !== "Z"
     ) {
-      throw new VectorPathsError("Unintelligeable path: " + path);
+      throw new VectorPathsError("Unintelligeable path: " + path, {
+        cause: path,
+      });
     }
     if (!points) return { action: actionName, points: [] };
     return {
@@ -49,13 +51,13 @@ function processPath(path: string, config: Config): string {
       points: points.map((point) => getSize(Number(point), config)),
     };
   });
+}
 
+export function joinMoves(moves: Array<PathMove>) {
   return moves
-    .map(
-      (move) => {
-        if (move.points.length === 0) return  [move.action]
-        return `${move.action} ${move.points.map((point) => point.absolute).join(" ")}`
-      }
-    )
+    .map((move) => {
+      if (move.points.length === 0) return [move.action];
+      return `${move.action} ${move.points.map((point) => point.absolute).join(" ")}`;
+    })
     .join(" ");
 }
