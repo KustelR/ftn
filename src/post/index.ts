@@ -30,16 +30,40 @@ function processNode(node: HtmlObject, config: Config): void {
       svgPositions.push(i);
     }
   }
-  if (svgs.length > 0) {
-    node.children = node.children.filter((child) => {
-      return !(child && typeof child !== "string" && child.tagName === "svg");
-    });
-    node.children.splice(
-      Math.min(...svgPositions),
-      0,
-      ...findAndJoin(svgs, config),
-    );
+  let newChildren = Array<HtmlObject>();
+  let joined: HtmlObject | undefined = undefined;
+  for (let i = 0; i < node.children.length; i++) {
+    const child = node.children[i];
+    if (!child || typeof child === "string") continue;
+    if (child.tagName === "svg") {
+      console.log("start", joined);
+      if (!joined) {
+        joined = child;
+      } else if (
+        checkOverlap(
+          getVectorPositions([joined])[0],
+          getVectorPositions([child])[0],
+        )
+      ) {
+        joined = joinVectors(joined, child, config);
+      } else {
+        newChildren.push(joined);
+        joined = undefined;
+      }
+      console.log(joined, newChildren);
+      continue;
+    }
+    if (joined) {
+      newChildren.push(joined);
+      joined = undefined;
+    }
+    newChildren.push(child);
   }
+  if (joined) {
+    newChildren.push(joined);
+    joined = undefined;
+  }
+  node.children = newChildren;
 }
 
 function getVectorPositions(children: Array<HtmlObject>): Array<VectorPos> {
@@ -186,7 +210,6 @@ function joinVectors(
     }
     offsetNode(child, n1Classes, x, y);
   });
-  console.log(node2);
   node2.children.forEach((child) => {
     if (!child || typeof child === "string") {
       throw new UnsupportedNodeTypeError(
@@ -204,7 +227,7 @@ function joinVectors(
     children: [...node1.children, ...node2.children],
   };
 }
-
+/*
 function findAndJoin(
   originalNodes: Array<HtmlObject>,
   config: Config,
@@ -255,14 +278,13 @@ function findAndJoinRec(
   }
   return { joined: joining, nodes: newNodes };
 }
-
+*/
 function offsetNode(
   node: HtmlObject,
   nodeClasses: TailwindProperties,
   x: Size,
   y: Size,
 ) {
-  console.log(x, y, nodeClasses.get("top"));
   if (!x || !y) return;
   const offsetLeftOld = nodeClasses.get("left")
     ? (nodeClasses.get("left") as Size)
