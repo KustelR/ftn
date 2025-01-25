@@ -1,6 +1,7 @@
 import { joinMoves, splitPath } from "@/properties/svg/generatePath";
 import { joinTailwindProperties } from "@/utils/changeTailwindProperties";
 import composeHtml from "@/utils/composeHtml";
+import postprocessDiv from "./div";
 
 export default function postProcess(
   node: HtmlObject | string | null,
@@ -12,19 +13,17 @@ export default function postProcess(
   node.children.forEach((child) => postProcess(child, config));
 }
 
-type VectorPos = {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-};
-
 function processNode(node: HtmlObject, config: Config): void {
+  if (node.tagName === "div") {
+    postprocessDiv(node);
+  }
+  /*
   const svgs: Array<HtmlObject> = [];
   const svgPositions: Array<number> = [];
   for (let i = 0; i < node.children.length; i++) {
     const child = node.children[i];
     if (!child || typeof child === "string") continue;
+    
     if (child.tagName === "svg") {
       svgs.push(child);
       svgPositions.push(i);
@@ -35,6 +34,7 @@ function processNode(node: HtmlObject, config: Config): void {
   for (let i = 0; i < node.children.length; i++) {
     const child = node.children[i];
     if (!child || typeof child === "string") continue;
+    
     if (child.tagName === "svg") {
       console.log("start", joined);
       if (!joined) {
@@ -64,8 +64,9 @@ function processNode(node: HtmlObject, config: Config): void {
     joined = undefined;
   }
   node.children = newChildren;
+  */
 }
-
+/*
 function getVectorPositions(children: Array<HtmlObject>): Array<VectorPos> {
   const vectorPositions: Array<VectorPos> = [];
   children.forEach((child) => {
@@ -278,7 +279,7 @@ function findAndJoinRec(
   }
   return { joined: joining, nodes: newNodes };
 }
-*/
+
 function offsetNode(
   node: HtmlObject,
   nodeClasses: TailwindProperties,
@@ -297,3 +298,4 @@ function offsetNode(
 
   node.props.transform = [`translate(${offsetLeft}, ${offsetTop})`];
 }
+*/
