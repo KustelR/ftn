@@ -14,9 +14,21 @@ module.exports = (env, argv) => ({
     rules: [
       // Converts TypeScript code to JavaScript
       {
-        test: /\.tsx?$/,
-        use: "ts-loader",
         exclude: /node_modules/,
+        test: /\.tsx?$/,
+        use: [
+          "ts-loader",
+          {
+            loader: "webpack-preprocessor-loader",
+            options: {
+              directives: {},
+              params: {
+                api: "pixso",
+                env: "prod",
+              },
+            },
+          },
+        ],
       },
     ],
   },
