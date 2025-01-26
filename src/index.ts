@@ -4,14 +4,17 @@ import composeHtml from "@/utils/composeHtml";
 import { FromUiMessageType } from "./types/FromUiEnum";
 
 type ApiType = "figma" | "pixso";
-const API_TYPE: ApiType = "figma";
+const API_TYPE: ApiType = "pixso";
 
 let plugin: PluginAPI;
-if (API_TYPE === "figma") {
-  plugin = figma;
-} else {
+/*  We are using hardcoded value so typescript thinks 
+   he is smarter than me and tells that this check can't be true!
+*/ //@ts-ignore
+if (API_TYPE === "pixso") {
   // @ts-expect-error Well i don't know where to find pixso types so i use this for now...
   plugin = pixso as PluginAPI;
+} else {
+  plugin = figma;
 }
 
 function sendToUi(msg: ToUiMessage): void {
