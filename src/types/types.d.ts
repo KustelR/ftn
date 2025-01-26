@@ -20,6 +20,9 @@ declare global {
   type SizeSettingKey = keyof SizeSetting;
   type SizeRound = "none" | "round";
   type SizeType = "absolute" | "relative";
+}
+
+declare global {
   type BorderedNode = {
     name: string;
     width?: number;
@@ -57,28 +60,6 @@ declare global {
     children: Array<ResultObject>;
   };
   type LayoutMode = "NONE" | "HORIZONTAL" | "VERTICAL" | "FIXED";
-  type Layouted = {
-    type: string;
-    parent: BaseNode | null;
-    height: number;
-    maxHeight?: number | null | undefined;
-    minHeight?: number | null | undefined;
-    width: number;
-    maxWidth?: number | null | undefined;
-    minWidth?: number | null | undefined;
-    layoutMode?: LayoutMode;
-    itemSpacing?: number;
-    rotation?: number;
-    absoluteBoundingBox: Rect | null;
-    absoluteRenderBounds: Rect | null;
-    x: number;
-    y: number;
-    relativeTransform: Transform;
-    layoutSizingVertical?: "FIXED" | "HUG" | "FILL";
-    layoutSizingHorizontal?: "FIXED" | "HUG" | "FILL";
-    primaryAxisAlignItems?: "MIN" | "MAX" | "SPACE_BETWEEN" | "CENTER";
-    counterAxisAlignItems?: "MIN" | "MAX" | "BASELINE" | "CENTER";
-  };
   type SvgFill = {
     id: string;
     type?: "GRADIENT_LINEAR" | "IMAGE";
@@ -110,10 +91,7 @@ declare global {
     destroyOnRender?: boolean;
   };
   type Prop = Array<string> | TailwindProperties;
-  type ToUiMessage = {
-    type: "CODE" | "LAST_CODE" | "IMPORTS" | "CONFIG" | "NODES";
-    data: string;
-  };
+
   type SpacedNode = {
     parent: BaseNode | null;
     paddingTop: number;
@@ -121,10 +99,19 @@ declare global {
     paddingLeft: number;
     paddingRight: number;
   };
+
+  type SelectItems = Array<string | number>;
+}
+
+declare global {
   type FromUiMessage = {
     type: FromUiMessageType;
     data: string;
   };
-  type SelectItems = Array<string | number>;
+  type ToUiMessage = {
+    type: "CODE" | "LAST_CODE" | "IMPORTS" | "CONFIG" | "NODES";
+    data: string;
+  };
 }
+
 export {};
