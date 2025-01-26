@@ -29,56 +29,64 @@ try {
   plugin.showUI(__html__);
   plugin.ui.resize(450, 500);
   plugin.ui.onmessage = async (msg: FromUiMessage) => {
-    switch (msg.type) {
-      case FromUiMessageType.GET_CODE_FROM_SELECTION:
-        lastCode = "";
-        const selection = plugin.currentPage.selection;
-        console.log(selection);
-        selectedNodes = await getDataFromSelection([...selection], config);
-        lastCode = selectedNodes
-          .map((node) => {
-            return composeHtml(node, config);
-          })
-          .join(``);
-        sendToUi({ type: "CODE", data: lastCode });
-        break;
-      case FromUiMessageType.GET_LAST_CODE:
-        sendToUi({ type: "LAST_CODE", data: lastCode });
-        break;
-      case FromUiMessageType.GET_IMPORTS:
-        sendToUi({ type: "IMPORTS", data: "test" });
-        break;
-      case FromUiMessageType.GET_CONFIG:
+    try {
+      switch (msg.type) {
+        case FromUiMessageType.GET_CODE_FROM_SELECTION:
+          lastCode = "";
+          const selection = plugin.currentPage.selection;
+          console.log(selection);
+          selectedNodes = await getDataFromSelection([...selection], config);
+          lastCode = selectedNodes
+            .map((node) => {
+              return composeHtml(node, config);
+            })
+            .join(``);
+          sendToUi({ type: "CODE", data: lastCode });
+          break;
+        case FromUiMessageType.GET_LAST_CODE:
+          sendToUi({ type: "LAST_CODE", data: lastCode });
+          break;
+        case FromUiMessageType.GET_IMPORTS:
+          sendToUi({ type: "IMPORTS", data: "test" });
+          break;
+        case FromUiMessageType.GET_CONFIG:
+          sendToUi({
+            type: "CONFIG",
+            data: JSON.stringify(config),
+          });
+          break;
+        case FromUiMessageType.SET_CONFIG:
+          const changedProperty: { property: string; value: string } =
+            JSON.parse(msg.data);
+          await changeConfig(changedProperty, config);
+          sendToUi({
+            type: "CONFIG",
+            data: JSON.stringify(config),
+          });
+          break;
+        case FromUiMessageType.GET_NODES:
+          sendToUi({
+            type: "NODES",
+            data: JSON.stringify(selectedNodes, (key, value) => {
+              if (value instanceof Map) {
+                return {
+                  dataType: "Map",
+                  value: Array.from(value.entries()),
+                };
+              }
+              return value;
+            }),
+          });
+      }
+    } catch (e) {
+      if (e instanceof Error) {
         sendToUi({
-          type: "CONFIG",
-          data: JSON.stringify(config),
+          type: "ERROR",
+          data: `Thrown an error: ${e.name}\nerror message: ${e.message}\nCause: ${e.cause}\n Stack trace:\n${e.stack}`,
         });
-        break;
-      case FromUiMessageType.SET_CONFIG:
-        const changedProperty: { property: string; value: string } = JSON.parse(
-          msg.data,
-        );
-        await changeConfig(changedProperty, config);
-        sendToUi({
-          type: "CONFIG",
-          data: JSON.stringify(config),
-        });
-        break;
-      case FromUiMessageType.GET_NODES:
-        sendToUi({
-          type: "NODES",
-          data: JSON.stringify(selectedNodes, (key, value) => {
-            if (value instanceof Map) {
-              return {
-                dataType: "Map",
-                value: Array.from(value.entries()),
-              };
-            }
-            return value;
-          }),
-        });
+      }
     }
-    //figma.closePlugin();
+    //plugin.closePlugin();
   };
 
   async function getDataFromSelection(
@@ -87,10 +95,15 @@ try {
   ): Promise<Array<HtmlObject>> {
     let result: Array<HtmlObject | null> = [];
     let conversionPromises: Array<Promise<BaseNode | null>> = [];
+    let nodes: Array<BaseNode | null> = [];
     selection.forEach((node) => {
-      conversionPromises.push(plugin.getNodeByIdAsync(node.id));
+      if (API_TYPE === "figma") {
+        conversionPromises.push(plugin.getNodeByIdAsync(node.id));
+      } else {
+        nodes.push(plugin.getNodeById(node.id));
+      }
     });
-    const nodes = await Promise.all(conversionPromises);
+    nodes = [...nodes, ...(await Promise.all(conversionPromises))];
     nodes.forEach((node) => {
       if (!node) return;
       result.push(toJSX(node, config));
