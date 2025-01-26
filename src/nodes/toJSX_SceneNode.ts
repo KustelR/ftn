@@ -19,6 +19,7 @@ import { BlendModeBlacklist, BackgroundColorBlacklist } from "./parserLists";
 import { generateBgColor as getBgColor } from "@/properties";
 import postProcess from "@/post";
 import getSize from "@/utils/getSize";
+import { UnsupportedNodeTypeError } from "@/types/errors";
 /**
  * @throws {UnsupportedNodeTypeError} if provided node type is not supported by api
  */
@@ -56,27 +57,32 @@ export default function toJSX_SceneNode(
       parsedNode = toJSX_SectionNode(node, config);
       break;
     default:
-      /*
-      throw new UnsupportedNodeTypeError(`Unknown node type: ${node.type}`, {
-        cause: node,
-      });
-      */
-
-      console.warn(`[WARNING!] Unsupported node type: ${node.type}`);
-      parsedNode = {
-        tagName: "div",
-        props: {},
-        children: [],
-      };
-      parsedNode.props.class = new Map();
-      parsedNode.props.class.set(
-        "w",
-        getSize(node.width, config, node.parent, "X"),
-      );
-      parsedNode.props.class.set(
-        "h",
-        getSize(node.width, config, node.parent, "Y"),
-      );
+      let env: string;
+      // #!if env === "dev"
+      env = "dev";
+      // #!elseif env === "prod"
+      env = "prod";
+      // #!endif
+      if (env === "dev") {
+        throw new UnsupportedNodeTypeError(`Unknown node type: ${node.type}`, {
+          cause: node,
+        });
+      } else {
+        parsedNode = {
+          tagName: "div",
+          props: {},
+          children: [`unknown node: ${node.type}`],
+        };
+        parsedNode.props.class = new Map();
+        parsedNode.props.class.set(
+          "w",
+          getSize(node.width, config, node.parent, "X"),
+        );
+        parsedNode.props.class.set(
+          "h",
+          getSize(node.width, config, node.parent, "Y"),
+        );
+      }
   }
 
   addTailwindProperties(parsedNode, getRotation(node));
