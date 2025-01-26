@@ -15,11 +15,6 @@ export default function generateFont(
   // #!if api == "figma"
   result.set(`font1`, `[${node.fontWeight}]`);
   // #!endif
-  /*
-  // #!elseif api == "pixso"
-  result.set(`font1`, `[${node.fontSize}]`);
-  // #!endif
-  */
   if (node.textAlignHorizontal != "LEFT") {
     result.set(`text1`, `${node.textAlignHorizontal.toLowerCase()}`);
   }
