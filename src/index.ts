@@ -2,26 +2,34 @@ import toJSX from "./toJsx";
 import { setProperty, getConfig, fillConfig } from "@/utils/config";
 import composeHtml from "@/utils/composeHtml";
 import { FromUiMessageType } from "./types/FromUiEnum";
-console.log("runs");
-// @ts-expect-error Well i don't know where to find pixso types so i use this for now...
-const localPixso = pixso as PluginAPI;
 
+type ApiType = "figma" | "pixso";
+const API_TYPE: ApiType = "figma";
 
+let plugin: PluginAPI;
+if (API_TYPE === "figma") {
+  plugin = figma;
+} else {
+  // @ts-expect-error Well i don't know where to find pixso types so i use this for now...
+  plugin = pixso as PluginAPI;
+}
+
+function sendToUi(msg: ToUiMessage): void {
+  plugin.ui.postMessage(msg);
+}
 
 try {
-  let config: Config = getConfig(
-    await localPixso.clientStorage.getAsync("config"),
-  );
+  let config: Config = getConfig(await plugin.clientStorage.getAsync("config"));
   fillConfig(config);
   let selectedNodes: Array<HtmlObject>;
   let lastCode: string = "";
-  localPixso.showUI(__html__);
-  localPixso.ui.resize(450, 500);
-  localPixso.ui.onmessage = async (msg: FromUiMessage) => {
+  plugin.showUI(__html__);
+  plugin.ui.resize(450, 500);
+  plugin.ui.onmessage = async (msg: FromUiMessage) => {
     switch (msg.type) {
       case FromUiMessageType.GET_CODE_FROM_SELECTION:
         lastCode = "";
-        const selection = localPixso.currentPage.selection;
+        const selection = plugin.currentPage.selection;
         console.log(selection);
         selectedNodes = await getDataFromSelection([...selection], config);
         lastCode = selectedNodes
@@ -29,16 +37,16 @@ try {
             return composeHtml(node, config);
           })
           .join(``);
-        localPixso.ui.postMessage({ type: "CODE", data: lastCode });
+        sendToUi({ type: "CODE", data: lastCode });
         break;
       case FromUiMessageType.GET_LAST_CODE:
-        localPixso.ui.postMessage({ type: "LAST_CODE", data: lastCode });
+        sendToUi({ type: "LAST_CODE", data: lastCode });
         break;
       case FromUiMessageType.GET_IMPORTS:
-        localPixso.ui.postMessage({ type: "IMPORTS", data: "test" });
+        sendToUi({ type: "IMPORTS", data: "test" });
         break;
       case FromUiMessageType.GET_CONFIG:
-        localPixso.ui.postMessage({
+        sendToUi({
           type: "CONFIG",
           data: JSON.stringify(config),
         });
@@ -48,13 +56,13 @@ try {
           msg.data,
         );
         await changeConfig(changedProperty, config);
-        localPixso.ui.postMessage({
+        sendToUi({
           type: "CONFIG",
           data: JSON.stringify(config),
         });
         break;
       case FromUiMessageType.GET_NODES:
-        localPixso.ui.postMessage({
+        sendToUi({
           type: "NODES",
           data: JSON.stringify(selectedNodes, (key, value) => {
             if (value instanceof Map) {
@@ -77,7 +85,7 @@ try {
     let result: Array<HtmlObject | null> = [];
     let conversionPromises: Array<Promise<BaseNode | null>> = [];
     selection.forEach((node) => {
-      conversionPromises.push(localPixso.getNodeByIdAsync(node.id));
+      conversionPromises.push(plugin.getNodeByIdAsync(node.id));
     });
     const nodes = await Promise.all(conversionPromises);
     nodes.forEach((node) => {
@@ -93,8 +101,8 @@ try {
   ) {
     setProperty(config, changedProperty.property, changedProperty.value);
 
-    await localPixso.clientStorage.setAsync("config", config);
+    await plugin.clientStorage.setAsync("config", config);
   }
 } catch (error) {
-  localPixso.ui.postMessage(error);
+  plugin.ui.postMessage(error);
 }
