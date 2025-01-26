@@ -12,7 +12,14 @@ export default function generateFont(
     result.set(`font`, `['${node.fontName.family}']`);
   }
   result.set(`text2`, `[${node.fontSize}px]`);
+  // #!if api == "figma"
   result.set(`font1`, `[${node.fontWeight}]`);
+  // #!endif
+  /*
+  // #!elseif api == "pixso"
+  result.set(`font1`, `[${node.fontSize}]`);
+  // #!endif
+  */
   if (node.textAlignHorizontal != "LEFT") {
     result.set(`text1`, `${node.textAlignHorizontal.toLowerCase()}`);
   }
