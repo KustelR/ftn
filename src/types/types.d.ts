@@ -1,4 +1,3 @@
-import { FromUiMessageType } from "./FromUiEnum";
 
 declare global {
   type Config = {
@@ -103,15 +102,6 @@ declare global {
   type SelectItems = Array<string | number>;
 }
 
-declare global {
-  type FromUiMessage = {
-    type: FromUiMessageType;
-    data: string;
-  };
-  type ToUiMessage = {
-    type: "CODE" | "LAST_CODE" | "IMPORTS" | "CONFIG" | "NODES";
-    data: string;
-  };
-}
+
 
 export {};
