@@ -1,5 +1,8 @@
+import { VectorPathsError } from "@/types/errors";
 import getSize from "@/utils/getSize";
-
+/**
+ * @throws {VectorPathsError} if the
+ */
 export default function generatePath(
   path: VectorPath,
   node: VectorNode,

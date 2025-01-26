@@ -1,5 +1,5 @@
 import generateTailwindColor from "@/utils/generateTailwindColor";
-
+import { FigmaMixedError, UnsupportedFillTypeError } from "@/types/errors";
 /**
  * @throws {FigmaMixedError} Error if node has mixed fills
  * @throws {UnsupportedFillTypeError} Thrown  on unsupported fill type
@@ -66,9 +66,11 @@ export default function generateBgFromFills(
         }
         break;
       default:
+        // #!if env === "dev"
         throw new UnsupportedFillTypeError(
           `Unsupported fill type (${fill.type}) for background in node: ${node.name}`,
         );
+      // #!endif
     }
   }
   return localClassNames;

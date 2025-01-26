@@ -1,7 +1,7 @@
 export default function getSize(
   size: number,
   config: Config,
-  parent?: BaseNode | Layouted | null,
+  parent?: BaseNode | null,
   dimension?: "X" | "Y",
   dropValue?: boolean,
 ): Size {

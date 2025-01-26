@@ -46,6 +46,8 @@ function handleMessage(message: ToUiMessage) {
         }),
       );
       break;
+    case "ERROR":
+      onError(message.data);
   }
 }
 
@@ -97,4 +99,8 @@ function parseMessage(message: string): Array<string | HTMLElement> {
     if (msgElement.match("^<[^\/].+[^\/]>$")) step++;
   });
   return elements;
+}
+
+function onError(error: string | Error) {
+  alert(error);
 }

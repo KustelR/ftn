@@ -3,18 +3,44 @@ import { setProperty, getConfig, fillConfig } from "@/utils/config";
 import composeHtml from "@/utils/composeHtml";
 import { FromUiMessageType } from "./types/FromUiEnum";
 
-if (figma.editorType === "figma") {
-  let config: Config = getConfig(await figma.clientStorage.getAsync("config"));
-  fillConfig(config);
-  let selectedNodes: Array<HtmlObject>;
-  let lastCode: string = "";
-  figma.showUI(__html__);
-  figma.ui.resize(450, 500);
-  figma.ui.onmessage = async (msg: FromUiMessage) => {
+type ApiType = "figma" | "pixso";
+let API_TYPE: ApiType;
+
+// #!if api === 'figma'
+API_TYPE = "figma";
+// #!endif
+
+// #!if api === 'pixso'
+API_TYPE = "pixso";
+// #!endif
+
+let plugin: PluginAPI;
+
+if (API_TYPE === "pixso") {
+  // @ts-expect-error Well i don't know where to find pixso types so i use this for now...
+  plugin = pixso as PluginAPI;
+} else if (API_TYPE === "figma") {
+  plugin = figma;
+} else {
+  throw new Error("API_TYPE not found or not supported");
+}
+
+function sendToUi(msg: ToUiMessage): void {
+  plugin.ui.postMessage(msg);
+}
+
+let config: Config = getConfig(await plugin.clientStorage.getAsync("config"));
+fillConfig(config);
+let selectedNodes: Array<HtmlObject>;
+let lastCode: string = "";
+plugin.showUI(__html__);
+plugin.ui.resize(450, 500);
+plugin.ui.onmessage = async (msg: FromUiMessage) => {
+  try {
     switch (msg.type) {
       case FromUiMessageType.GET_CODE_FROM_SELECTION:
         lastCode = "";
-        const selection = figma.currentPage.selection;
+        const selection = plugin.currentPage.selection;
         console.log(selection);
         selectedNodes = await getDataFromSelection([...selection], config);
         lastCode = selectedNodes
@@ -22,26 +48,32 @@ if (figma.editorType === "figma") {
             return composeHtml(node, config);
           })
           .join(``);
-        figma.ui.postMessage({ type: "CODE", data: lastCode });
+        sendToUi({ type: "CODE", data: lastCode });
         break;
       case FromUiMessageType.GET_LAST_CODE:
-        figma.ui.postMessage({ type: "LAST_CODE", data: lastCode });
+        sendToUi({ type: "LAST_CODE", data: lastCode });
         break;
       case FromUiMessageType.GET_IMPORTS:
-        figma.ui.postMessage({ type: "IMPORTS", data: "test" });
+        sendToUi({ type: "IMPORTS", data: "test" });
         break;
       case FromUiMessageType.GET_CONFIG:
-        figma.ui.postMessage({ type: "CONFIG", data: JSON.stringify(config) });
+        sendToUi({
+          type: "CONFIG",
+          data: JSON.stringify(config),
+        });
         break;
       case FromUiMessageType.SET_CONFIG:
         const changedProperty: { property: string; value: string } = JSON.parse(
           msg.data,
         );
         await changeConfig(changedProperty, config);
-        figma.ui.postMessage({ type: "CONFIG", data: JSON.stringify(config) });
+        sendToUi({
+          type: "CONFIG",
+          data: JSON.stringify(config),
+        });
         break;
       case FromUiMessageType.GET_NODES:
-        figma.ui.postMessage({
+        sendToUi({
           type: "NODES",
           data: JSON.stringify(selectedNodes, (key, value) => {
             if (value instanceof Map) {
@@ -54,26 +86,27 @@ if (figma.editorType === "figma") {
           }),
         });
     }
-    //figma.closePlugin();
-  };
-}
-
-// Runs this code if the plugin is run in FigJam
-if (figma.editorType === "figjam") {
-  console.log("doesn't support figjam yet");
-  figma.closePlugin();
-}
-
+  } catch (e) {
+    handlePluginError(e);
+  }
+  //plugin.closePlugin();
+};
 async function getDataFromSelection(
   selection: Array<SceneNode>,
   config: Config,
 ): Promise<Array<HtmlObject>> {
   let result: Array<HtmlObject | null> = [];
   let conversionPromises: Array<Promise<BaseNode | null>> = [];
+  let nodes: Array<BaseNode | null> = [];
   selection.forEach((node) => {
-    conversionPromises.push(figma.getNodeByIdAsync(node.id));
+    // #!if api === "figma"
+    conversionPromises.push(plugin.getNodeByIdAsync(node.id));
+    // #!endif
+    // #!if api === "pixso"
+    nodes.push(plugin.getNodeById(node.id));
+    // #!endif
   });
-  const nodes = await Promise.all(conversionPromises);
+  nodes = [...nodes, ...(await Promise.all(conversionPromises))];
   nodes.forEach((node) => {
     if (!node) return;
     result.push(toJSX(node, config));
@@ -87,5 +120,18 @@ async function changeConfig(
 ) {
   setProperty(config, changedProperty.property, changedProperty.value);
 
-  await figma.clientStorage.setAsync("config", config);
+  await plugin.clientStorage.setAsync("config", config);
+}
+
+function handlePluginError(e: any) {
+  // #!if api === "pixso"
+  if (e instanceof Error) {
+    sendToUi({
+      type: "ERROR",
+      data: `Thrown an error: ${e.name}\nerror message: ${e.message}\nCause: ${e.cause}\n Stack trace:\n${e.stack}`,
+    });
+  }
+  // #!else
+  throw e;
+  // #!endif
 }
