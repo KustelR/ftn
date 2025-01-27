@@ -5,26 +5,13 @@ import { FromUiMessageType } from "./types/FromUiEnum";
 import type {} from "@figma/plugin-typings";
 import type {} from "@pixso/plugin-typings";
 
-type ApiType = "figma" | "pixso";
-let API_TYPE: ApiType;
-
-// #!if api === 'figma'
-API_TYPE = "figma";
-// #!endif
-
-// #!if api === 'pixso'
-API_TYPE = "pixso";
-// #!endif
-
 let plugin: PluginAPI;
 
-if (API_TYPE === "pixso") {
-  plugin = pixso;
-} else if (API_TYPE === "figma") {
-  plugin = figma;
-} else {
-  throw new Error("API_TYPE not found or not supported");
-}
+// #!if api === 'pixso'
+plugin = pixso;
+// #!elseif api === 'figma'
+plugin = figma;
+// #!endif
 
 function sendToUi(msg: ToUiMessage): void {
   plugin.ui.postMessage(msg);
