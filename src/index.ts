@@ -2,6 +2,8 @@ import toJSX from "./toJsx";
 import { setProperty, getConfig, fillConfig } from "@/utils/config";
 import composeHtml from "@/utils/composeHtml";
 import { FromUiMessageType } from "./types/FromUiEnum";
+import type {} from "@figma/plugin-typings";
+import type {} from "@pixso/plugin-typings";
 
 type ApiType = "figma" | "pixso";
 let API_TYPE: ApiType;
@@ -17,8 +19,7 @@ API_TYPE = "pixso";
 let plugin: PluginAPI;
 
 if (API_TYPE === "pixso") {
-  // @ts-expect-error Well i don't know where to find pixso types so i use this for now...
-  plugin = pixso as PluginAPI;
+  plugin = pixso;
 } else if (API_TYPE === "figma") {
   plugin = figma;
 } else {
