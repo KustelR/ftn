@@ -2,6 +2,8 @@
   "name": "ftn",
   "version": "1.0.0",
   "description": "Your Figma Plugin",
+  "license": "MIT",
+  "author": "Kustel",
   "main": "index.js",
   "scripts": {
     "buildui": "tsc buildUi.ts && node buildUi.js",
