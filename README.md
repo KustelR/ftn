@@ -15,16 +15,28 @@ Figma Plugin for conversion Figma designs to JSX.
 6. Done
 ![done](https://imgur.com/uStzveg.png)
 
-## How to build
+## Build guide
 
-Create normal plugib build
+You need working node and npm on your machine for this to work!
 
+###Create plugin build
+
+For figma:
 ```
-npm run build
+npm run build-figma
+```
+For pixso:
+```
+npm run build-pixso
 ```
 
-Watch changes and rebuild on the fly
+###Watch changes and rebuild on the fly
 
+For figma:
 ```
-npm run dev
+npm run dev-figma
+```
+For pixso:
+```
+npm run dev-pixso
 ```
