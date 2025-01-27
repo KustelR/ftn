@@ -4,7 +4,7 @@
   "api": "1.0.0",
   "editorType": ["figma"],
   "main": "index.js",
-  "ui": "ui/ui.html",
+  "ui": "ui/index.html",
   "documentAccess": "dynamic-page",
   "networkAccess": {
     "allowedDomains": ["none"]
