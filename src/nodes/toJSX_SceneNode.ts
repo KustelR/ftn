@@ -57,13 +57,13 @@ export default function toJSX_SceneNode(
       parsedNode = toJSX_SectionNode(node, config);
       break;
     default:
-      let env: string;
+      let enviroment: string = "";
       // #!if env === "dev"
-      env = "dev";
-      // #!elseif env === "prod"
-      env = "prod";
+      enviroment = "dev";
+      // #!else
+      enviroment = "prod";
       // #!endif
-      if (env === "dev") {
+      if (enviroment === "dev") {
         throw new UnsupportedNodeTypeError(`Unknown node type: ${node.type}`, {
           cause: node,
         });
