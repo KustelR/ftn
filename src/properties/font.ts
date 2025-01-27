@@ -1,5 +1,5 @@
 export default function generateFont(
-  node: TextedNode,
+  node: TextNode,
   options?: { calculateResponsiveFont: boolean },
 ): TailwindProperties {
   const result: TailwindProperties = new Map();
