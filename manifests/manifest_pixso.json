@@ -2,5 +2,5 @@
   "name": "ftn",
   "id": "1451605187206795188",
   "main": "index.js",
-  "ui": "index/index.html"
+  "ui": "ui/index.html"
 }

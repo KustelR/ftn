@@ -23,8 +23,8 @@ module.exports = (env, argv) => ({
             options: {
               directives: {},
               params: {
-                api: "pixso",
-                env: "prod",
+                api: env.api,
+                env: env.env,
               },
             },
           },

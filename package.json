@@ -7,16 +7,17 @@
   "main": "index.js",
   "scripts": {
     "buildui": "tsc buildUi.ts && node buildUi.js",
-    "watch": "webpack --watch ",
     "prettier": "npx onchange \"**/*\" -- npx prettier --write --ignore-unknown {{changed}}",
-    "tailwind-watch": "npx tailwind -i ./src/ui/input.css -o ./src/ui/output.css --watch",
     "tailwind": "npx tailwind -i ./src/ui/input.css -o ./src/ui/output.css",
     "buildui-watch": "npx onchange \"./src/ui/**/*\" -- npm run buildui",
-    "manifest-pixso": "tsc createmanifest.ts && node createmanifest.js pixso",
-    "manifest-figma": "tsc createmanifest.ts && node createmanifest.js figma",
+    "manifest": "tsc createmanifest.ts && node createmanifest.js",
     "test": "jest",
-    "build": "webpack && npm run tailwind && npm run buildui",
-    "dev": "concurrently --kill-others \" webpack --watch \" \" npm run prettier \" \" npm run tailwind-watch \" \" npm run buildui-watch \""
+    "build-unspecific": "npm run tailwind && npm run buildui",
+    "build-figma": "npx webpack --env api=figma && npm run build-unspecific && npm run manifest  -- figma",
+    "build-pixso": "npx webpack --env api=pixso && npm run build-unspecific && npm run manifest  -- pixso",
+    "dev-unspecific": "concurrently \" npm run prettier \" \" npm run tailwind -- --watch \" \" npm run buildui-watch \"",
+    "dev-pixso": "npm run build-pixso && concurrently --kill-others \"npx webpack --watch --env api=pixso \" \" npm run dev-unspecific \"",
+    "dev-figma": "npm run build-figma && concurrently --kill-others \" npx webpack --watch --env api=figma \" \" npm run dev-unspecific \""
   },
   "devDependencies": {
     "@figma/eslint-plugin-figma-plugins": "*",
