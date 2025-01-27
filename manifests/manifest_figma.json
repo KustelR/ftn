@@ -1,0 +1,12 @@
+{
+  "name": "MyPlugin",
+  "id": "737805260747778092",
+  "api": "1.0.0",
+  "editorType": ["figma"],
+  "main": "index.js",
+  "ui": "ui/ui.html",
+  "documentAccess": "dynamic-page",
+  "networkAccess": {
+    "allowedDomains": ["none"]
+  }
+}

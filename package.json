@@ -12,8 +12,8 @@
     "tailwind-watch": "npx tailwind -i ./src/ui/input.css -o ./src/ui/output.css --watch",
     "tailwind": "npx tailwind -i ./src/ui/input.css -o ./src/ui/output.css",
     "buildui-watch": "npx onchange \"./src/ui/**/*\" -- npm run buildui",
-    "lint": "eslint --ext .ts,.tsx --ignore-pattern node_modules .",
-    "lint:fix": "eslint --ext .ts,.tsx --ignore-pattern node_modules --fix .",
+    "manifest-pixso": "tsc createmanifest.ts && node createmanifest.js pixso",
+    "manifest-figma": "tsc createmanifest.ts && node createmanifest.js figma",
     "test": "jest",
     "build": "webpack && npm run tailwind && npm run buildui",
     "dev": "concurrently --kill-others \" webpack --watch \" \" npm run prettier \" \" npm run tailwind-watch \" \" npm run buildui-watch \""

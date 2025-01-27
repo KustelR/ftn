@@ -2,11 +2,5 @@
   "name": "ftn",
   "id": "1451605187206795188",
   "main": "index.js",
-  "ui": "ui/index.html",
-  "menu": [
-    {
-      "name": "Main",
-      "command": "main"
-    }
-  ]
+  "ui": "ui/index.html"
 }

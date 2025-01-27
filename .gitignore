@@ -4,11 +4,11 @@
 node_modules
 
 out/
-dist/*
+dist
 buildUi.js
-!dist/manifest.json
 output.css
 code.js
+createmanifest.js
 
 #tests
 coverage 
