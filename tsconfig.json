@@ -6,11 +6,7 @@
     "resolveJsonModule": true,
     "lib": ["es2022", "dom"],
     "strict": true,
-    "typeRoots": [
-      "./node_modules/@types",
-      "./node_modules/@figma",
-      "./src/types/*"
-    ],
+    "typeRoots": ["./node_modules/@types", "./src/types/*"],
     "outDir": "./dist",
     "jsx": "react",
     "allowJs": true,
