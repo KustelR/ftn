@@ -2,13 +2,9 @@ import { joinTailwindProperties } from "@/utils/changeTailwindProperties";
 import getSize from "@/utils/getSize";
 
 export default function getLayout(
-  node: SceneNode,
+  node: FrameNode,
   config: Config,
 ): TailwindProperties {
-  if (node.type !== "FRAME") {
-    return new Map();
-  }
-
   let res: TailwindProperties = new Map();
 
   res = joinTailwindProperties(res, getLayoutMode(node, config));
