@@ -16,8 +16,8 @@
     "build-figma": "npx webpack --env api=figma && npm run build-unspecific && npm run manifest  -- figma",
     "build-pixso": "npx webpack --env api=pixso && npm run build-unspecific && npm run manifest  -- pixso",
     "dev-unspecific": "concurrently \" npm run prettier \" \" npm run tailwind -- --watch \" \" npm run buildui-watch \"",
-    "dev-pixso": "npm run build-pixso && concurrently --kill-others \"npx webpack --watch --env api=pixso \" \" npm run dev-unspecific \"",
-    "dev-figma": "npm run build-figma && concurrently --kill-others \" npx webpack --watch --env api=figma \" \" npm run dev-unspecific \""
+    "dev-pixso": "npm run build-pixso && concurrently --kill-others \"npx webpack --watch --env api=pixso env=dev \" \" npm run dev-unspecific \"",
+    "dev-figma": "npm run build-figma && concurrently --kill-others \" npx webpack --watch --env api=figma env=dev \" \" npm run dev-unspecific \""
   },
   "devDependencies": {
     "@figma/eslint-plugin-figma-plugins": "*",
