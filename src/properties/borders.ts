@@ -1,14 +1,15 @@
+import { UnsupportedPropertyError } from "@/types/errors";
+import { joinTailwindProperties } from "@/utils/changeTailwindProperties";
 import generateTailwindColor from "@/utils/generateTailwindColor";
 
-export default function generateBorders(
-  strokes: Array<Paint>,
-  node: BorderedNode,
-): TailwindProperties {
+export default function generateBorders(node: SceneNode): TailwindProperties {
   let result: TailwindProperties = new Map();
-  if (node.strokeWeight !== undefined && strokes.length > 0) {
+  if (!("strokes" in node)) return result;
+  const strokes = node.strokes;
+  if ("strokeWeight" in node && strokes.length > 0) {
     result = new Map([...generateBorder(node), ...result]);
   }
-  if (node.cornerRadius !== undefined) {
+  if ("cornerRadius" in node) {
     result = new Map([...generateRounded(node), ...result]);
   }
   strokes.map((fill) => {
@@ -23,17 +24,63 @@ export default function generateBorders(
         );
     }
   });
-  switch (node.strokeALign) {
-    case "INSIDE":
-      result.set("box", "border");
-      break;
-    case undefined:
-    case "OUTSIDE":
-      break;
-    default:
-      console.warn(
-        `Unsupported stroke alignment: ${node.strokeALign} in node ${node.name}`,
-      );
+
+  result = joinTailwindProperties(result, generateStrokeCap(node));
+  result = joinTailwindProperties(result, generateStrokeAlign(node));
+
+  return result;
+}
+
+function generateBorder(node: SceneNode): TailwindProperties {
+  let result: TailwindProperties = new Map();
+  if (!("strokeWeight" in node)) return result;
+  if (typeof node.strokeWeight !== "symbol") {
+    result.set(`border`, `[${node.strokeWeight}px]`);
+  } else if ("strokeRightWeight" in node) {
+    if (node.strokeRightWeight !== 0) {
+      result.set(`border-r`, `[${node.strokeRightWeight}px]`);
+    }
+    if (node.strokeLeftWeight !== 0) {
+      result.set(`border-l`, `[${node.strokeLeftWeight}px]`);
+    }
+    if (node.strokeTopWeight !== 0) {
+      result.set(`border-t`, `[${node.strokeTopWeight}px]`);
+    }
+    if (node.strokeBottomWeight !== 0) {
+      result.set(`border-b`, `[${node.strokeBottomWeight}px]`);
+    }
+  }
+  return result;
+}
+
+function generateRounded(node: SceneNode): TailwindProperties {
+  let result: TailwindProperties = new Map();
+  if ("cornerRadius" in node && typeof node.cornerRadius !== "symbol") {
+    if (node.cornerRadius !== 0) {
+      result.set(`rounded`, `[${node.cornerRadius}]`);
+      return result;
+    }
+  }
+  if ("topLeftRadius" in node && node.topLeftRadius !== 0) {
+    result.set(`rounded-tl`, `[${node.topLeftRadius}]`);
+  }
+  if ("topRightRadius" in node && node.topRightRadius !== 0) {
+    result.set(`rounded-tr`, `[${node.topRightRadius}]`);
+  }
+  if ("bottomLeftRadius" in node && node.bottomLeftRadius !== 0) {
+    result.set(`rounded-bl`, `[${node.bottomLeftRadius}]`);
+  }
+  if ("bottomRightRadius" in node && node.topRightRadius !== 0) {
+    result.set(`rounded-br`, `[${node.bottomRightRadius}]`);
+  }
+  return result;
+}
+
+function generateStrokeCap(node: SceneNode): TailwindProperties {
+  const result: TailwindProperties = new Map();
+  //throw JSON.stringify(node);
+  if (!("strokeCap" in node)) {
+    return result;
   }
 
   switch (node.strokeCap) {
@@ -57,46 +104,20 @@ export default function generateBorders(
   return result;
 }
 
-function generateBorder(node: BorderedNode): TailwindProperties {
-  let result: TailwindProperties = new Map();
-  if (typeof node.strokeWeight !== "symbol") {
-    result.set(`border`, `[${node.strokeWeight}px]`);
-  } else {
-    if (node.strokeRightWeight !== 0) {
-      result.set(`border-r`, `[${node.strokeRightWeight}px]`);
-    }
-    if (node.strokeLeftWeight !== 0) {
-      result.set(`border-l`, `[${node.strokeLeftWeight}px]`);
-    }
-    if (node.strokeTopWeight !== 0) {
-      result.set(`border-t`, `[${node.strokeTopWeight}px]`);
-    }
-    if (node.strokeBottomWeight !== 0) {
-      result.set(`border-b`, `[${node.strokeBottomWeight}px]`);
-    }
-  }
-  return result;
-}
-
-function generateRounded(node: BorderedNode): TailwindProperties {
-  let result: TailwindProperties = new Map();
-  if (node.cornerRadius && typeof node.cornerRadius !== "symbol") {
-    if (node.cornerRadius !== 0) {
-      result.set(`rounded`, `[${node.cornerRadius}]`);
-      return result;
-    }
-  }
-  if (node.topLeftRadius && node.topLeftRadius !== 0) {
-    result.set(`rounded-tl`, `[${node.topLeftRadius}]`);
-  }
-  if (node.topRightRadius && node.topRightRadius !== 0) {
-    result.set(`rounded-tr`, `[${node.topRightRadius}]`);
-  }
-  if (node.bottomLeftRadius && node.bottomLeftRadius !== 0) {
-    result.set(`rounded-bl`, `[${node.bottomLeftRadius}]`);
-  }
-  if (node.bottomRightRadius && node.topRightRadius !== 0) {
-    result.set(`rounded-br`, `[${node.bottomRightRadius}]`);
+function generateStrokeAlign(node: SceneNode): TailwindProperties {
+  const result: TailwindProperties = new Map();
+  if (!("strokeAlign" in node)) return result;
+  switch (node.strokeAlign) {
+    case "INSIDE":
+      result.set("box", "border");
+      break;
+    case undefined:
+    case "OUTSIDE":
+      break;
+    default:
+      throw new UnsupportedPropertyError(
+        "Unsupported stroke alignment: " + node.strokeAlign,
+      );
   }
   return result;
 }
