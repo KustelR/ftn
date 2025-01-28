@@ -29,10 +29,8 @@ export default function generateBgFromFills(
 
     switch (fill.type) {
       case "SOLID":
-        localClassNames.set(
-          "bg",
-          generateTailwindColor(fill.color, fill.opacity),
-        );
+        const color = generateTailwindColor(fill.color, fill.opacity);
+        if (color) localClassNames.set("bg", color);
         break;
       case "GRADIENT_LINEAR":
         localClassNames.set("bg-gradient-to", `l`);
@@ -41,27 +39,20 @@ export default function generateBgFromFills(
           const opacity = fill.opacity
             ? stop.color.a * fill.opacity
             : stop.color.a;
+          let color = generateTailwindColor(stop.color, opacity);
+          if (!color) color = `[#000000]/0`;
           if (j === 0) {
-            localClassNames.set(
-              "from",
-              generateTailwindColor(stop.color, opacity),
-            );
+            localClassNames.set("from", color);
             if (stop.position !== 0)
               localClassNames.set(`from${j}`, `[${stop.position}]`);
             continue;
           } else if (j === fill.gradientStops.length - 1) {
-            localClassNames.set(
-              `to`,
-              generateTailwindColor(stop.color, opacity),
-            );
+            localClassNames.set(`to`, color);
             if (stop.position != 1)
               localClassNames.set(`to${j}`, `[${stop.position}]`);
             continue;
           }
-          localClassNames.set(
-            `via${j}`,
-            generateTailwindColor(stop.color, opacity),
-          );
+          localClassNames.set(`via${j}`, color);
           localClassNames.set(`via${j}.${1}`, `[${stop.position}]`);
         }
         break;

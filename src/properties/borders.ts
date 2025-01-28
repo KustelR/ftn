@@ -14,7 +14,8 @@ export default function generateBorders(
   strokes.map((fill) => {
     switch (fill.type) {
       case "SOLID":
-        result.set(`border1`, generateTailwindColor(fill.color, fill.opacity));
+        const color = generateTailwindColor(fill.color, fill.opacity);
+        if (color) result.set(`border1`, color);
         break;
       default:
         console.warn(

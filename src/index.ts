@@ -101,23 +101,28 @@ async function getDataFromSelection(
   plugin: PluginAPI,
   config: Config,
 ): Promise<Array<HtmlObject>> {
-  let result: Array<HtmlObject | null> = [];
-  let conversionPromises: Array<Promise<BaseNode | null>> = [];
-  let nodes: Array<BaseNode | null> = [];
-  selection.forEach((node) => {
-    // #!if api === "figma"
-    conversionPromises.push(plugin.getNodeByIdAsync(node.id));
-    // #!endif
-    // #!if api === "pixso"
-    nodes.push(plugin.getNodeById(node.id));
-    // #!endif
-  });
-  nodes = [...nodes, ...(await Promise.all(conversionPromises))];
-  nodes.forEach((node) => {
-    if (!node) return;
-    result.push(toJSX(node, config));
-  });
-  return result.filter((node) => !!node);
+  try {
+    let result: Array<HtmlObject | null> = [];
+    let conversionPromises: Array<Promise<BaseNode | null>> = [];
+    let nodes: Array<BaseNode | null> = [];
+    selection.forEach((node) => {
+      // #!if api === "figma"
+      conversionPromises.push(plugin.getNodeByIdAsync(node.id));
+      // #!endif
+      // #!if api === "pixso"
+      nodes.push(plugin.getNodeById(node.id));
+      // #!endif
+    });
+    nodes = [...nodes, ...(await Promise.all(conversionPromises))];
+    nodes.forEach((node) => {
+      if (!node) return;
+      result.push(toJSX(node, config));
+    });
+    return result.filter((node) => !!node);
+  } catch (e) {
+    handlePluginError(e, plugin);
+  }
+  return [];
 }
 
 async function changeConfig(

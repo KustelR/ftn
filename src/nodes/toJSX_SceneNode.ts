@@ -100,7 +100,7 @@ export default function toJSX_SceneNode(
   }
   addTailwindProperties(parsedNode, getNodeSize(node, config));
 
-  //postProcess(parsedNode, config);
+  postProcess(parsedNode, config);
 
   return parsedNode;
 }

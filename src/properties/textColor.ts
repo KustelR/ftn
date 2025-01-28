@@ -10,7 +10,8 @@ export default function generateTextColorFromFills(node: {
 
     switch (fill.type) {
       case "SOLID":
-        result.set(`text`, generateTailwindColor(fill.color, fill.opacity));
+        const textColor = generateTailwindColor(fill.color, fill.opacity);
+        if (textColor) result.set(`text`, textColor);
         break;
       default:
         console.warn(

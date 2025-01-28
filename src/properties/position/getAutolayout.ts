@@ -49,7 +49,6 @@ function getLayoutMode(node: FrameNode, config: Config): TailwindProperties {
   let res: TailwindProperties = new Map();
   switch (node.layoutMode) {
     case "NONE":
-      res.set("relative", true);
       break;
     case "HORIZONTAL":
       res.set("flex", true);

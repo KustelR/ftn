@@ -30,6 +30,8 @@ export default function toJSX_VectorNode(
       const fillProps = generateFillProp(fill);
       if (fillProps.opacity) {
         itemProps["fill-opacity"] = [`${fillProps.opacity}`];
+      } else {
+        itemProps["fill-opacity"] = ["0"];
       }
       itemProps["fill"] = [fillProps.fill];
     });

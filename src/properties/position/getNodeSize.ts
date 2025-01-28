@@ -5,10 +5,12 @@ import getSize from "@/utils/getSize";
 type PixsoSceneNode = {
   primaryAxisSizingMode: "FIXED" | "AUTO";
   counterAxisSizingMode: "FIXED" | "AUTO";
+  strokeWeight: number;
   x: number;
   y: number;
   width: number;
   height: number;
+  type: string;
 };
 
 /**
@@ -74,8 +76,14 @@ function getNodeSizes(node: SceneNode, config: Config): TailwindProperties {
   }
   // #!elseif api === "pixso"
   const pixsoNode = node as unknown as PixsoSceneNode;
-  result.set("h", getSize(pixsoNode.height, config));
-  result.set("w", getSize(pixsoNode.width, config));
+  const height = getSize(pixsoNode.height, config);
+  const width = getSize(pixsoNode.width, config);
+  if (pixsoNode.type === "VECTOR") {
+    height.absolute = Math.max(height.absolute, pixsoNode.strokeWeight);
+    width.absolute = Math.max(width.absolute, pixsoNode.strokeWeight);
+  }
+  result.set("h", height);
+  result.set("w", width);
   // #!endif
   return result;
 }
