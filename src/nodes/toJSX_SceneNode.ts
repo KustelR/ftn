@@ -13,6 +13,7 @@ import {
   getAutolayout,
   getAbsolutePosition,
   getNodeSize,
+  generateBorders,
 } from "@/properties";
 import { addTailwindProperties } from "@/utils/changeTailwindProperties";
 import { BlendModeBlacklist, BackgroundColorBlacklist } from "./parserLists";
@@ -20,6 +21,8 @@ import { generateBgColor as getBgColor } from "@/properties";
 import postProcess from "@/post";
 import getSize from "@/utils/getSize";
 import { UnsupportedNodeTypeError } from "@/types/errors";
+import { handlePluginError } from "@/utils/handlePluginError";
+import { getPlugin } from "@/utils/getPlugin";
 /**
  * @throws {UnsupportedNodeTypeError} if provided node type is not supported by api
  */
@@ -27,7 +30,11 @@ export default function toJSX_SceneNode(
   node: SceneNode,
   config: Config,
 ): HtmlObject {
-  let parsedNode: HtmlObject;
+  let parsedNode: HtmlObject = {
+    tagName: "div",
+    props: {},
+    children: [],
+  };
   switch (node.type) {
     case "FRAME":
       parsedNode = toJSX_FrameNode(node, config);
@@ -57,22 +64,25 @@ export default function toJSX_SceneNode(
       parsedNode = toJSX_SectionNode(node, config);
       break;
     default:
-      let enviroment: string = "";
       // #!if env === "dev"
-      enviroment = "dev";
+      handleUnknownNode(node, config);
       // #!else
-      enviroment = "prod";
-      // #!endif
-      if (enviroment === "dev") {
-        throw new UnsupportedNodeTypeError(`Unknown node type: ${node.type}`, {
-          cause: node,
-        });
-      } else {
+      try {
+        handleUnknownNode(node, config);
+      } catch (e) {
+        if (e instanceof UnsupportedNodeTypeError) {
+          parsedNode = e.placeholder
+        } else {
+          throw e
+        }
+      }
+      // #!endif 
+  }
   runGen(() => {
-  addTailwindProperties(parsedNode, getRotation(node));
+    addTailwindProperties(parsedNode, getRotation(node));
   });
   runGen(() => {
-  addTailwindProperties(parsedNode, getBlendMode(node, BlendModeBlacklist));
+    addTailwindProperties(parsedNode, getBlendMode(node, BlendModeBlacklist));
   });
   runGen(() => {
     addTailwindProperties(
@@ -82,20 +92,20 @@ export default function toJSX_SceneNode(
   });
 
   runGen(() => {
-  if (node.type === "FRAME") {
-    addTailwindProperties(parsedNode, getAutolayout(node, config));
-  }
-  if (
-    node.parent &&
-    ((node.parent.type === "FRAME" && node.parent.layoutMode === "NONE") ||
-      node.parent.type !== "FRAME")
-  ) {
-    addTailwindProperties(parsedNode, getAbsolutePosition(node, config));
-  }
+    if (node.type === "FRAME") {
+      addTailwindProperties(parsedNode, getAutolayout(node, config));
+    }
+    if (
+      node.parent &&
+      ((node.parent.type === "FRAME" && node.parent.layoutMode === "NONE") ||
+        node.parent.type !== "FRAME")
+    ) {
+      addTailwindProperties(parsedNode, getAbsolutePosition(node, config));
+    }
   });
 
   runGen(() => {
-  addTailwindProperties(parsedNode, getNodeSize(node, config));
+    addTailwindProperties(parsedNode, getNodeSize(node, config));
   });
 
   runGen(() => {
