@@ -68,26 +68,20 @@ export default function toJSX_SceneNode(
           cause: node,
         });
       } else {
-        parsedNode = {
-          tagName: "div",
-          props: {},
-          children: [`unknown node: ${node.type}`],
-        };
-        parsedNode.props.class = new Map();
-        parsedNode.props.class.set(
-          "w",
-          getSize(node.width, config, node.parent, "X"),
-        );
-        parsedNode.props.class.set(
-          "h",
-          getSize(node.width, config, node.parent, "Y"),
-        );
-      }
-  }
-
+  runGen(() => {
   addTailwindProperties(parsedNode, getRotation(node));
+  });
+  runGen(() => {
   addTailwindProperties(parsedNode, getBlendMode(node, BlendModeBlacklist));
-  addTailwindProperties(parsedNode, getBgColor(node, BackgroundColorBlacklist));
+  });
+  runGen(() => {
+    addTailwindProperties(
+      parsedNode,
+      getBgColor(node, BackgroundColorBlacklist),
+    );
+  });
+
+  runGen(() => {
   if (node.type === "FRAME") {
     addTailwindProperties(parsedNode, getAutolayout(node, config));
   }
@@ -98,9 +92,50 @@ export default function toJSX_SceneNode(
   ) {
     addTailwindProperties(parsedNode, getAbsolutePosition(node, config));
   }
-  addTailwindProperties(parsedNode, getNodeSize(node, config));
+  });
 
+  runGen(() => {
+  addTailwindProperties(parsedNode, getNodeSize(node, config));
+  });
+
+  runGen(() => {
+    if (node.type !== "VECTOR") {
+      addTailwindProperties(parsedNode, generateBorders(node));
+    }
+  });
   postProcess(parsedNode, config);
 
   return parsedNode;
+}
+
+function runGen(func: Function) {
+  try {
+    func();
+  } catch (e) {
+    handlePluginError(e, getPlugin());
+  }
+}
+
+function handleUnknownNode(node: SceneNode, config: Config) {
+  const placeholder = {
+    tagName: "div",
+    props: { class: new Map() },
+    children: [`unknown node: ${node.type}`],
+  };
+  placeholder.props.class = new Map();
+  placeholder.props.class.set(
+    "w",
+    getSize(node.width, config, node.parent, "X"),
+  );
+  placeholder.props.class.set(
+    "h",
+    getSize(node.width, config, node.parent, "Y"),
+  );
+  throw new UnsupportedNodeTypeError(
+    `Unknown node type: ${node.type}`,
+    {
+      cause: node,
+    },
+    placeholder,
+  );
 }
