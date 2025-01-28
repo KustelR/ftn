@@ -57,11 +57,9 @@ export default function generateBgFromFills(
         }
         break;
       default:
-        // #!if env === "dev"
         throw new UnsupportedFillTypeError(
           `Unsupported fill type (${fill.type}) for background in node: ${node.name}`,
         );
-      // #!endif
     }
   }
   return localClassNames;
