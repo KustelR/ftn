@@ -19,7 +19,7 @@ Figma Plugin for conversion Figma designs to JSX.
 
 You need working node and npm on your machine for this to work!
 
-###Create plugin build
+__Create plugin build__
 
 For figma:
 ```
@@ -30,7 +30,7 @@ For pixso:
 npm run build-pixso
 ```
 
-###Watch changes and rebuild on the fly
+__Watch changes and rebuild on the fly__
 
 For figma:
 ```
