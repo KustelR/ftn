@@ -14,9 +14,6 @@ export default function toJSX_FrameNode(
   const children: Array<HtmlObject | null> = [];
 
   classNames = new Map([...generateSpacing(node, config), ...classNames]);
-  if (typeof node.strokes !== "symbol" && node.strokes) {
-    classNames = new Map([...generateBorders([...node.strokes], node)]);
-  }
   node.children.map((child) => {
     children.push(toJSX(child, config));
   });
