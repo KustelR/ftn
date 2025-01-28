@@ -1,5 +1,5 @@
 export function getPlugin(): PluginAPI {
-  let plugin: PluginAPI;
+  let plugin: PluginAPI | undefined;
   // #!if api === 'pixso'
   plugin = pixso;
   // #!elseif api === 'figma'
