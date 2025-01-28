@@ -4,8 +4,6 @@ export function getPlugin(): PluginAPI {
   plugin = pixso;
   // #!elseif api === 'figma'
   plugin = figma;
-  // #!else
-  console.error("API was not provided");
   // #!endif
 
   if (!plugin) {
