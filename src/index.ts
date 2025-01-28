@@ -4,23 +4,13 @@ import composeHtml from "@/utils/composeHtml";
 import { FromUiMessageType } from "./types/FromUiEnum";
 import type {} from "@figma/plugin-typings";
 import type {} from "@pixso/plugin-typings";
+import { sendToUi } from "@/utils/sendToUi";
+import { handlePluginError } from "@/utils/handlePluginError";
+import { getPlugin } from "@/utils/getPlugin";
 
 run();
 async function run() {
-  let plugin: PluginAPI | undefined;
-
-  // #!if api === 'pixso'
-  plugin = pixso;
-  // #!elseif api === 'figma'
-  plugin = figma;
-  // #!else
-  console.error("API was not provided");
-  // #!endif
-
-  if (!plugin) {
-    throw new Error("Plugin API not found");
-  }
-
+  const plugin = getPlugin();
   let config: Config = getConfig(await plugin.clientStorage.getAsync("config"));
   fillConfig(config);
   let selectedNodes: Array<HtmlObject>;
@@ -133,24 +123,4 @@ async function changeConfig(
   setProperty(config, changedProperty.property, changedProperty.value);
 
   await plugin.clientStorage.setAsync("config", config);
-}
-
-function handlePluginError(e: any, plugin: PluginAPI) {
-  // #!if api === "pixso"
-  if (e instanceof Error) {
-    sendToUi(
-      {
-        type: "ERROR",
-        data: `Thrown an error: ${e.name}\nerror message: ${e.message}\nCause: ${e.cause}\n Stack trace:\n${e.stack}`,
-      },
-      plugin,
-    );
-  }
-  // #!else
-  throw e;
-  // #!endif
-}
-
-function sendToUi(msg: ToUiMessage, plugin: PluginAPI): void {
-  plugin.ui.postMessage(msg);
 }
