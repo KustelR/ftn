@@ -6,15 +6,12 @@ import { FigmaMixedError, UnsupportedFillTypeError } from "@/types/errors";
  */
 export default function generateBgFromFills(
   node: SceneNode,
-  blacklist: Array<string>,
 ): TailwindProperties {
   const localClassNames: TailwindProperties = new Map();
 
-  if (blacklist.includes(node.type)) {
+  if (node.type === "TEXT" || !("fills" in node)) {
     return localClassNames;
   }
-
-  node = node as RectangleNode;
 
   if (typeof node.fills === "symbol") {
     throw new FigmaMixedError(

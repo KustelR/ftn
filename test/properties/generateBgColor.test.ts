@@ -38,19 +38,25 @@ const fillSolidInvisible: { name: string; fills: Array<Paint> } = {
 
 describe("ignores invisible", () => {
   test('should be undefined due to visible: false"', () => {
-    expect(generateBgColor(fillSolidInvisible as unknown as SceneNode, BackgroundColorBlacklist).get("bg")).toBeUndefined();
+    expect(
+      generateBgColor(fillSolidInvisible as unknown as SceneNode).get("bg"),
+    ).toBeUndefined();
   });
 });
 
 describe("solid fill", () => {
   test('should have item by key "bg"', () =>
-    expect(generateBgColor(fillSolid as unknown as SceneNode, BackgroundColorBlacklist).get("bg")).toBeDefined());
+    expect(
+      generateBgColor(fillSolid as unknown as SceneNode).get("bg"),
+    ).toBeDefined());
   test('bg should be [#ff0000]"', () =>
-    expect(generateBgColor(fillSolid as unknown as SceneNode, BackgroundColorBlacklist).get("bg")).toEqual("[#ff0000]"));
+    expect(
+      generateBgColor(fillSolid as unknown as SceneNode).get("bg"),
+    ).toEqual("[#ff0000]"));
   test('bg should be [#ff0000]/[0.5]"', () =>
-    expect(generateBgColor(fillSolidOpacity05 as unknown as SceneNode, BackgroundColorBlacklist).get("bg")).toEqual(
-      "[#ff0000]/[0.5]",
-    ));
+    expect(
+      generateBgColor(fillSolidOpacity05 as unknown as SceneNode).get("bg"),
+    ).toEqual("[#ff0000]/[0.5]"));
 });
 
 const gradientLinear: { name: string; fills: Array<Paint> } = {
@@ -111,61 +117,85 @@ const gradientLinearBig: { name: string; fills: Array<Paint> } = {
 
 describe("simple linear gradient", () => {
   test("should generate classes: bg-gradient-to-r", () => {
-    expect(generateBgFromFills(gradientLinear as unknown as SceneNode, BackgroundColorBlacklist).get("bg-gradient-to")).toEqual(
-      "l",
-    );
+    expect(
+      generateBgFromFills(gradientLinear as unknown as SceneNode).get(
+        "bg-gradient-to",
+      ),
+    ).toEqual("l");
   });
   test("should generate classes: from-[#000000]", () => {
-    expect(generateBgFromFills(gradientLinear as unknown as SceneNode, BackgroundColorBlacklist).get("from")).toEqual(
-      "[#000000]",
-    );
+    expect(
+      generateBgFromFills(gradientLinear as unknown as SceneNode).get("from"),
+    ).toEqual("[#000000]");
   });
   test("should not generate classes: from-0", () => {
-    expect(generateBgFromFills(gradientLinear as unknown as SceneNode, BackgroundColorBlacklist).get("from0")).toBeUndefined();
+    expect(
+      generateBgFromFills(gradientLinear as unknown as SceneNode).get("from0"),
+    ).toBeUndefined();
   });
   test("should generate classes: to-[#ffffff]", () => {
-    expect(generateBgFromFills(gradientLinear as unknown as SceneNode, BackgroundColorBlacklist).get("to")).toEqual("[#ffffff]");
+    expect(
+      generateBgFromFills(gradientLinear as unknown as SceneNode).get("to"),
+    ).toEqual("[#ffffff]");
   });
   test("should not generate classes: to-1", () => {
-    expect(generateBgFromFills(gradientLinear as unknown as SceneNode, BackgroundColorBlacklist).get("to2")).toBeUndefined();
+    expect(
+      generateBgFromFills(gradientLinear as unknown as SceneNode).get("to2"),
+    ).toBeUndefined();
   });
 });
 
 describe("complicated linear gradient", () => {
   test("should generate classes: from-[#000000]", () => {
-    expect(generateBgFromFills(gradientLinearBig as unknown as SceneNode, BackgroundColorBlacklist).get("from")).toEqual(
-      "[#000000]",
-    );
+    expect(
+      generateBgFromFills(gradientLinearBig as unknown as SceneNode).get(
+        "from",
+      ),
+    ).toEqual("[#000000]");
   });
   test("should not generate classes: from-0", () => {
-    expect(generateBgFromFills(gradientLinearBig as unknown as SceneNode, BackgroundColorBlacklist).get("from0")).toBeUndefined();
+    expect(
+      generateBgFromFills(gradientLinearBig as unknown as SceneNode).get(
+        "from0",
+      ),
+    ).toBeUndefined();
   });
   test("should generate classes: to-[#ffffff]", () => {
-    expect(generateBgFromFills(gradientLinearBig as unknown as SceneNode, BackgroundColorBlacklist).get("to")).toEqual(
-      "[#ffffff]",
-    );
+    expect(
+      generateBgFromFills(gradientLinearBig as unknown as SceneNode).get("to"),
+    ).toEqual("[#ffffff]");
   });
   test("should not generate classes: to-1", () => {
-    expect(generateBgFromFills(gradientLinearBig as unknown as SceneNode, BackgroundColorBlacklist).get("to4")).toBeUndefined();
+    expect(
+      generateBgFromFills(gradientLinearBig as unknown as SceneNode).get("to4"),
+    ).toBeUndefined();
   });
   test("should generate classes: via2-[#ff0000]", () => {
-    expect(generateBgFromFills(gradientLinearBig as unknown as SceneNode, BackgroundColorBlacklist).get("via1")).toEqual(
-      "[#ff0000]",
-    );
+    expect(
+      generateBgFromFills(gradientLinearBig as unknown as SceneNode).get(
+        "via1",
+      ),
+    ).toEqual("[#ff0000]");
   });
   test("should generate classes: via2.1-[0.3]", () => {
-    expect(generateBgFromFills(gradientLinearBig as unknown as SceneNode, BackgroundColorBlacklist).get("via1.1")).toEqual(
-      "[0.3]",
-    );
+    expect(
+      generateBgFromFills(gradientLinearBig as unknown as SceneNode).get(
+        "via1.1",
+      ),
+    ).toEqual("[0.3]");
   });
   test("should generate classes: via3-[#00ff00]", () => {
-    expect(generateBgFromFills(gradientLinearBig as unknown as SceneNode, BackgroundColorBlacklist).get("via2")).toEqual(
-      "[#00ff00]",
-    );
+    expect(
+      generateBgFromFills(gradientLinearBig as unknown as SceneNode).get(
+        "via2",
+      ),
+    ).toEqual("[#00ff00]");
   });
   test("should generate classes: via3.1-[0.6]", () => {
-    expect(generateBgFromFills(gradientLinearBig as unknown as SceneNode, BackgroundColorBlacklist).get("via2.1")).toEqual(
-      "[0.6]",
-    );
+    expect(
+      generateBgFromFills(gradientLinearBig as unknown as SceneNode).get(
+        "via2.1",
+      ),
+    ).toEqual("[0.6]");
   });
 });
