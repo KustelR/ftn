@@ -4,7 +4,7 @@ import generateTailwindColor from "@/utils/generateTailwindColor";
 
 export default function generateBorders(node: SceneNode): TailwindProperties {
   let result: TailwindProperties = new Map();
-  if (!("strokes" in node)) return result;
+  if (!("strokes" in node) || node.type === "VECTOR") return result;
   const strokes = node.strokes;
   if ("strokeWeight" in node && strokes.length > 0) {
     result = new Map([...generateBorder(node), ...result]);

@@ -2,11 +2,11 @@ import { joinTailwindProperties } from "@/utils/changeTailwindProperties";
 import getSize from "@/utils/getSize";
 
 export default function getLayout(
-  node: FrameNode,
+  node: SceneNode,
   config: Config,
 ): TailwindProperties {
   let res: TailwindProperties = new Map();
-
+  if (!("layoutMode" in node)) return res;
   res = joinTailwindProperties(res, getLayoutMode(node, config));
 
   switch (node.primaryAxisAlignItems) {
@@ -41,8 +41,9 @@ export default function getLayout(
   return res;
 }
 
-function getLayoutMode(node: FrameNode, config: Config): TailwindProperties {
+function getLayoutMode(node: SceneNode, config: Config): TailwindProperties {
   let res: TailwindProperties = new Map();
+  if (!("layoutMode" in node)) return res;
   switch (node.layoutMode) {
     case "NONE":
       break;

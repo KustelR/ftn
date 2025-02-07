@@ -1,8 +1,18 @@
 import getSize from "@/utils/getSize";
 
-
-export default function getFixedLayout(node: SceneNode, config: Config): TailwindProperties {
+export default function getFixedLayout(
+  node: SceneNode,
+  config: Config,
+): TailwindProperties {
   const result: TailwindProperties = new Map();
+  if (
+    !(
+      node.parent &&
+      (("layoutMode" in node.parent && node.parent.layoutMode === "NONE") ||
+        !("layoutMode" in node.parent))
+    )
+  )
+    return result;
   result.set("absolute", true);
   const [left, top] = getCoordinates(node);
   if (left !== 0) result.set("left", getSize(left, config, node.parent, "X"));
@@ -20,7 +30,7 @@ function getCoordinates(node: SceneNode) {
   }
 
   let left = node.x;
-  let top = node.y; 
+  let top = node.y;
   let [offsetLeft, offsetTop] = [0, 0];
   if (node.parent.type === "GROUP") {
     offsetTop = node.parent.y;
