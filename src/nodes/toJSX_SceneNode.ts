@@ -16,7 +16,6 @@ import {
   generateBorders,
 } from "@/properties";
 import { addTailwindProperties } from "@/utils/changeTailwindProperties";
-import { BlendModeBlacklist, BackgroundColorBlacklist } from "./parserLists";
 import { generateBgColor as getBgColor } from "@/properties";
 import { generateSpacing as getSpacing } from "@/properties";
 import postProcess from "@/post";
@@ -72,59 +71,50 @@ export default function toJSX_SceneNode(
         handleUnknownNode(node, config);
       } catch (e) {
         if (e instanceof UnsupportedNodeTypeError) {
-          parsedNode = e.placeholder
+          parsedNode = e.placeholder;
         } else {
-          throw e
+          throw e;
         }
       }
-      // #!endif 
+    // #!endif
   }
-  runGen(() => {
-    addTailwindProperties(parsedNode, getRotation(node));
-  });
-  runGen(() => {
-    addTailwindProperties(parsedNode, getBlendMode(node, BlendModeBlacklist));
-  });
-  runGen(() => {
-    addTailwindProperties(
-      parsedNode,
-      getBgColor(node, BackgroundColorBlacklist),
-    );
-  });
-
-  runGen(() => {
-    if (node.type === "FRAME") {
-      addTailwindProperties(parsedNode, getAutolayout(node, config));
-    }
-    if (
-      node.parent &&
-      ((node.parent.type === "FRAME" && node.parent.layoutMode === "NONE") ||
-        node.parent.type !== "FRAME")
-    ) {
-      addTailwindProperties(parsedNode, getAbsolutePosition(node, config));
-    }
-  });
-
-  runGen(() => {
-    addTailwindProperties(parsedNode, getNodeSize(node, config));
-  });
-    runGen(() => {
-    addTailwindProperties(parsedNode, getSpacing(node, config));
-  });
-
-  runGen(() => {
-    if (node.type !== "VECTOR") {
-      addTailwindProperties(parsedNode, generateBorders(node));
-    }
-  });
+  handlePluginError(node, pixso);
+  runGenMulti(
+    parsedNode,
+    node,
+    config,
+    getRotation,
+    getBlendMode,
+    getBgColor,
+    getAutolayout,
+    getAbsolutePosition,
+    getNodeSize,
+    getSpacing,
+    generateBorders,
+  );
   postProcess(parsedNode, config);
 
   return parsedNode;
 }
 
-function runGen(func: Function) {
+function runGenMulti(
+  parsedNode: HtmlObject,
+  node: SceneNode,
+  config: Config,
+  ...funcs: Array<(node: SceneNode, config: Config) => TailwindProperties>
+): void {
+  funcs.forEach((func) => {
+    runGen(func, parsedNode, node, config);
+  });
+}
+function runGen(
+  func: (node: SceneNode, config: Config) => TailwindProperties,
+  parsedNode: HtmlObject,
+  node: SceneNode,
+  config: Config,
+): void {
   try {
-    func();
+    addTailwindProperties(parsedNode, func(node, config));
   } catch (e) {
     handlePluginError(e, getPlugin());
   }
