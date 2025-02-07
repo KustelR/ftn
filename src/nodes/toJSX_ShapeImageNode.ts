@@ -16,7 +16,10 @@ export default function toJSX_ShapeImageNode(
     otherTags.set("width", `${node.absoluteRenderBounds.width}`);
     otherTags.set("height", `${node.absoluteRenderBounds.height}`);
   }
-  otherTags.set("src", `SRC HERE`);
+  otherTags.set(
+    "src",
+    `https://placehold.co/${Math.round(node.width)}x${Math.round(node.height)}?text=${node.name}`,
+  );
   otherTags.set("alt", `${node.name}`);
 
   const fills = typeof node.fills != "symbol" ? node.fills : [];
