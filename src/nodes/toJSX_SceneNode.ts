@@ -18,6 +18,7 @@ import {
 import { addTailwindProperties } from "@/utils/changeTailwindProperties";
 import { BlendModeBlacklist, BackgroundColorBlacklist } from "./parserLists";
 import { generateBgColor as getBgColor } from "@/properties";
+import { generateSpacing as getSpacing } from "@/properties";
 import postProcess from "@/post";
 import getSize from "@/utils/getSize";
 import { UnsupportedNodeTypeError } from "@/types/errors";
@@ -106,6 +107,9 @@ export default function toJSX_SceneNode(
 
   runGen(() => {
     addTailwindProperties(parsedNode, getNodeSize(node, config));
+  });
+    runGen(() => {
+    addTailwindProperties(parsedNode, getSpacing(node, config));
   });
 
   runGen(() => {

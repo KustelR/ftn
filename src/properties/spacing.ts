@@ -1,10 +1,13 @@
 import getSize from "@/utils/getSize";
 
 export default function generateSpacings(
-  node: SpacedNode,
+  node: SceneNode,
   config: Config,
 ): TailwindProperties {
   let result: TailwindProperties = new Map();
+  if (!("paddingTop" in node)) {
+    return result;
+  }
   if (node.paddingTop == node.paddingBottom && node.paddingTop != 0) {
     result.set(`py`, getSize(node.paddingTop, config, node.parent, "Y"));
   } else {

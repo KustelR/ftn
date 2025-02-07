@@ -13,7 +13,6 @@ export default function toJSX_FrameNode(
   let tagName: string = "div";
   const children: Array<HtmlObject | null> = [];
 
-  classNames = new Map([...generateSpacing(node, config), ...classNames]);
   node.children.map((child) => {
     children.push(toJSX(child, config));
   });
