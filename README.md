@@ -1,6 +1,6 @@
 # FtJ: Figma to JSX
 
-Figma Plugin for conversion Figma designs to JSX.
+Figma Plugin for conversion designs to JSX.
 
 ## How to use
 1. Select figma element
